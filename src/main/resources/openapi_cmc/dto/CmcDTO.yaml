@@ -1,0 +1,11 @@
+components:
+  schemas:
+    CreateCmcInDTO:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        description:
+          type: string
