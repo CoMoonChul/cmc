@@ -72,6 +72,7 @@ dependencies {
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
 
 	implementation 'org.modelmapper:modelmapper:3.1.1'
+	implementation 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20211018.1'
 }
 
 tasks.named('test') {
