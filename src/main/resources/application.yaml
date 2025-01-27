@@ -30,11 +30,13 @@ server:
 
 springdoc:
   api-docs:
-    version: 'OPENAPI_7_8'
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
+    version: 'OPENAPI_3_0'
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
     operations-sorter: alpha
     tags-sorter: alpha
     path: /swagger-ui.html
     disable-swagger-default-utl: true
+    configUrl: /v3/api-docs/swagger-config
+    url: /v3/api-docs
