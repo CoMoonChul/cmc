@@ -35,7 +35,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'io.github.cdimascio:dotenv-java:3.0.2'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.4.6'
 	// h2 db
 	runtimeOnly 'com.h2database:h2'
 	// rds db
