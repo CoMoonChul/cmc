@@ -1,22 +1,16 @@
 components:
   schemas:
-    Stash:
+    Guide:
       type: object
       x-class-extra-annotation: "@jakarta.persistence.Entity"
       required:
-        - stash_id
-        - username
-        - title
+        - id
       properties:
-        stash_id:
+        id:
           type: integer
           format: int64
           x-field-extra-annotation: |
             @jakarta.persistence.Id
             @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-        username:
-          type: string
-        title:
-          type: string
         description:
           type: string
