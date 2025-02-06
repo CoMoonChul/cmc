@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CmcApplication {
 
 	public static void main(String[] args) {
-		// .env 파일 로드
+		// .env 파일 로드z
 		Dotenv dotenv = Dotenv.configure().directory("./").ignoreIfMissing().load();
 		// 시스템 환경 변수에 추가
 		System.setProperty("DB_HOST", dotenv.get("DB_HOST"));
