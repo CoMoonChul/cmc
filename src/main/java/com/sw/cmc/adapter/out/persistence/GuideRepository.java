@@ -16,5 +16,5 @@ import java.util.Optional;
  */
 @Repository
 public interface GuideRepository extends JpaRepository<Guide, Long> {
-    //test
+
 }
