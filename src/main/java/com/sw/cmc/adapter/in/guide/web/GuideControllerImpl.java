@@ -1,8 +1,8 @@
-package com.sw.cmc.adapter.in;
+package com.sw.cmc.adapter.in.guide.web;
 
 import com.sw.cmc.adapter.in.guide.dto.*;
-import com.sw.cmc.adapter.in.guide.web.GuideControllerApi;
-import com.sw.cmc.application.port.in.GuideUseCase;
+import com.sw.cmc.application.port.in.guide.GuideUseCase;
+import com.sw.cmc.domain.guide.GuideDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -30,26 +30,26 @@ public class GuideControllerImpl implements GuideControllerApi {
 
     @Override
     public ResponseEntity<GetGuideDTOResponse> getGuideDTO(GuideDTORequest guideDTO) throws Exception {
-        Guide guide = guideUseCase.getGuideDTO(guideDTO);
+        Guide guide = guideUseCase.getGuideDTO(modelMapper.map(guideDTO, GuideDomain.class));
         return ResponseEntity.ok(modelMapper.map(guide, GetGuideDTOResponse.class));
     }
 
     @Override
     public ResponseEntity<PostGuideDeleteResponse> postGuideDelete(PostGuideDeleteRequest postGuideDeleteRequest) throws Exception {
         PostGuideDeleteResponse postGuideDeleteResponse = new PostGuideDeleteResponse();
-        postGuideDeleteResponse.setId(guideUseCase.postGuideDelete(postGuideDeleteRequest));
+        postGuideDeleteResponse.setId(guideUseCase.postGuideDelete(modelMapper.map(postGuideDeleteRequest, GuideDomain.class)));
         return ResponseEntity.ok(postGuideDeleteResponse);
     }
 
     @Override
     public ResponseEntity<PostGuideCreateResponse> postGuideCreate(PostGuideCreateRequest postGuideCreateRequest) throws Exception {
-        Guide savedGuide = guideUseCase.postGuideCreate(postGuideCreateRequest);
+        Guide savedGuide = guideUseCase.postGuideCreate(modelMapper.map(postGuideCreateRequest, GuideDomain.class));
         return ResponseEntity.ok(modelMapper.map(savedGuide, PostGuideCreateResponse.class));
     }
 
     @Override
     public ResponseEntity<PostGuideUpdateResponse> postGuideUpdate(PostGuideUpdateRequest postGuideUpdateRequest) throws Exception {
-        Guide guide = guideUseCase.postGuideUpdate(postGuideUpdateRequest);
+        Guide guide = guideUseCase.postGuideUpdate(modelMapper.map(postGuideUpdateRequest, GuideDomain.class));
         return ResponseEntity.ok(modelMapper.map(guide, PostGuideUpdateResponse.class));
     }
 }

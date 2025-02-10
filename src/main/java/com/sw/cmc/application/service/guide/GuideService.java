@@ -1,10 +1,11 @@
-package com.sw.cmc.application.service;
+package com.sw.cmc.application.service.guide;
 
 import com.sw.cmc.adapter.in.guide.dto.*;
 import com.sw.cmc.adapter.out.persistence.GuideRepository;
-import com.sw.cmc.application.port.in.GuideUseCase;
+import com.sw.cmc.application.port.in.guide.GuideUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
+import com.sw.cmc.domain.guide.GuideDomain;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -32,39 +33,39 @@ public class GuideService implements GuideUseCase {
     }
 
     @Override
-    public Guide getGuideDTO(GuideDTORequest guideDTO) throws Exception{
-        return guideRepository.findById(guideDTO.getId())
+    public Guide getGuideDTO(GuideDomain guideDomain) throws Exception{
+        return guideRepository.findById(guideDomain.getId())
                 .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("GUIDE001")));
     }
 
     @Override
-    public Long postGuideDelete(PostGuideDeleteRequest postGuideDeleteRequest) throws Exception {
-        guideRepository.deleteById(postGuideDeleteRequest.getId());
-        return postGuideDeleteRequest.getId();
+    public Long postGuideDelete(GuideDomain guideDomain) throws Exception {
+        guideRepository.deleteById(guideDomain.getId());
+        return guideDomain.getId();
     }
 
     @Override
-    public Guide postGuideCreate(PostGuideCreateRequest postGuideCreateRequest) throws Exception{
-        validatePostGuideCreate(postGuideCreateRequest);
-        Guide guide = modelMapper.map(postGuideCreateRequest, Guide.class);
+    public Guide postGuideCreate(GuideDomain guideDomain) throws Exception{
+        validatePostGuideCreate(guideDomain);
+        Guide guide = modelMapper.map(guideDomain, Guide.class);
         return guideRepository.save(guide);
     }
 
     @Override
-    public Guide postGuideUpdate(PostGuideUpdateRequest postGuideUpdateRequest) throws Exception {
-        validatePostGuideUpdate(postGuideUpdateRequest);
-        Guide existingGuide = guideRepository.findById(postGuideUpdateRequest.getId())
+    public Guide postGuideUpdate(GuideDomain guideDomain) throws Exception {
+        validatePostGuideUpdate(guideDomain);
+        Guide existingGuide = guideRepository.findById(guideDomain.getId())
                 .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("GUIDE001")));
-        existingGuide.setDescription(postGuideUpdateRequest.getDescription());
+        existingGuide.setDescription(guideDomain.getDescription());
         return guideRepository.save(existingGuide);
     }
 
-    private void validatePostGuideCreate(PostGuideCreateRequest postGuideCreateRequest) throws Exception {
-        validateDescriptionLength(postGuideCreateRequest.getDescription());
+    private void validatePostGuideCreate(GuideDomain guideDomain) throws Exception {
+        validateDescriptionLength(guideDomain.getDescription());
     }
 
-    private void validatePostGuideUpdate(PostGuideUpdateRequest postGuideUpdateRequest) throws Exception {
-        validateDescriptionLength(postGuideUpdateRequest.getDescription());
+    private void validatePostGuideUpdate(GuideDomain guideDomain) throws Exception {
+        validateDescriptionLength(guideDomain.getDescription());
     }
 
     private void validateDescriptionLength(String description) throws Exception {
