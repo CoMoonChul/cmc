@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  title: Login api
+  description: Cmc Login api
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: login-controller
+    description: Login api controller
+
+paths:
+  /v1/temp/login:
+    post:
+      tags:
+        - login-controller
+      summary: "API_USER_9999 임시 로그인"
+      description: 임시 로그인 API
+      operationId: "tempLogin"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/LoginDTO.yaml#/components/schemas/TempLoginRequest"
+      responses:
+        "200":
+          description: "임시 로그인 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/LoginDTO.yaml#/components/schemas/TempLoginResponse"
+
+components:
+  schemas:
+    User:
+      $ref: './entity/UserEntity.yaml#/User'
