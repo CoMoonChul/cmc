@@ -1,0 +1,28 @@
+components:
+  schemas:
+    TempLoginRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+          description: 회원 ID
+      description: 임시 로그인 요청
+
+    TempLoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: Access Token
+        accessTokenExpirationTime:
+          type: integer
+          description: Access Token 만료 시간
+        refreshToken:
+          type: string
+          description: Refresh Token
+        refreshTokenExpirationTime:
+          type: integer
+          description: Refresh Token 만료 시간
+      description: 임시 로그인 응답
