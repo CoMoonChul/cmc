@@ -1,4 +1,4 @@
-package com.sw.cmc.domain;
+package com.sw.cmc.domain.user;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TempLogin {
-    Long userNum;
+    long userNum;
     String userId;
     String userCode;
 }

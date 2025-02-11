@@ -40,3 +40,9 @@ springdoc:
     disable-swagger-default-utl: true
     configUrl: /v3/api-docs/swagger-config
     url: /v3/api-docs
+
+jwt:
+  token:
+    secret-key: eH0SIMQPTgoK7M1ZpyEbkOqmVXGby7JO
+    access-token-expiration-time-in-seconds: 300 # 5분
+    refresh-token-expiration-time-in-seconds: 77760000 # 90일
