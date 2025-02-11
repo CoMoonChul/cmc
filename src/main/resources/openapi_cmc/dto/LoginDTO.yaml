@@ -17,12 +17,12 @@ components:
           type: string
           description: Access Token
         accessTokenExpirationTime:
-          type: integer
+          type: number
           description: Access Token 만료 시간
         refreshToken:
           type: string
           description: Refresh Token
         refreshTokenExpirationTime:
-          type: integer
+          type: number
           description: Refresh Token 만료 시간
       description: 임시 로그인 응답

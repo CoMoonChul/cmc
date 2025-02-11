@@ -5,7 +5,7 @@ User:
     userNum:
       x-field-extra-annotation: |
         @jakarta.persistence.Id
-        @jakarta.persistence.Column(columnDefinition = "BIGINT COMMENT '회원 번호'")
+        @jakarta.persistence.Column(columnDefinition = "DECIMAL(10, 0) COMMENT '회원 번호'")
     userId:
       x-field-extra-annotation: |
         @jakarta.validation.constraints.NotNull

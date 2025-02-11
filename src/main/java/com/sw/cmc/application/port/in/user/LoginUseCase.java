@@ -1,7 +1,7 @@
-package com.sw.cmc.application.port.in;
+package com.sw.cmc.application.port.in.user;
 
 import com.sw.cmc.adapter.in.user.dto.TempLoginResponse;
-import com.sw.cmc.domain.TempLogin;
+import com.sw.cmc.domain.user.TempLogin;
 
 /**
  * packageName    : com.sw.cmc.application.port.in

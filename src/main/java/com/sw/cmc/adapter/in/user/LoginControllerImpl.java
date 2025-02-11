@@ -1,10 +1,10 @@
-package com.sw.cmc.adapter.in;
+package com.sw.cmc.adapter.in.user;
 
 import com.sw.cmc.adapter.in.user.dto.TempLoginRequest;
 import com.sw.cmc.adapter.in.user.dto.TempLoginResponse;
 import com.sw.cmc.adapter.in.user.web.LoginControllerApi;
-import com.sw.cmc.application.port.in.LoginUseCase;
-import com.sw.cmc.domain.TempLogin;
+import com.sw.cmc.application.port.in.user.LoginUseCase;
+import com.sw.cmc.domain.user.TempLogin;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
