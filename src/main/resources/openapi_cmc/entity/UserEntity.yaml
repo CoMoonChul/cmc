@@ -3,10 +3,20 @@ User:
   x-class-extra-annotation: "@jakarta.persistence.Entity"
   properties:
     userNum:
+      type: long
       x-field-extra-annotation: |
         @jakarta.persistence.Id
         @jakarta.persistence.Column(columnDefinition = "DECIMAL(10, 0) COMMENT '회원 번호'")
     userId:
+      type: string
       x-field-extra-annotation: |
         @jakarta.validation.constraints.NotNull
         @jakarta.persistence.Column(columnDefinition = "VARCHAR(50) COMMENT '회원 ID'")
+    userRole:
+      type: string
+      x-field-extra-annotation: |
+        @jakarta.persistence.Column(columnDefinition = "VARCHAR(50) COMMENT '회원 권한'")
+    refreshToken:
+      type: string
+      x-field-extra-annotation: |
+        @jakarta.persistence.Column(columnDefinition = "VARCHAR(2048) COMMENT 'Refresh Token'")

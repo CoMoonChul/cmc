@@ -44,7 +44,7 @@ public class JwtTokenProvider {
      * @param claims
      * @return token
      */
-    public Token createToken(final Claims claims) {
+    public Token createToken(final Claims claims) throws Exception {
         return Token.builder()
                 .accessToken(createToken(claims, JwtTokenType.ACCESS))
                 .accessTokenExpirationTime(accessTokenExpirationTimeInSeconds)
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
      * @param tokenType
      * @return string
      */
-    public String createToken(final Claims claims, final JwtTokenType tokenType) {
+    public String createToken(final Claims claims, final JwtTokenType tokenType) throws Exception {
         final Date now = new Date();
         return Jwts.builder()
                 .addClaims(claims)
