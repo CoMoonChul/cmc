@@ -15,5 +15,5 @@ import lombok.Setter;
 public class TempLogin {
     long userNum;
     String userId;
-    String userCode;
+    String userRole;
 }
