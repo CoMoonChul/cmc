@@ -1,5 +1,6 @@
 package com.sw.cmc.application.service.user;
 
+import com.sw.cmc.adapter.in.user.dto.JoinCheckResponse;
 import com.sw.cmc.adapter.in.user.dto.JoinResponse;
 import com.sw.cmc.adapter.in.user.dto.User;
 import com.sw.cmc.adapter.out.persistence.user.JoinRepository;
@@ -44,7 +45,7 @@ public class JoinService implements JoinUseCase {
         }
         // 닉네임 중복 검사
         if (joinRepository.findByUserName(join.getUserName()).isPresent()) {
-            throw new CmcException(messageUtil.getFormattedMessage("USER008"));
+            throw new CmcException(messageUtil.getFormattedMessage("USER009"));
         }
 
         // 회원 가입 일시
@@ -55,6 +56,22 @@ public class JoinService implements JoinUseCase {
         // 회원 생성
         joinRepository.save(modelMapper.map(join, User.class));
 
-        return new JoinResponse().resultMsg(messageUtil.getFormattedMessage("USER009"));
+        return new JoinResponse().resultMessage(messageUtil.getFormattedMessage("USER011"));
+    }
+
+    @Override
+    public JoinCheckResponse checkUserId(String userId) throws Exception {
+        if (joinRepository.findByUserId(userId).isPresent()) {
+            return new JoinCheckResponse().resultMessage(messageUtil.getFormattedMessage("USER007"));
+        }
+        return new JoinCheckResponse().resultMessage(messageUtil.getFormattedMessage("USER008"));
+    }
+
+    @Override
+    public JoinCheckResponse checkUserName(String userName) throws Exception {
+        if (joinRepository.findByUserName(userName).isPresent()) {
+            return new JoinCheckResponse().resultMessage(messageUtil.getFormattedMessage("USER009"));
+        }
+        return new JoinCheckResponse().resultMessage(messageUtil.getFormattedMessage("USER010"));
     }
 }

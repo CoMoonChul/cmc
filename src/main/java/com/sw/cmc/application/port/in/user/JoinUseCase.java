@@ -1,5 +1,6 @@
 package com.sw.cmc.application.port.in.user;
 
+import com.sw.cmc.adapter.in.user.dto.JoinCheckResponse;
 import com.sw.cmc.adapter.in.user.dto.JoinResponse;
 import com.sw.cmc.domain.user.Join;
 
@@ -12,4 +13,8 @@ import com.sw.cmc.domain.user.Join;
  */
 public interface JoinUseCase {
     JoinResponse join(Join join) throws Exception;
+
+    JoinCheckResponse checkUserId(String userId) throws Exception;
+
+    JoinCheckResponse checkUserName(String userName) throws Exception;
 }

@@ -24,7 +24,15 @@ components:
     JoinResponse:
       type: object
       properties:
-        resultMsg:
+        resultMessage:
           type: string
           description: 회원가입 결과 메시지
       description: 회원가입 응답
+
+    JoinCheckResponse:
+      type: object
+      properties:
+        resultMessage:
+          type: string
+          description: 중복 체크 결과 메시지
+      description: 중복 체크 응답
