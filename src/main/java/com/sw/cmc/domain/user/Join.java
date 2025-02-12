@@ -25,7 +25,7 @@ public class Join {
     private LocalDateTime createdDtm;
     private LocalDateTime updatedDtm;
 
-    private String resultMsg;
+    private String resultMessage;
 
     public void validateUserId(String userId, String message) {
         if (StringUtils.length(userId) < 4 || StringUtils.length(userId) > 15) {
@@ -33,19 +33,19 @@ public class Join {
         }
     }
     public void validatePassword(String password, String message) {
-        final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d).{8,20}$";
-        if (StringUtils.length(password) < 6 || !Pattern.matches(PASSWORD_REGEX, password)) {
+        final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d).{6,}$";
+        if (!Pattern.matches(PASSWORD_REGEX, password)) {
             throw new CmcException(message);
         }
     }
     public void validateEmail(String email, String message) {
         final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        if (!Pattern.matches(EMAIL_REGEX, email)) {
+        if (StringUtils.isNotEmpty(email) && !Pattern.matches(EMAIL_REGEX, email)) {
             throw new CmcException(message);
         }
     }
     public void validateUserName(String userName, String message) {
-        if (StringUtils.length(userName) > 20) {
+        if (StringUtils.length(userName) < 2 || StringUtils.length(userName) > 20) {
             throw new CmcException(message);
         }
     }

@@ -1,5 +1,6 @@
 package com.sw.cmc.adapter.in.user;
 
+import com.sw.cmc.adapter.in.user.dto.JoinCheckResponse;
 import com.sw.cmc.adapter.in.user.dto.JoinRequest;
 import com.sw.cmc.adapter.in.user.dto.JoinResponse;
 import com.sw.cmc.adapter.in.user.web.JoinControllerApi;
@@ -27,5 +28,15 @@ public class JoinControllerImpl implements JoinControllerApi {
     @Override
     public ResponseEntity<JoinResponse> join(JoinRequest joinRequest) throws Exception {
         return ResponseEntity.ok(joinUseCase.join(modelMapper.map(joinRequest, Join.class)));
+    }
+
+    @Override
+    public ResponseEntity<JoinCheckResponse> checkUserId(String userId) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUserId(userId), JoinCheckResponse.class));
+    }
+
+    @Override
+    public ResponseEntity<JoinCheckResponse> checkUserName(String userName) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUserName(userName), JoinCheckResponse.class));
     }
 }
