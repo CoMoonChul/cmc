@@ -8,12 +8,13 @@ import java.util.Optional;
 
 /**
  * packageName    : com.sw.cmc.adapter.out.persistence.user
- * fileName       : LoginRepository
+ * fileName       : JoinRepository
  * author         : SungSuHan
  * date           : 2025-02-11
  * description    :
  */
 @Repository
-public interface LoginRepository extends JpaRepository<User, Long> {
+public interface JoinRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(String userId);
+    Optional<User> findByUserName(String userName);
 }

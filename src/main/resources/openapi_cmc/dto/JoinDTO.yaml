@@ -1,0 +1,30 @@
+components:
+  schemas:
+    JoinRequest:
+      type: object
+      required:
+        - userId
+        - password
+        - userName
+      properties:
+        userId:
+          type: string
+          description: 회원 ID
+        password:
+          type: string
+          description: 회원 비밀번호
+        userName:
+          type: string
+          description: 회원명
+        email:
+          type: string
+          description: 회원 이메일
+      description: 회원가입 요청
+
+    JoinResponse:
+      type: object
+      properties:
+        resultMsg:
+          type: string
+          description: 회원가입 결과 메시지
+      description: 회원가입 응답
