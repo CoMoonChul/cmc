@@ -35,12 +35,12 @@ User:
       type: string
       x-field-extra-annotation: |
         @jakarta.persistence.Column(columnDefinition = "VARCHAR(50) COMMENT '회원 권한'")
-    createdDtm:
+    createdAt:
       type: string
       x-field-extra-annotation: |
         @jakarta.validation.constraints.NotNull
         @jakarta.persistence.Column(columnDefinition = "DATETIME COMMENT '회원 생성 일시'")
-    updatedDtm:
+    updatedAt:
       type: string
       x-field-extra-annotation: |
         @jakarta.validation.constraints.NotNull

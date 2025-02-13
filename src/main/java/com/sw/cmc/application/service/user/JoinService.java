@@ -47,7 +47,7 @@ public class JoinService implements JoinUseCase {
         }
 
         // 회원 가입 일시
-        join.setJoinDtm();
+        join.setJoinDatetime();
 
         // 회원 생성
         joinRepository.save(modelMapper.map(join, User.class));
