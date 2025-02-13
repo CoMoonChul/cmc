@@ -58,15 +58,15 @@ paths:
               schema:
                 $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinCheckResponse"
 
-  /v1/checkUserName:
+  /v1/checkUsername:
     get:
       tags:
         - join-controller
       summary: "API_USER_0003 닉네임 중복 체크"
       description: "닉네임 중복 체크 API"
-      operationId: "checkUserName"
+      operationId: "checkUsername"
       parameters:
-        - name: userName
+        - name: username
           in: query
           required: true
           schema:

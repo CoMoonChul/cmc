@@ -22,7 +22,7 @@ User:
       type: string
       x-field-extra-annotation: |
         @jakarta.persistence.Column(columnDefinition = "VARCHAR(2048) COMMENT 'Refresh Token'")
-    userName:
+    username:
       type: string
       x-field-extra-annotation: |
         @jakarta.validation.constraints.NotNull
@@ -38,10 +38,8 @@ User:
     createdAt:
       type: string
       x-field-extra-annotation: |
-        @jakarta.validation.constraints.NotNull
-        @jakarta.persistence.Column(columnDefinition = "DATETIME COMMENT '회원 생성 일시'")
+        @jakarta.persistence.Column(columnDefinition = "TIMESTAMP COMMENT '회원 생성 일시'")
     updatedAt:
       type: string
       x-field-extra-annotation: |
-        @jakarta.validation.constraints.NotNull
-        @jakarta.persistence.Column(columnDefinition = "DATETIME COMMENT '회원 변경 일시'")
+        @jakarta.persistence.Column(columnDefinition = "TIMESTAMP COMMENT '회원 변경 일시'")

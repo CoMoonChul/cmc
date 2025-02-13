@@ -16,5 +16,5 @@ public interface JoinUseCase {
 
     JoinCheckResponse checkUserId(String userId) throws Exception;
 
-    JoinCheckResponse checkUserName(String userName) throws Exception;
+    JoinCheckResponse checkUsername(String username) throws Exception;
 }

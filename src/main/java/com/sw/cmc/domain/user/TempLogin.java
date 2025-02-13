@@ -3,8 +3,6 @@ package com.sw.cmc.domain.user;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 /**
  * packageName    : com.sw.cmc.domain
  * fileName       : TempLoginDomain
@@ -18,7 +16,7 @@ public class TempLogin {
     private long userNum;
     private String userId;
     private String password;
-    private String userName;
+    private String username;
     private String email;
     private String userRole;
     private String createdAt;
