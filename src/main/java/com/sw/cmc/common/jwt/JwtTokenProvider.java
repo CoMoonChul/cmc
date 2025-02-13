@@ -2,10 +2,7 @@ package com.sw.cmc.common.jwt;
 
 import com.sw.cmc.common.config.JwtProperties;
 import com.sw.cmc.domain.user.Token;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -40,29 +37,22 @@ public class JwtTokenProvider {
      * methodName : createToken
      * author : SungSuHan
      * description :
-     *
-     * @param claims
-     * @return token
      */
     public Token createToken(final Claims claims) throws Exception {
         return Token.builder()
-                .accessToken(createToken(claims, JwtTokenType.ACCESS))
+                .accessToken(createJwtToken(claims, JwtTokenType.ACCESS))
                 .accessTokenExpirationTime(accessTokenExpirationTimeInSeconds)
-                .refreshToken(createToken(claims, JwtTokenType.REFRESH))
+                .refreshToken(createJwtToken(claims, JwtTokenType.REFRESH))
                 .refreshTokenExpirationTime(refreshTokenExpirationTimeInSeconds)
                 .build();
     }
 
     /**
-     * methodName : createToken
+     * methodName : createJwtToken
      * author : SungSuHan
      * description :
-     *
-     * @param claims
-     * @param tokenType
-     * @return string
      */
-    public String createToken(final Claims claims, final JwtTokenType tokenType) throws Exception {
+    public String createJwtToken(final Claims claims, final JwtTokenType tokenType) throws Exception {
         final Date now = new Date();
         return Jwts.builder()
                 .addClaims(claims)
@@ -73,4 +63,26 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /**
+     * methodName : getClaims
+     * author : SungSuHan
+     * description :
+     */
+    public Claims getClaims(final String token) {
+        return jwtParser.parseClaimsJws(token).getBody();
+    }
+
+    /**
+     * methodName : validateToken
+     * author : SungSuHan
+     * description :
+     */
+    public boolean validateToken(final String token) {
+        try {
+            jwtParser.parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
