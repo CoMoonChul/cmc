@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 @Repository
 public interface JoinRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUserId(String userId);
+    boolean existsByUserId(String userId);
 
-    Optional<User> findByUserName(String userName);
+    boolean existsByUserName(String userName);
 }

@@ -13,8 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 /**
  * packageName    : com.sw.cmc.application.service.user
  * fileName       : JoinService
@@ -40,18 +38,16 @@ public class JoinService implements JoinUseCase {
         join.validateUserName(join.getUserName(), messageUtil.getFormattedMessage("USER006"));
 
         // 아이디 중복 검사
-        if (joinRepository.findByUserId(join.getUserId()).isPresent()) {
+        if (joinRepository.existsByUserId(join.getUserId())) {
             throw new CmcException(messageUtil.getFormattedMessage("USER007"));
         }
         // 닉네임 중복 검사
-        if (joinRepository.findByUserName(join.getUserName()).isPresent()) {
+        if (joinRepository.existsByUserName(join.getUserName())) {
             throw new CmcException(messageUtil.getFormattedMessage("USER009"));
         }
 
         // 회원 가입 일시
-        LocalDateTime now = LocalDateTime.now();
-        join.setCreatedDtm(now);
-        join.setUpdatedDtm(now);
+        join.setJoinDtm();
 
         // 회원 생성
         joinRepository.save(modelMapper.map(join, User.class));
@@ -61,17 +57,25 @@ public class JoinService implements JoinUseCase {
 
     @Override
     public JoinCheckResponse checkUserId(String userId) throws Exception {
-        if (joinRepository.findByUserId(userId).isPresent()) {
-            return new JoinCheckResponse().resultMessage(messageUtil.getFormattedMessage("USER007"));
-        }
-        return new JoinCheckResponse().resultMessage(messageUtil.getFormattedMessage("USER008"));
+        Join join = new Join();
+
+        join.validateUserId(userId, messageUtil.getFormattedMessage("USER003"));
+
+        return new JoinCheckResponse()
+            .resultMessage(messageUtil.getFormattedMessage(
+                joinRepository.existsByUserId(userId) ? "USER007" : "USER008"
+            ));
     }
 
     @Override
     public JoinCheckResponse checkUserName(String userName) throws Exception {
-        if (joinRepository.findByUserName(userName).isPresent()) {
-            return new JoinCheckResponse().resultMessage(messageUtil.getFormattedMessage("USER009"));
-        }
-        return new JoinCheckResponse().resultMessage(messageUtil.getFormattedMessage("USER010"));
+        Join join = new Join();
+
+        join.validateUserName(userName, messageUtil.getFormattedMessage("USER006"));
+
+        return new JoinCheckResponse()
+            .resultMessage(messageUtil.getFormattedMessage(
+                joinRepository.existsByUserName(userName) ? "USER009" : "USER010"
+            ));
     }
 }
