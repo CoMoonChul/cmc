@@ -28,14 +28,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./dto/JoinDTO.yaml#/components/schemas/JoinRequest"
+              $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinRequest"
       responses:
         "200":
           description: "회원가입 성공"
           content:
             application/json:
               schema:
-                $ref: "./dto/JoinDTO.yaml#/components/schemas/JoinResponse"
+                $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinResponse"
 
   /v1/checkUserId:
     get:
@@ -56,7 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./dto/JoinDTO.yaml#/components/schemas/JoinCheckResponse"
+                $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinCheckResponse"
 
   /v1/checkUserName:
     get:
@@ -77,7 +77,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./dto/JoinDTO.yaml#/components/schemas/JoinCheckResponse"
+                $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinCheckResponse"
 
   # login-controller
   /v1/temp/login:
@@ -92,14 +92,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./dto/TempLoginDTO.yaml#/components/schemas/TempLoginRequest"
+              $ref: "./dto/user/TempLoginDTO.yaml#/components/schemas/TempLoginRequest"
       responses:
         "200":
           description: "임시로그인 성공"
           content:
             application/json:
               schema:
-                $ref: "./dto/TempLoginDTO.yaml#/components/schemas/TempLoginResponse"
+                $ref: "./dto/user/TempLoginDTO.yaml#/components/schemas/TempLoginResponse"
 
 components:
   schemas:
