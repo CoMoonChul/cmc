@@ -49,4 +49,10 @@ public class Join {
             throw new CmcException(message);
         }
     }
+
+     public void setJoinDtm() {
+         LocalDateTime now = LocalDateTime.now();
+         setCreatedDtm(now);
+         setUpdatedDtm(now);
+     }
 }
