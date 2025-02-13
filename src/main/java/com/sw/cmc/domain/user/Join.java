@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.sw.cmc.common.advice.CmcException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 /**
@@ -22,8 +23,8 @@ public class Join {
     private String password;
     private String userName;
     private String email;
-    private LocalDateTime createdDtm;
-    private LocalDateTime updatedDtm;
+    private String createdAt;
+    private String updatedAt;
 
     private String resultMessage;
 
@@ -50,9 +51,10 @@ public class Join {
         }
     }
 
-     public void setJoinDtm() {
+     public void setJoinDatetime() {
          LocalDateTime now = LocalDateTime.now();
-         setCreatedDtm(now);
-         setUpdatedDtm(now);
+         String formattedNow = now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+         setCreatedAt(formattedNow);
+         setUpdatedAt(formattedNow);
      }
 }
