@@ -6,14 +6,14 @@ CREATE TABLE IF NOT EXISTS User (
     username VARCHAR(50) NOT NULL,
     email VARCHAR(50),
     user_role VARCHAR(10),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS GroupTable (
     group_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     group_name VARCHAR(50) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS GroupMember (
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS GroupMember (
     group_id BIGINT NOT NULL,
     user_num BIGINT NOT NULL,
     group_role VARCHAR(10),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_group FOREIGN KEY (group_id) REFERENCES GroupTable(group_id),
     CONSTRAINT fk_user FOREIGN KEY (user_num) REFERENCES User(user_num),
     UNIQUE KEY unique_group_user (user_num, group_id)
@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS Comment (
     user_num BIGINT,
     target_id BIGINT NOT NULL,
     comment_target TINYINT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_comment_user FOREIGN KEY (user_num) REFERENCES User(user_num)
 );
 
@@ -43,15 +43,15 @@ CREATE TABLE IF NOT EXISTS Review (
     user_num BIGINT NOT NULL,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_review_user FOREIGN KEY (user_num) REFERENCES User(user_num)
 );
 
 CREATE TABLE IF NOT EXISTS ReviewLike (
     user_num BIGINT NOT NULL,
     review_id BIGINT NOT NULL,
-    liked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_num, review_id),
     CONSTRAINT fk_review_like_user FOREIGN KEY (user_num) REFERENCES User(user_num),
     CONSTRAINT fk_review_like_review FOREIGN KEY (review_id) REFERENCES Review(review_id)
@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS CodeEditor (
     content LONGTEXT,
     language VARCHAR(20),
     user_num BIGINT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_code_editor_user FOREIGN KEY (user_num) REFERENCES User(user_num)
 );
 
@@ -80,9 +80,9 @@ CREATE TABLE IF NOT EXISTS Battle (
     content VARCHAR(3000) NOT NULL,
     code_1 BIGINT NOT NULL,
     code_2 BIGINT NOT NULL,
-    end_time DATETIME,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    end_time TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_battle_user FOREIGN KEY (user_num) REFERENCES User(user_num),
     CONSTRAINT fk_battle_code_1 FOREIGN KEY (code_1) REFERENCES CodeEditor(code_edit_num),
     CONSTRAINT fk_battle_code_2 FOREIGN KEY (code_2) REFERENCES CodeEditor(code_edit_num)
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS NotificationTemplate (
     noti_title VARCHAR(100),
     noti_content VARCHAR(1000),
     noti_type CHAR(10) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     create_user BIGINT,
     CONSTRAINT fk_noti_template_user FOREIGN KEY (create_user) REFERENCES User(user_num)
 );
@@ -109,10 +109,10 @@ CREATE TABLE IF NOT EXISTS Notification (
     noti_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_num BIGINT NOT NULL,
     noti_template_id BIGINT NOT NULL,
-    send_at DATETIME,
+    send_at TIMESTAMP,
     send_state CHAR(1) DEFAULT 'N' NOT NULL,
     link_url VARCHAR(50),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     create_user BIGINT NOT NULL,
     CONSTRAINT fk_noti_user FOREIGN KEY (user_num) REFERENCES User(user_num),
     CONSTRAINT fk_noti_template FOREIGN KEY (noti_template_id) REFERENCES NotificationTemplate(noti_template_id),
@@ -137,8 +137,8 @@ CREATE TABLE IF NOT EXISTS Vote (
     battle_id BIGINT NOT NULL,
     user_num BIGINT,
     vote_value TINYINT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_vote_battle FOREIGN KEY (battle_id) REFERENCES Battle(battle_id),
     CONSTRAINT fk_vote_user FOREIGN KEY (user_num) REFERENCES User(user_num)
 );
