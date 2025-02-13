@@ -5,8 +5,6 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import com.sw.cmc.common.advice.CmcException;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 /**
@@ -50,11 +48,4 @@ public class Join {
             throw new CmcException(message);
         }
     }
-
-     public void setJoinDatetime() {
-         LocalDateTime now = LocalDateTime.now();
-         String formattedNow = now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-         setCreatedAt(formattedNow);
-         setUpdatedAt(formattedNow);
-     }
 }

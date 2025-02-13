@@ -48,9 +48,6 @@ public class JoinService implements JoinUseCase {
             throw new CmcException(messageUtil.getFormattedMessage("USER009"));
         }
 
-        // 회원 가입 일시
-        join.setJoinDatetime();
-
         // 회원 생성
         joinRepository.save(modelMapper.map(join, User.class));
 
