@@ -36,7 +36,7 @@ public class JoinControllerImpl implements JoinControllerApi {
     }
 
     @Override
-    public ResponseEntity<JoinCheckResponse> checkUserName(String userName) throws Exception {
-        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUserName(userName), JoinCheckResponse.class));
+    public ResponseEntity<JoinCheckResponse> checkUsername(String username) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUsername(username), JoinCheckResponse.class));
     }
 }

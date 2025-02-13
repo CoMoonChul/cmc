@@ -17,5 +17,5 @@ import java.util.Optional;
 public interface JoinRepository extends JpaRepository<User, Long> {
     boolean existsByUserId(String userId);
 
-    boolean existsByUserName(String userName);
+    boolean existsByUsername(String username);
 }
