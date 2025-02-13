@@ -38,8 +38,8 @@ User:
     createdAt:
       type: string
       x-field-extra-annotation: |
-        @jakarta.persistence.Column(columnDefinition = "TIMESTAMP COMMENT '회원 생성 일시'")
+        @jakarta.persistence.Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP COMMENT '회원 생성 일시'")
     updatedAt:
       type: string
       x-field-extra-annotation: |
-        @jakarta.persistence.Column(columnDefinition = "TIMESTAMP COMMENT '회원 변경 일시'")
+        @jakarta.persistence.Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP COMMENT '회원 변경 일시'")
