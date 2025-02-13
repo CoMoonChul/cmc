@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS group_member (
     user_num BIGINT NOT NULL,
     group_role VARCHAR(10),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_group FOREIGN KEY (group_id) REFERENCES group_table(group_id),
-    CONSTRAINT fk_user FOREIGN KEY (user_num) REFERENCES user(user_num),
+    CONSTRAINT fk_group FOREIGN KEY (group_id) REFERENCES group_table(group_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE,
     UNIQUE KEY unique_group_user (user_num, group_id)
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS comment (
     comment_target TINYINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_comment_user FOREIGN KEY (user_num) REFERENCES user(user_num)
+    CONSTRAINT fk_comment_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS review (
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS review (
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_review_user FOREIGN KEY (user_num) REFERENCES user(user_num)
+    CONSTRAINT fk_review_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS review_like (
@@ -53,14 +53,14 @@ CREATE TABLE IF NOT EXISTS review_like (
     review_id BIGINT NOT NULL,
     liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_num, review_id),
-    CONSTRAINT fk_review_like_user FOREIGN KEY (user_num) REFERENCES user(user_num),
-    CONSTRAINT fk_review_like_review FOREIGN KEY (review_id) REFERENCES review(review_id)
+    CONSTRAINT fk_review_like_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE,
+    CONSTRAINT fk_review_like_review FOREIGN KEY (review_id) REFERENCES review(review_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS review_view (
     review_id BIGINT UNIQUE NOT NULL,
     view_count BIGINT DEFAULT 0 NOT NULL,
-    CONSTRAINT fk_review_view FOREIGN KEY (review_id) REFERENCES review(review_id)
+    CONSTRAINT fk_review_view FOREIGN KEY (review_id) REFERENCES review(review_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS code_editor (
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS code_editor (
     user_num BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_code_editor_user FOREIGN KEY (user_num) REFERENCES user(user_num)
+    CONSTRAINT fk_code_editor_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS battle (
@@ -83,15 +83,15 @@ CREATE TABLE IF NOT EXISTS battle (
     end_time TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_battle_user FOREIGN KEY (user_num) REFERENCES user(user_num),
-    CONSTRAINT fk_battle_code_1 FOREIGN KEY (code_1) REFERENCES code_editor(code_edit_num),
-    CONSTRAINT fk_battle_code_2 FOREIGN KEY (code_2) REFERENCES code_editor(code_edit_num)
+    CONSTRAINT fk_battle_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE,
+    CONSTRAINT fk_battle_code_1 FOREIGN KEY (code_1) REFERENCES code_editor(code_edit_num) ON DELETE CASCADE,
+    CONSTRAINT fk_battle_code_2 FOREIGN KEY (code_2) REFERENCES code_editor(code_edit_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS battle_view (
     battle_id BIGINT UNIQUE NOT NULL,
     view_count BIGINT DEFAULT 0 NOT NULL,
-    CONSTRAINT fk_battle_view FOREIGN KEY (battle_id) REFERENCES battle(battle_id)
+    CONSTRAINT fk_battle_view FOREIGN KEY (battle_id) REFERENCES battle(battle_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS notification_template (
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS notification_template (
     noti_type CHAR(10) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     create_user BIGINT,
-    CONSTRAINT fk_noti_template_user FOREIGN KEY (create_user) REFERENCES user(user_num)
+    CONSTRAINT fk_noti_template_user FOREIGN KEY (create_user) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS notification (
@@ -128,8 +128,8 @@ CREATE TABLE IF NOT EXISTS review_tag_relation (
     relation_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     review_id BIGINT,
     tag_id BIGINT,
-    CONSTRAINT fk_review_tag_review FOREIGN KEY (review_id) REFERENCES review(review_id),
-    CONSTRAINT fk_review_tag_tag FOREIGN KEY (tag_id) REFERENCES tag(tag_id)
+    CONSTRAINT fk_review_tag_review FOREIGN KEY (review_id) REFERENCES review(review_id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_tag_tag FOREIGN KEY (tag_id) REFERENCES tag(tag_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS vote (
@@ -139,11 +139,11 @@ CREATE TABLE IF NOT EXISTS vote (
     vote_value TINYINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_vote_battle FOREIGN KEY (battle_id) REFERENCES battle(battle_id),
-    CONSTRAINT fk_vote_user FOREIGN KEY (user_num) REFERENCES user(user_num)
+    CONSTRAINT fk_vote_battle FOREIGN KEY (battle_id) REFERENCES battle(battle_id) ON DELETE CASCADE,
+    CONSTRAINT fk_vote_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
--- ReviewLike 테이블의 user_num, review_id 복합 인덱스
+-- review_like 테이블의 user_num, review_id 복합 인덱스
 SELECT COUNT(1) INTO @idxExists FROM information_schema.statistics
 WHERE table_schema = DATABASE() AND table_name = 'review_like' AND index_name = 'idx_review_like';
 SET @createIndex = IF(@idxExists = 0, 'CREATE INDEX idx_review_like ON review_like(user_num, review_id)', 'SELECT "Index already exists";');
@@ -151,7 +151,7 @@ PREPARE stmt FROM @createIndex;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- Notification 테이블의 user_num 인덱스
+-- notification 테이블의 user_num 인덱스
 SELECT COUNT(1) INTO @idxExists FROM information_schema.statistics
 WHERE table_schema = DATABASE() AND table_name = 'notification' AND index_name = 'idx_notification_user';
 SET @createIndex = IF(@idxExists = 0, 'CREATE INDEX idx_notification_user ON notification(user_num)', 'SELECT "Index already exists";');
@@ -159,15 +159,7 @@ PREPARE stmt FROM @createIndex;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- Notification 테이블의 send_state 인덱스
-SELECT COUNT(1) INTO @idxExists FROM information_schema.statistics
-WHERE table_schema = DATABASE() AND table_name = 'notification' AND index_name = 'idx_notification_state';
-SET @createIndex = IF(@idxExists = 0, 'CREATE INDEX idx_notification_state ON notification(send_state)', 'SELECT "Index already exists";');
-PREPARE stmt FROM @createIndex;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
--- Review 테이블의 user_num 인덱스
+-- review 테이블의 user_num 인덱스
 SELECT COUNT(1) INTO @idxExists FROM information_schema.statistics
 WHERE table_schema = DATABASE() AND table_name = 'review' AND index_name = 'idx_review_user';
 SET @createIndex = IF(@idxExists = 0, 'CREATE INDEX idx_review_user ON review(user_num)', 'SELECT "Index already exists";');
@@ -175,7 +167,7 @@ PREPARE stmt FROM @createIndex;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- Battle 테이블의 created_at 인덱스
+-- battle 테이블의 created_at 인덱스
 SELECT COUNT(1) INTO @idxExists FROM information_schema.statistics
 WHERE table_schema = DATABASE() AND table_name = 'battle' AND index_name = 'idx_battle_created';
 SET @createIndex = IF(@idxExists = 0, 'CREATE INDEX idx_battle_created ON battle(created_at)', 'SELECT "Index already exists";');
@@ -183,7 +175,7 @@ PREPARE stmt FROM @createIndex;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- Vote 테이블의 battle_id 인덱스
+-- vote 테이블의 battle_id 인덱스
 SELECT COUNT(1) INTO @idxExists FROM information_schema.statistics
 WHERE table_schema = DATABASE() AND table_name = 'vote' AND index_name = 'idx_vote_battle';
 SET @createIndex = IF(@idxExists = 0, 'CREATE INDEX idx_vote_battle ON vote(battle_id)', 'SELECT "Index already exists";');
@@ -191,7 +183,7 @@ PREPARE stmt FROM @createIndex;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- GroupMember 테이블의 user_num, group_id 복합 인덱스
+-- group_member 테이블의 user_num, group_id 복합 인덱스
 SELECT COUNT(1) INTO @idxExists FROM information_schema.statistics
 WHERE table_schema = DATABASE() AND table_name = 'group_member' AND index_name = 'idx_group_member';
 SET @createIndex = IF(@idxExists = 0, 'CREATE INDEX idx_group_member ON group_member(user_num, group_id)', 'SELECT "Index already exists";');
