@@ -13,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.sw.cmc.domain.user.Join.*;
+
 /**
  * packageName    : com.sw.cmc.application.service.user
  * fileName       : JoinService
@@ -32,10 +34,10 @@ public class JoinService implements JoinUseCase {
     @Transactional
     public JoinResponse join(Join join) throws Exception {
         // 유효성 검사
-        join.validateUserId(join.getUserId(), messageUtil.getFormattedMessage("USER003"));
-        join.validatePassword(join.getPassword(), messageUtil.getFormattedMessage("USER004"));
-        join.validateEmail(join.getEmail(), messageUtil.getFormattedMessage("USER005"));
-        join.validateUsername(join.getUsername(), messageUtil.getFormattedMessage("USER006"));
+        validateUserId(join.getUserId(), messageUtil.getFormattedMessage("USER003"));
+        validatePassword(join.getPassword(), messageUtil.getFormattedMessage("USER004"));
+        validateEmail(join.getEmail(), messageUtil.getFormattedMessage("USER005"));
+        validateUsername(join.getUsername(), messageUtil.getFormattedMessage("USER006"));
 
         // 아이디 중복 검사
         if (joinRepository.existsByUserId(join.getUserId())) {
@@ -57,9 +59,7 @@ public class JoinService implements JoinUseCase {
 
     @Override
     public JoinCheckResponse checkUserId(String userId) throws Exception {
-        Join join = new Join();
-
-        join.validateUserId(userId, messageUtil.getFormattedMessage("USER003"));
+        validateUserId(userId, messageUtil.getFormattedMessage("USER003"));
 
         return new JoinCheckResponse()
             .resultMessage(messageUtil.getFormattedMessage(
@@ -69,9 +69,7 @@ public class JoinService implements JoinUseCase {
 
     @Override
     public JoinCheckResponse checkUsername(String username) throws Exception {
-        Join join = new Join();
-
-        join.validateUsername(username, messageUtil.getFormattedMessage("USER006"));
+        validateUsername(username, messageUtil.getFormattedMessage("USER006"));
 
         return new JoinCheckResponse()
             .resultMessage(messageUtil.getFormattedMessage(
