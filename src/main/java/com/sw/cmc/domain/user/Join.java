@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class Join {
     private String userId;
     private String password;
-    private String userName;
+    private String username;
     private String email;
     private String createdAt;
     private String updatedAt;
@@ -45,8 +45,8 @@ public class Join {
             throw new CmcException(message);
         }
     }
-    public void validateUserName(String userName, String message) {
-        if (StringUtils.length(userName) < 2 || StringUtils.length(userName) > 20) {
+    public void validateUsername(String username, String message) {
+        if (StringUtils.length(username) < 2 || StringUtils.length(username) > 20) {
             throw new CmcException(message);
         }
     }

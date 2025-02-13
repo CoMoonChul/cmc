@@ -35,14 +35,14 @@ public class JoinService implements JoinUseCase {
         join.validateUserId(join.getUserId(), messageUtil.getFormattedMessage("USER003"));
         join.validatePassword(join.getPassword(), messageUtil.getFormattedMessage("USER004"));
         join.validateEmail(join.getEmail(), messageUtil.getFormattedMessage("USER005"));
-        join.validateUserName(join.getUserName(), messageUtil.getFormattedMessage("USER006"));
+        join.validateUsername(join.getUsername(), messageUtil.getFormattedMessage("USER006"));
 
         // 아이디 중복 검사
         if (joinRepository.existsByUserId(join.getUserId())) {
             throw new CmcException(messageUtil.getFormattedMessage("USER007"));
         }
         // 닉네임 중복 검사
-        if (joinRepository.existsByUserName(join.getUserName())) {
+        if (joinRepository.existsByUsername(join.getUsername())) {
             throw new CmcException(messageUtil.getFormattedMessage("USER009"));
         }
 
@@ -68,14 +68,14 @@ public class JoinService implements JoinUseCase {
     }
 
     @Override
-    public JoinCheckResponse checkUserName(String userName) throws Exception {
+    public JoinCheckResponse checkUsername(String username) throws Exception {
         Join join = new Join();
 
-        join.validateUserName(userName, messageUtil.getFormattedMessage("USER006"));
+        join.validateUsername(username, messageUtil.getFormattedMessage("USER006"));
 
         return new JoinCheckResponse()
             .resultMessage(messageUtil.getFormattedMessage(
-                joinRepository.existsByUserName(userName) ? "USER009" : "USER010"
+                joinRepository.existsByUsername(username) ? "USER009" : "USER010"
             ));
     }
 }
