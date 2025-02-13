@@ -1,7 +1,7 @@
-package com.sw.cmc.application.service.live_code;
+package com.sw.cmc.application.service.lcd;
 
-import com.sw.cmc.adapter.out.persistence.repositroy.LiveChatRepository;
-import com.sw.cmc.adapter.out.persistence.repositroy.LiveCodingRoomRepository;
+import com.sw.cmc.adapter.out.persistence.lcd.LiveChatRepository;
+import com.sw.cmc.adapter.out.persistence.lcd.LiveCodingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +17,5 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LiveChatService {
     private final LiveChatRepository liveChatRepository;
-    private final LiveCodingRoomRepository liveCodingRoomRepository;
+    private final LiveCodingRepository liveCodingRepository;
 }

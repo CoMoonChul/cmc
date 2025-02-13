@@ -29,7 +29,7 @@ public class LiveChat {
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
-    private LiveCodingRoom liveCodingRoom;
+    private LiveCoding liveCoding;
 
 
     private String message;  // 채팅 메시지

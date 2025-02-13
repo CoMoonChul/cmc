@@ -1,0 +1,18 @@
+components:
+  schemas:
+    LiveCoding:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: "유저 ID"
+        code:
+          type: string
+          description: "실시간 코드 내용"
+        createdAt:
+          type: string
+          description: "코딩방 생성 일시"
+        updatedAt:
+          type: string
+          description: "코딩방 마지막 수정 일시"
+      description: "실시간 코드 편집을 위한 코딩방"

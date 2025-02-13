@@ -1,6 +1,6 @@
-package com.sw.cmc.adapter.out.persistence.repositroy;
+package com.sw.cmc.adapter.out.persistence.lcd;
 
-import com.sw.cmc.domain.lcd.LiveCodingRoom;
+import com.sw.cmc.domain.lcd.LiveCoding;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
  * date           : 2025-02-08
  * description    :
  */
-public interface LiveCodingRoomRepository extends JpaRepository<LiveCodingRoom, Long> {
-    // 특정 ID로 LiveCodingRoom 조회
-    Optional<LiveCodingRoom> findById(Long id);
+public interface LiveCodingRepository extends JpaRepository<LiveCoding, Long> {
+    // 특정 ID로 LiveCoding 조회
+    Optional<LiveCoding> findById(Long id);
 }

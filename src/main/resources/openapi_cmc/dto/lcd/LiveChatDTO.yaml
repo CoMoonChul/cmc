@@ -1,0 +1,49 @@
+components:
+  schemas:
+    # LiveChat 요청 DTO (채팅 입력)
+    LiveChatRequest:
+      type: object
+      required:
+        - userId
+        - message
+      properties:
+        userId:
+          type: string
+          description: user ID
+        message:
+          type: string
+          description: 채팅 내용
+
+    # LiveChat 응답 DTO (채팅 메시지 반환)
+    LiveChatResponse:
+      type: object
+      required:
+        - userId
+        - message
+        - timestamp
+      properties:
+        userId:
+          type: string
+          description: 사용자 ID
+        message:
+          type: string
+          description: 채팅 메시지 내용
+        timestamp:
+          type: string
+          format: date-time
+          description: 메시지가 보내진 시간
+
+    # LiveChat 메시지 내역 조회 DTO
+    LiveChatHistoryResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: 사용자 ID
+        message:
+          type: string
+          description: 채팅 메시지 내용
+        timestamp:
+          type: string
+          format: date-time
+          description: 메시지 전송 시간

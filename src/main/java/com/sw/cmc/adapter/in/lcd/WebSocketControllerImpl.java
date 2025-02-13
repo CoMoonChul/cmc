@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-public class WebSocketController {
+public class WebSocketControllerImpl {
 
     @MessageMapping("/chat") // 클라이언트가 /app/chat 으로 메시지를 보낼 때 실행됨
     @SendTo("/topic/messages") // 모든 구독자에게 메시지를 전송

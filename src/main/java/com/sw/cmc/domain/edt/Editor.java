@@ -1,6 +1,6 @@
-package com.sw.cmc.domain;
+package com.sw.cmc.domain.edt;
 
-import com.sw.cmc.domain.lcd.LiveCodingRoom;
+import com.sw.cmc.domain.lcd.LiveCoding;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,7 @@ public class Editor {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
-    private LiveCodingRoom liveCodingRoom; // 라이브코딩
+    private LiveCoding liveCoding; // 라이브코딩
 
     @Column(nullable = false)
     private String code;
@@ -36,8 +36,8 @@ public class Editor {
 
 
     @Builder
-    public Editor(LiveCodingRoom liveCodingRoom, String code, String codeType) {
-        this.liveCodingRoom = liveCodingRoom;
+    public Editor(LiveCoding liveCoding, String code, String codeType) {
+        this.liveCoding = liveCoding;
         this.code = code;
         this.codeType = codeType;
     }}

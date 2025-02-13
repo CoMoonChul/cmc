@@ -1,6 +1,6 @@
 package com.sw.cmc.domain.lcd;
 
-import com.sw.cmc.domain.Editor;
+import com.sw.cmc.domain.edt.Editor;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class LiveCodingRoom {
+public class LiveCoding {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +26,19 @@ public class LiveCodingRoom {
     private Long id;
 
 
-    @OneToMany(mappedBy = "liveCodingRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "LiveCoding", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LiveChat> liveChats = new ArrayList<>();
 
     @Column(nullable = false)
     private int maxParticipants;
 
     @Builder
-    public LiveCodingRoom(String roomName, int maxParticipants) {
+    public LiveCoding(String roomName, int maxParticipants) {
         this.maxParticipants = maxParticipants;
     }
 
 
-    @OneToOne(mappedBy = "liveCodingRoom", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "LiveCoding", cascade = CascadeType.ALL)
     private Editor editor;
 
 //    public void setEditor(Editor editor) {
@@ -48,11 +48,11 @@ public class LiveCodingRoom {
 //    // 추가적인 비즈니스 로직을 위한 메서드들
 //    public void addLiveChat(LiveChat liveChat) {
 //        this.liveChats.add(liveChat);
-//        liveChat.setLiveCodingRoom(this);
+//        liveChat.setLiveCoding(this);
 //    }
 //
 //    public void removeLiveChat(LiveChat liveChat) {
 //        this.liveChats.remove(liveChat);
-//        liveChat.setLiveCodingRoom(null);
+//        liveChat.setLiveCoding(null);
 //    }
 }

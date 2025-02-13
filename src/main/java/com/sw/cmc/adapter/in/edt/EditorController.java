@@ -1,7 +1,7 @@
-package com.sw.cmc.adapter.in.lcd;
+package com.sw.cmc.adapter.in.edt;
 
-import com.sw.cmc.application.service.EditorService;
-import com.sw.cmc.domain.Editor;
+import com.sw.cmc.application.service.edt.EditorService;
+import com.sw.cmc.domain.edt.Editor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class EditorController {
 
     private final EditorService editorService;
 
-    // 특정 LiveCodingRoom의 Editor 정보 조회
+    // 특정 LiveCoding의 Editor 정보 조회
     @GetMapping("/{roomId}")
     public Editor getEditor(@PathVariable Long roomId) {
         return editorService.getEditorByRoomId(roomId).orElseThrow(() -> new RuntimeException("Editor not found"));

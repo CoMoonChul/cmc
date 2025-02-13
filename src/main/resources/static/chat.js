@@ -1,61 +1,60 @@
-document.addEventListener("DOMContentLoaded", function () {
+let stompClient = null;
 
-    console.log('######start>>>>>>>>>>>>>>>>>>>>>>>');
-    let stompClient = null;
+function connect() {
+    let socket = new SockJS("http://localhost:8080/ws"); // WebSocket 엔드포인트
+    stompClient = Stomp.over(socket);
 
+    stompClient.connect({}, function (frame) {
+        console.log("✅ WebSocket 연결됨:", frame);
 
-    document.getElementById('sendMessageBtn').addEventListener('click', function() {
-        sendMessage('Hello, this is a test message!');
+        // 메시지 수신 구독
+        stompClient.subscribe("/topic/messages", function (message) {
+            let receivedMessage = JSON.parse(message.body);
+            console.log("🔵 받은 메시지:", receivedMessage.text);
+            showMessage(receivedMessage.text);
+        });
     });
 
+    // 연결 종료 시 재연결 로직
+    socket.onclose = function () {
+        console.log("🚨 WebSocket 연결 끊김. 재연결 시도...");
+        setTimeout(connect, 3000);
+    };
+}
 
-    function connect() {
-        console.log('fn connect >>> ');
-        let socket = new SockJS("http://localhost:8080/ws");
-        stompClient = Stomp.over(socket);
+function sendMessage() {
+    let messageInput = document.getElementById("message");
+    let messageText = messageInput.value.trim();
 
-        console.log('##############');
-        console.log('socket');
-        console.log(socket);
-        console.log('##############');
-        console.log('Stomp');
-        console.log(Stomp);
-        console.log('##############');
-        console.log('stompClient');
-        console.log(stompClient);
-        console.log('##############');
-
-        stompClient.connect({}, function (frame) {
-            console.log("✅ WebSocket 연결 성공:", frame);
-
-            // 메시지 수신 핸들러
-            stompClient.subscribe("/topic/messages", function (message) {
-                showMessage(JSON.parse(message.body));
-            });
-        }, function (error) {
-            console.error("🚨 WebSocket 연결 실패:", error);
-        });
+    if (messageText && stompClient && stompClient.connected) {
+        let chatMessage = { text: messageText };
+        stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+        console.log("📤 보낸 메시지:", chatMessage.text);
+        messageInput.value = "";
+    } else {
+        console.log("⚠️ 메시지를 보낼 수 없습니다. WebSocket이 연결되지 않았거나 메시지가 비어 있습니다.");
     }
+}
 
-    function sendMessage() {
-        let messageInput = document.getElementById("message-input");
-        let message = messageInput.value.trim();
+// 메시지를 화면에 표시하는 함수
+function showMessage(message) {
+    let messageContainer = document.getElementById("messages");
+    let messageElement = document.createElement("li");
+    messageElement.textContent = message;
+    messageContainer.appendChild(messageElement);
+}
 
-        if (message && stompClient && stompClient.connected) {
-            stompClient.send("/app/chat", {}, JSON.stringify({ text: message }));
-            messageInput.value = "";
-        } else {
-            console.warn("❌ 메시지를 전송할 수 없습니다. WebSocket 연결 상태를 확인하세요.");
+// 페이지 로딩 후 WebSocket 연결 및 이벤트 리스너 추가
+document.addEventListener("DOMContentLoaded", function () {
+    connect();
+
+    document.getElementById("send").addEventListener("click", function () {
+        sendMessage();
+    });
+
+    document.getElementById("message").addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            sendMessage();
         }
-    }
-
-    function showMessage(message) {
-        let chatBox = document.getElementById("chat-box");
-        let messageElement = document.createElement("p");
-        messageElement.textContent = message.text;
-        chatBox.appendChild(messageElement);
-    }
-
-    window.onload = connect;
-
+    });
 });
