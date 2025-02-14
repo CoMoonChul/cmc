@@ -10,6 +10,18 @@ import com.sw.cmc.domain.comment.CommentDomain;
  * description    : comment usecase
  */
 public interface CommentUseCase {
+
+    /**
+     * methodName : selectComment
+     * author : IM HYUN WOO
+     * description : 댓글 단건 조회
+     *
+     * @param id
+     * @return comment domain
+     * @throws Exception the exception
+     */
+    CommentDomain selectComment(Long id) throws Exception;
+
     /**
      * methodName : createComment
      * author : IM HYUN WOO
