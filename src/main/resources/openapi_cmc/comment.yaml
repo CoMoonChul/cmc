@@ -56,6 +56,27 @@ paths:
         "400":
           description: "댓글 삭제 실패"
 
+  /updateComment:
+    post:
+      tags:
+        - comment-controller
+      summary: "댓글 수정"
+      operationId: "updateComment"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/UpdateCommentReqDTO"
+      responses:
+        "200":
+          description: "댓글 수정 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/UpdateCommentResDTO"
+        "400":
+          description: "댓글 수정 실패"
 
 components:
   schemas:

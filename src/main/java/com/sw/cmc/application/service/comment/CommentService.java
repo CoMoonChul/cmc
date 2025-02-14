@@ -4,6 +4,8 @@ import com.sw.cmc.adapter.in.comment.dto.Comment;
 import com.sw.cmc.adapter.in.guide.dto.Guide;
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
+import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.comment.CommentDomain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -27,6 +29,7 @@ public class CommentService implements CommentUseCase {
     private final EntityManager entityManager;
     private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
+    private final MessageUtil messageUtil;
 
     @Override
     @Transactional
@@ -51,5 +54,25 @@ public class CommentService implements CommentUseCase {
         commentDomain.validateDeleteComment();
         commentRepository.deleteById(commentDomain.getCommentId());
         return commentDomain;
+    }
+
+    @Override
+    public CommentDomain updateComment(CommentDomain commentDomain) throws Exception {
+        commentDomain.validateUpdateComment();
+        Comment found = commentRepository.findById(commentDomain.getCommentId())
+                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("COMMENT001")));
+        found.setContent(commentDomain.getContent());
+        found.setTargetId(commentDomain.getTargetId());
+        found.setCommentTarget(commentDomain.getCommentTarget());
+        Comment saved = commentRepository.save(found);
+        return CommentDomain.builder()
+                .commentId(saved.getCommentId())
+                .content(saved.getContent())
+                .userNum(saved.getUserNum())
+                .targetId(saved.getTargetId())
+                .commentTarget(saved.getCommentTarget())
+                .createdAt(saved.getCreatedAt())
+                .updatedAt(saved.getUpdatedAt())
+                .build();
     }
 }
