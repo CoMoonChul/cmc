@@ -29,4 +29,8 @@ public class CommentDomain {
     public void validateDeleteComment() throws Exception {
 
     }
+
+    public void validateUpdateComment() throws Exception {
+
+    }
 }

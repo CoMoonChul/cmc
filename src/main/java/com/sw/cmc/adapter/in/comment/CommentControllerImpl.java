@@ -1,9 +1,6 @@
 package com.sw.cmc.adapter.in.comment;
 
-import com.sw.cmc.adapter.in.comment.dto.CreateCommentReqDTO;
-import com.sw.cmc.adapter.in.comment.dto.CreateCommentResDTO;
-import com.sw.cmc.adapter.in.comment.dto.DeleteCommentReqDTO;
-import com.sw.cmc.adapter.in.comment.dto.DeleteCommentResDTO;
+import com.sw.cmc.adapter.in.comment.dto.*;
 import com.sw.cmc.adapter.in.comment.web.CommentControllerApi;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.domain.comment.CommentDomain;
@@ -43,5 +40,17 @@ public class CommentControllerImpl implements CommentControllerApi {
                 .commentId(deleteCommentReqDTO.getCommentId())
                 .build();
         return ResponseEntity.ok(modelMapper.map(commentUseCase.deleteComment(commentDomain), DeleteCommentResDTO.class));
+    }
+
+    @Override
+    public ResponseEntity<UpdateCommentResDTO> updateComment(UpdateCommentReqDTO updateCommentReqDTO) throws Exception {
+        CommentDomain commentDomain = CommentDomain.builder()
+                .commentId(updateCommentReqDTO.getCommentId())
+                .content(updateCommentReqDTO.getContent())
+                .userNum(updateCommentReqDTO.getUserNum())
+                .targetId(updateCommentReqDTO.getTargetId())
+                .commentTarget(updateCommentReqDTO.getCommentTarget())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(commentUseCase.updateComment(commentDomain), UpdateCommentResDTO.class));
     }
 }

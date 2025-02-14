@@ -55,3 +55,39 @@ components:
         comment_id:
           type: integer
           format: int64
+
+    UpdateCommentReqDTO:
+      type: object
+      properties:
+        comment_id:
+          type: integer
+          format: int64
+        content:
+          type: string
+        user_num:
+          type: integer
+          format: int64
+        target_id:
+          type: integer
+          format: int64
+        comment_target:
+          type: integer
+          format: int32
+
+    UpdateCommentResDTO:
+      type: object
+      properties:
+        comment_id:
+          type: integer
+          format: int64
+        content:
+          type: string
+        user_num:
+          type: integer
+          format: int64
+        target_id:
+          type: integer
+          format: int64
+        comment_target:
+          type: integer
+          format: int32
