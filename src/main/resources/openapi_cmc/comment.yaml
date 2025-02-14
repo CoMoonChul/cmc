@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: User api
+  description: Cmc User api
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: comment-controller
+    description: Comment api controller
+
+paths:
+  /createComment:
+    post:
+      tags:
+        - comment-controller
+      summary: "댓글 생성"
+      operationId: "createComment"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/CreateCommentReqDTO"
+      responses:
+        "200":
+          description: "댓글 생성 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/CreateCommentResDTO"
+        "400":
+          description: "댓글 생성 실패"
+
+
+components:
+  schemas:
+    Comment:
+      $ref: './entity/CommentEntity.yaml#/Comment'
