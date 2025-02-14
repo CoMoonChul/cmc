@@ -1,0 +1,59 @@
+components:
+  schemas:
+    UpdateReviewLikeReqDTO:
+      type: object
+      description: 리뷰 좋아요 생성/수정 요청
+      required:
+        - user_num
+        - review_id
+      properties:
+        user_num:
+          type: integer
+          format: int64
+          description: 회원번호
+        review_id:
+          type: integer
+          format: int64
+          description: 리뷰 ID
+
+    UpdateReviewLikeResDTO:
+      type: object
+      description: 리뷰 좋아요 생성/수정 응답
+      properties:
+        user_num:
+          type: integer
+          format: int64
+          description: 회원번호
+        review_id:
+          type: integer
+          format: int64
+          description: 리뷰 ID
+
+    DeleteReviewLikeReqDTO:
+      type: object
+      description: 리뷰 좋아요 삭제 요청
+      required:
+        - user_num
+        - review_id
+      properties:
+        user_num:
+          type: integer
+          format: int64
+          description: 회원번호
+        review_id:
+          type: integer
+          format: int64
+          description: 리뷰 ID
+
+    DeleteReviewLikeResDTO:
+      type: object
+      description: 리뷰 좋아요 삭제 응답
+      properties:
+        user_num:
+          type: integer
+          format: int64
+          description: 회원번호
+        review_id:
+          type: integer
+          format: int64
+          description: 리뷰 ID

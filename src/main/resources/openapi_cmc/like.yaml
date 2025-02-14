@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: Like api
+  description: Cmc Like api
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: like-controller
+    description: Like api controller
+
+paths:
+  /updateReviewLike:
+    post:
+      tags:
+        - like-controller
+      summary: "리뷰 좋아요 생성/업데이트"
+      operationId: "updateReviewLike"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/like/LikeDTO.yaml#/components/schemas/UpdateReviewLikeReqDTO"
+      responses:
+        "200":
+          description: "리뷰 좋아요 생성/업데이트 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/like/LikeDTO.yaml#/components/schemas/UpdateReviewLikeResDTO"
+        "400":
+          description: "리뷰 좋아요 생성/업데이트 실패"
+
+  /deleteReviewLike:
+    post:
+      tags:
+        - like-controller
+      summary: "리뷰 좋아요 삭제"
+      operationId: "deleteReviewLike"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/like/LikeDTO.yaml#/components/schemas/DeleteReviewLikeReqDTO"
+      responses:
+        "200":
+          description: "리뷰 좋아요 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/like/LikeDTO.yaml#/components/schemas/DeleteReviewLikeResDTO"
+        "400":
+          description: "리뷰 좋아요 삭제 실패"
+
+components:
+  schemas:
+    ReviewLike:
+      $ref: './entity/ReviewLikeEntity.yaml#/components/schemas/ReviewLike'
+#    ReviewLikeId:
+#      $ref: './entity/ReviewLikeEntity.yaml#/ReviewLikeId'

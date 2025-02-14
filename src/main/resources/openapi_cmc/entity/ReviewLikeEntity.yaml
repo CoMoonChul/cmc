@@ -1,0 +1,40 @@
+components:
+  schemas:
+    ReviewLike:
+      type: object
+      x-class-extra-annotation: "@jakarta.persistence.Entity"
+      properties:
+        id:
+          type: object
+          x-field-extra-annotation: "@jakarta.persistence.EmbeddedId"
+          properties:
+            userNum:
+              type: integer
+              format: int64
+              description: "User ID"
+            reviewId:
+              type: integer
+              format: int64
+              description: "Review ID"
+        liked_at:
+          type: string
+          description: "좋아요 등록 시간"
+          x-field-extra-annotation: |
+            @jakarta.persistence.Column(name = "liked_at", updatable = false, insertable = false)
+
+    ReviewLikeId:
+      type: object
+      x-class-extra-annotation: "@jakarta.persistence.Embeddable"
+      description: "Review Like 복합키"
+      required:
+        - userNum
+        - reviewId
+      properties:
+        userNum:
+          type: integer
+          format: int64
+          description: "User ID"
+        reviewId:
+          type: integer
+          format: int64
+          description: "Review ID"
