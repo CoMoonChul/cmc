@@ -1,0 +1,23 @@
+package com.sw.cmc.application.port.in.comment;
+
+import com.sw.cmc.domain.comment.CommentDomain;
+
+/**
+ * packageName    : com.sw.cmc.application.port.in.comment
+ * fileName       : CommentUseCase
+ * author         : ihw
+ * date           : 2025. 2. 13.
+ * description    : comment usecase
+ */
+public interface CommentUseCase {
+    /**
+     * methodName : createComment
+     * author : IM HYUN WOO
+     * description : 댓글 생성
+     *
+     * @param comment domain
+     * @return comment domain
+     * @throws Exception the exception
+     */
+    CommentDomain createComment(CommentDomain commentDomain) throws Exception;
+}

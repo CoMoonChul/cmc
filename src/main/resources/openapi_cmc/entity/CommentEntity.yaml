@@ -1,0 +1,26 @@
+Comment:
+  type: object
+  x-class-extra-annotation: "@jakarta.persistence.Entity"
+  properties:
+    comment_id:
+      type: long
+      x-field-extra-annotation: |
+        @jakarta.persistence.Id
+        @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    content:
+      type: string
+    user_num:
+      type: long
+    target_id:
+      type: long
+    comment_target:
+      type: integer
+      format: int32
+    createdAt:
+      type: string
+      x-field-extra-annotation: |
+        @jakarta.persistence.Column(name="updated_at", updatable=false, insertable=false)
+    updatedAt:
+      type: string
+      x-field-extra-annotation: |
+        @jakarta.persistence.Column(name="updated_at", insertable=false)
