@@ -72,6 +72,7 @@ public class CommentService implements CommentUseCase {
     }
 
     @Override
+    @Transactional
     public CommentDomain updateComment(CommentDomain commentDomain) throws Exception {
         commentDomain.validateUpdateComment();
         Comment found = commentRepository.findById(commentDomain.getCommentId())

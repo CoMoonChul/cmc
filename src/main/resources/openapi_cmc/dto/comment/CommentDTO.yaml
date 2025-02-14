@@ -6,21 +6,28 @@ components:
         comment_id:
           type: integer
           format: int64
+          description: 댓글 ID
         content:
           type: string
+          description: 내용
         user_num:
           type: integer
           format: int64
+          description: 회원 번호
         target_id:
           type: integer
           format: int64
+          description: 타겟 ID
         comment_target:
           type: integer
           format: int32
+          description: 타겟 구분
         created_at:
           type: string
+          description: 생성 일시
         updated_at:
           type: string
+          description: 최종 수정 일시
 
     CreateCommentReqDTO:
       type: object
@@ -32,15 +39,19 @@ components:
       properties:
         content:
           type: string
+          description: 내용
         user_num:
           type: integer
           format: int64
+          description: 회원 번호
         target_id:
           type: integer
           format: int64
+          description: 타켓 ID
         comment_target:
           type: integer
           format: int32
+          description: 타겟 구분
 
     CreateCommentResDTO:
       type: object
@@ -48,21 +59,28 @@ components:
         comment_id:
           type: integer
           format: int64
+          description: 댓글 ID
         content:
           type: string
+          description: 내용
         user_num:
           type: integer
           format: int64
+          description: 회원 번호
         target_id:
           type: integer
           format: int64
+          description: 타겟 ID
         comment_target:
           type: integer
           format: int32
+          description: 타겟 구분
         created_at:
           type: string
+          description: 생성 일시
         updated_at:
           type: string
+          description: 최종 수정 일시
 
     DeleteCommentReqDTO:
       type: object
@@ -70,6 +88,7 @@ components:
         comment_id:
           type: integer
           format: int64
+          description: 댓글 ID
 
     DeleteCommentResDTO:
       type: object
@@ -77,6 +96,7 @@ components:
         comment_id:
           type: integer
           format: int64
+          description: 댓글 ID
 
     UpdateCommentReqDTO:
       type: object
@@ -84,17 +104,22 @@ components:
         comment_id:
           type: integer
           format: int64
+          description: 댓글 ID
         content:
           type: string
+          description: 내용
         user_num:
           type: integer
           format: int64
+          description: 회원 번호
         target_id:
           type: integer
           format: int64
+          description: 타겟 ID
         comment_target:
           type: integer
           format: int32
+          description: 타겟 구분
 
     UpdateCommentResDTO:
       type: object
@@ -102,14 +127,19 @@ components:
         comment_id:
           type: integer
           format: int64
+          description: 댓글 ID
         content:
           type: string
+          description: 내용
         user_num:
           type: integer
           format: int64
+          description: 회원 번호
         target_id:
           type: integer
           format: int64
+          description: 타겟 ID
         comment_target:
           type: integer
           format: int32
+          description: 타겟 구분
