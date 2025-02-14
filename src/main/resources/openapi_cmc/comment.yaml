@@ -12,6 +12,31 @@ tags:
     description: Comment api controller
 
 paths:
+  /selectComment:
+    get:
+      tags:
+        - comment-controller
+      summary: 댓글 단건 조회
+      description: 댓글 단건 조회
+      operationId: selectComment
+      parameters:
+        - name: id
+          in: query
+          description: 댓글 id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/SelectCommentResDTO"
+        '400':
+          description: Invalid status value
+
   /createComment:
     post:
       tags:

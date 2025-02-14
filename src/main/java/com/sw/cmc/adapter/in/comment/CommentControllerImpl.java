@@ -24,6 +24,11 @@ public class CommentControllerImpl implements CommentControllerApi {
     private final CommentUseCase commentUseCase;
 
     @Override
+    public ResponseEntity<SelectCommentResDTO> selectComment(Long id) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(commentUseCase.selectComment(id), SelectCommentResDTO.class));
+    }
+
+    @Override
     public ResponseEntity<CreateCommentResDTO> createComment(CreateCommentReqDTO createCommentReqDTO) throws Exception {
         CommentDomain commentDomain = CommentDomain.builder()
                 .content(createCommentReqDTO.getContent())

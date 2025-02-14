@@ -1,5 +1,27 @@
 components:
   schemas:
+    SelectCommentResDTO:
+      type: object
+      properties:
+        comment_id:
+          type: integer
+          format: int64
+        content:
+          type: string
+        user_num:
+          type: integer
+          format: int64
+        target_id:
+          type: integer
+          format: int64
+        comment_target:
+          type: integer
+          format: int32
+        created_at:
+          type: string
+        updated_at:
+          type: string
+
     CreateCommentReqDTO:
       type: object
       required:

@@ -32,6 +32,21 @@ public class CommentService implements CommentUseCase {
     private final MessageUtil messageUtil;
 
     @Override
+    public CommentDomain selectComment(Long id) throws Exception {
+        Comment found = commentRepository.findById(id)
+                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("COMMENT001")));
+        return CommentDomain.builder()
+                .commentId(found.getCommentId())
+                .content(found.getContent())
+                .userNum(found.getUserNum())
+                .targetId(found.getTargetId())
+                .commentTarget(found.getCommentTarget())
+                .createdAt(found.getCreatedAt())
+                .updatedAt(found.getUpdatedAt())
+                .build();
+    }
+
+    @Override
     @Transactional
     public CommentDomain createComment(CommentDomain commentDomain) throws Exception {
         commentDomain.validateCreateComment();
