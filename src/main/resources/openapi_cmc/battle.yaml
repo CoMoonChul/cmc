@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: Battle api
+  description: Cmc Battle api
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: battle-controller
+    description: Battle api controller
+
+paths:
+  /example:
+    get:
+      tags:
+        - battle-controller
+      summary: "임시"
+      operationId: "example"
+      parameters:
+        - name: id
+          in: query
+          description: 임시 id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "임시"
+        "400":
+          description: "임시"
+
+components:
+  schemas:
+    Battle:
+      $ref: './entity/BattleEntity.yaml#/Battle'

@@ -93,7 +93,10 @@ tasks.named('test') {
 def cmcSwaggerMap = [
 		"guide" : "guide.yaml",
 		"user" : "user.yaml",
-		"comment": "comment.yaml"
+		"comment": "comment.yaml",
+		"view": "view.yaml",
+		"review": "review.yaml",
+		"battle": "battle.yaml"
 ]
 
 cmcSwaggerMap.each { entry ->
