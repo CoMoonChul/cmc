@@ -44,4 +44,12 @@ public class CommentService implements CommentUseCase {
                 .updatedAt(saved.getUpdatedAt())
                 .build();
     }
+
+    @Override
+    @Transactional
+    public CommentDomain deleteComment(CommentDomain commentDomain) throws Exception {
+        commentDomain.validateDeleteComment();
+        commentRepository.deleteById(commentDomain.getCommentId());
+        return commentDomain;
+    }
 }

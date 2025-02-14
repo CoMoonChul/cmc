@@ -34,6 +34,28 @@ paths:
         "400":
           description: "댓글 생성 실패"
 
+  /deleteComment:
+    post:
+      tags:
+        - comment-controller
+      summary: "댓글 삭제"
+      operationId: "deleteComment"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/DeleteCommentReqDTO"
+      responses:
+        "200":
+          description: "댓글 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/DeleteCommentResDTO"
+        "400":
+          description: "댓글 삭제 실패"
+
 
 components:
   schemas:

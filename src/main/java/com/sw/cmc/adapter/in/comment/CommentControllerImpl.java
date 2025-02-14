@@ -2,6 +2,8 @@ package com.sw.cmc.adapter.in.comment;
 
 import com.sw.cmc.adapter.in.comment.dto.CreateCommentReqDTO;
 import com.sw.cmc.adapter.in.comment.dto.CreateCommentResDTO;
+import com.sw.cmc.adapter.in.comment.dto.DeleteCommentReqDTO;
+import com.sw.cmc.adapter.in.comment.dto.DeleteCommentResDTO;
 import com.sw.cmc.adapter.in.comment.web.CommentControllerApi;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.domain.comment.CommentDomain;
@@ -33,5 +35,13 @@ public class CommentControllerImpl implements CommentControllerApi {
                 .commentTarget(createCommentReqDTO.getCommentTarget())
                 .build();
         return ResponseEntity.ok(modelMapper.map(commentUseCase.createComment(commentDomain), CreateCommentResDTO.class));
+    }
+
+    @Override
+    public ResponseEntity<DeleteCommentResDTO> deleteComment(DeleteCommentReqDTO deleteCommentReqDTO) throws Exception {
+        CommentDomain commentDomain = CommentDomain.builder()
+                .commentId(deleteCommentReqDTO.getCommentId())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(commentUseCase.deleteComment(commentDomain), DeleteCommentResDTO.class));
     }
 }
