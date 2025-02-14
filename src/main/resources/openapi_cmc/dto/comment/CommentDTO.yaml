@@ -41,3 +41,17 @@ components:
           type: string
         updated_at:
           type: string
+
+    DeleteCommentReqDTO:
+      type: object
+      properties:
+        comment_id:
+          type: integer
+          format: int64
+
+    DeleteCommentResDTO:
+      type: object
+      properties:
+        comment_id:
+          type: integer
+          format: int64

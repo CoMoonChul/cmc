@@ -20,4 +20,15 @@ public interface CommentUseCase {
      * @throws Exception the exception
      */
     CommentDomain createComment(CommentDomain commentDomain) throws Exception;
+
+    /**
+     * methodName : deleteComment
+     * author : IM HYUN WOO
+     * description : 댓글 삭제
+     *
+     * @param comment domain
+     * @return comment domain
+     * @throws Exception the exception
+     */
+    CommentDomain deleteComment(CommentDomain commentDomain) throws Exception;
 }
