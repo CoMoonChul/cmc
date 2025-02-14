@@ -1,0 +1,29 @@
+Battle:
+  type: object
+  x-class-extra-annotation: "@jakarta.persistence.Entity"
+  properties:
+    battle_id:
+      type: long
+      x-field-extra-annotation: |
+        @jakarta.persistence.Id
+        @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    user_num:
+      type: long
+    title:
+      type: string
+    content:
+      type: string
+    code_1:
+      type: long
+    code_2:
+      type: long
+    end_time:
+      type: string
+    createdAt:
+      type: string
+      x-field-extra-annotation: |
+        @jakarta.persistence.Column(name="updated_at", updatable=false, insertable=false)
+    updatedAt:
+      type: string
+      x-field-extra-annotation: |
+        @jakarta.persistence.Column(name="updated_at", insertable=false)

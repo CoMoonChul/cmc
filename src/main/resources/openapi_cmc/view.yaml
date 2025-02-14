@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: View api
+  description: Cmc View api
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: view-controller
+    description: View api controller
+
+paths:
+  /updateReviewView:
+    post:
+      tags:
+        - view-controller
+      summary: "리뷰 조회수 생성/업데이트"
+      operationId: "updateReviewView"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/view/ViewDTO.yaml#/components/schemas/UpdateReviewViewReqDTO"
+      responses:
+        "200":
+          description: "리뷰 조회수 생성/업데이트 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/view/ViewDTO.yaml#/components/schemas/UpdateReviewViewResDTO"
+        "400":
+          description: "리뷰 조회수 생성/업데이트 실패"
+
+  /updateBattleView:
+    post:
+      tags:
+        - view-controller
+      summary: "배틀 조회수 생성/업데이트"
+      operationId: "updateBattleView"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/view/ViewDTO.yaml#/components/schemas/UpdateBattleViewReqDTO"
+      responses:
+        "200":
+          description: "배틀 조회수 생성/업데이트 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/view/ViewDTO.yaml#/components/schemas/UpdateBattleViewResDTO"
+        "400":
+          description: "배틀 조회수 생성/업데이트 실패"
+
+components:
+  schemas:
+    ReviewView:
+      $ref: './entity/ReviewViewEntity.yaml#/ReviewView'
+    BattleView:
+      $ref: './entity/BattleViewEntity.yaml#/BattleView'

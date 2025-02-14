@@ -1,0 +1,59 @@
+components:
+  schemas:
+    UpdateReviewViewReqDTO:
+      type: object
+      description: 리뷰 조회수 생성/수정 요청
+      required:
+        - review_id
+        - view_count
+      properties:
+        review_id:
+          type: integer
+          format: int64
+          description: 리뷰 ID
+        view_count:
+          type: integer
+          format: int64
+          description: 조회수
+
+    UpdateReviewViewResDTO:
+      type: object
+      description: 리뷰 조회수 생성/수정 응답
+      properties:
+        review_id:
+          type: integer
+          format: int64
+          description: 리뷰 ID
+        view_count:
+          type: integer
+          format: int64
+          description: 조회수
+
+    UpdateBattleViewReqDTO:
+      type: object
+      description: 배틀 조회수 생성/수정 요청
+      required:
+        - battle_id
+        - view_count
+      properties:
+        battle_id:
+          type: integer
+          format: int64
+          description: 배틀 ID
+        view_count:
+          type: integer
+          format: int64
+          description: 조회수
+
+    UpdateBattleViewResDTO:
+      type: object
+      description: 배틀 조회수 생성/수정 응답
+      properties:
+        battle_id:
+          type: integer
+          format: int64
+          description: 배틀 ID
+        view_count:
+          type: integer
+          format: int64
+          description: 조회수
