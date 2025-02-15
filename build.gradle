@@ -93,7 +93,8 @@ tasks.named('test') {
 def cmcSwaggerMap = [
 		"guide" : "guide.yaml",
 		"user" : "user.yaml",
-		"comment": "comment.yaml"
+		"comment": "comment.yaml",
+		"notice": "notice.yaml"
 ]
 
 cmcSwaggerMap.each { entry ->
@@ -138,6 +139,8 @@ sourceSets {
 		}
 	}
 }
+
+
 
 
 compileJava.dependsOn(tasks.openApiGenerateAll)

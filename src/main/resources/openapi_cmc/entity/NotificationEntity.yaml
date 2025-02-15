@@ -1,0 +1,19 @@
+Notification:
+  type: object
+  x-class-extra-annotation: "@jakarta.persistence.Entity"
+  properties:
+    noti_id:
+      type: long
+      x-field-extra-annotation: |
+        @jakarta.persistence.Id
+        @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    user_num:
+      type: string
+    noti_template_id:
+      type: long
+    send_at:
+      type: string
+    created_at:
+      type: string
+    create_user:
+      type: long
