@@ -1,0 +1,32 @@
+components:
+  schemas:
+    SelectNoticeReqDTO:
+      type: object
+      required:
+        - userNum
+      properties:
+        userNum:
+          type: string
+          description: 회원 ID
+
+    SelectNoticeResDTO:
+      type: object
+      properties:
+        noti_id:
+          type: integer
+          format: int64
+        user_num:
+          type: integer
+          format: int64
+        noti_template_id:
+          type: integer
+          format: int64
+        send_at:
+          type: integer
+          format: int32
+        created_at:
+          type: string
+        create_user:
+          type: integer
+          format: int32
+
