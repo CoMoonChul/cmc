@@ -32,7 +32,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./dto/notice/NoticeDTO.yaml#/components/schemas/SelectNoticeResDTO"
+                $ref: "./dto/notice/NoticeDTO.yaml#/components/schemas/SelectNoticeListDTO"
         '400':
           description: Invalid status value
 

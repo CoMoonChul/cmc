@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS comment (
 CREATE TABLE IF NOT EXISTS review (
     review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_num BIGINT NOT NULL,
-    title VARCHAR(255) NOT NULL,
+    title VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -96,8 +96,8 @@ CREATE TABLE IF NOT EXISTS battle_view (
 
 CREATE TABLE IF NOT EXISTS notification_template (
     noti_template_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    noti_template_nm VARCHAR(100),
-    noti_title VARCHAR(100),
+    noti_template_nm VARCHAR(50),
+    noti_title VARCHAR(50),
     noti_content VARCHAR(1000),
     noti_type CHAR(10) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
