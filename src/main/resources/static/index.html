@@ -1,0 +1,27 @@
+<!-- 테스트 파일 입니다 . -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script defer src="chat.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #chat-container { max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+        #messages { list-style-type: none; padding: 0; }
+        #messages li { padding: 8px; border-bottom: 1px solid #ddd; }
+        input, button { padding: 10px; margin: 5px; }
+    </style>
+</head>
+<body>
+<div id="chat-container">
+    <h2>실시간 채팅</h2>
+    <ul id="messages"></ul>
+    <input type="text" id="message" placeholder="메시지를 입력하세요">
+    <button id="send">전송</button>
+</div>
+</body>
+</html>

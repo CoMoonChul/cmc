@@ -1,0 +1,90 @@
+components:
+  schemas:
+    LiveCoding:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 라이브 코딩 방 ID
+        host_id:
+          type: integer
+          format: int64
+          description: 방장 회원 ID
+        created_at:
+          type: string
+          description: 생성 일시
+        updated_at:
+          type: string
+          description: 최종 수정 일시
+
+    CreateLiveCodingReqDTO:
+      type: object
+      required:
+        - host_id
+      properties:
+        host_id:
+          type: integer
+          format: int64
+          description: 방장 회원 ID
+
+    CreateLiveCodingResDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 라이브 코딩 방 ID
+        host_id:
+          type: integer
+          format: int64
+          description: 방장 회원 ID
+        created_at:
+          type: string
+          description: 생성 일시
+        updated_at:
+          type: string
+          description: 최종 수정 일시
+
+    DeleteLiveCodingReqDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 라이브 코딩 방 ID
+
+    DeleteLiveCodingResDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 라이브 코딩 방 ID
+
+    UpdateLiveCodingReqDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 라이브 코딩 방 ID
+        host_id:
+          type: integer
+          format: int64
+          description: 방장 회원 ID
+
+    UpdateLiveCodingResDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 라이브 코딩 방 ID
+        host_id:
+          type: integer
+          format: int64
+          description: 방장 회원 ID
+        updated_at:
+          type: string
+          description: 최종 수정 일시

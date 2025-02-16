@@ -1,0 +1,86 @@
+openapi: 3.0.0
+info:
+  title: LiveCoding API
+  description: Cmc LiveCoding API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: live-coding-controller
+    description: LiveCoding API controller
+
+paths:
+  /createLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 생성"
+      operationId: "createLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/liveCodingDTO.yaml#/components/schemas/CreateLiveCodingReqDTO"
+      responses:
+        "200":
+          description: "라이브 코딩 방 생성 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/liveCodingDTO.yaml#/components/schemas/CreateLiveCodingResDTO"
+        "400":
+          description: "라이브 코딩 방 생성 실패"
+
+  /deleteLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 삭제"
+      operationId: "deleteLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/liveCodingDTO.yaml#/components/schemas/DeleteLiveCodingReqDTO"
+      responses:
+        "200":
+          description: "라이브 코딩 방 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/liveCodingDTO.yaml#/components/schemas/DeleteLiveCodingResDTO"
+        "400":
+          description: "라이브 코딩 방 삭제 실패"
+
+  /updateLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 정보 업데이트"
+      operationId: "updateLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/liveCodingDTO.yaml#/components/schemas/UpdateLiveCodingReqDTO"
+      responses:
+        "200":
+          description: "라이브 코딩 방 정보 업데이트 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/liveCodingDTO.yaml#/components/schemas/UpdateLiveCodingResDTO"
+        "400":
+          description: "라이브 코딩 방 정보 업데이트 실패"
+
+components:
+  schemas:
+    LiveCoding:
+      $ref: './entity/liveCodingEntity.yaml#/components/schemas/LiveCoding'
+
+
