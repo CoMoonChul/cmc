@@ -1,7 +1,6 @@
 package com.sw.cmc.application.service.comment;
 
 import com.sw.cmc.adapter.in.comment.dto.Comment;
-import com.sw.cmc.adapter.in.guide.dto.Guide;
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.common.advice.CmcException;
