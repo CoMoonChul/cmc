@@ -1,10 +1,8 @@
-package com.sw.cmc.adapter.in.notice;
+package com.sw.cmc.adapter.in.notice.web;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sw.cmc.adapter.in.notice.dto.Notification;
 import com.sw.cmc.adapter.in.notice.dto.SelectNoticeListDTO;
 import com.sw.cmc.adapter.in.notice.dto.SelectNoticeResDTO;
-import com.sw.cmc.adapter.in.notice.web.NoticeControllerApi;
 import com.sw.cmc.application.port.in.notice.NoticeUseCase;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -12,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * packageName    : com.sw.cmc.adapter.in.notice

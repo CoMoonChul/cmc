@@ -1,10 +1,9 @@
-package com.sw.cmc.adapter.in.like;
+package com.sw.cmc.adapter.in.like.web;
 
 import com.sw.cmc.adapter.in.like.dto.DeleteReviewLikeReqDTO;
 import com.sw.cmc.adapter.in.like.dto.DeleteReviewLikeResDTO;
 import com.sw.cmc.adapter.in.like.dto.UpdateReviewLikeReqDTO;
 import com.sw.cmc.adapter.in.like.dto.UpdateReviewLikeResDTO;
-import com.sw.cmc.adapter.in.like.web.LikeControllerApi;
 import com.sw.cmc.application.port.in.like.LikeUseCase;
 import com.sw.cmc.domain.like.LikeDomain;
 import lombok.RequiredArgsConstructor;

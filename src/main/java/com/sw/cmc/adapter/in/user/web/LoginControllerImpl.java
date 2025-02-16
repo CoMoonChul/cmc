@@ -1,8 +1,7 @@
-package com.sw.cmc.adapter.in.user;
+package com.sw.cmc.adapter.in.user.web;
 
 import com.sw.cmc.adapter.in.user.dto.TempLoginRequest;
 import com.sw.cmc.adapter.in.user.dto.TempLoginResponse;
-import com.sw.cmc.adapter.in.user.web.LoginControllerApi;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
 import com.sw.cmc.domain.user.TempLogin;
 import lombok.RequiredArgsConstructor;
