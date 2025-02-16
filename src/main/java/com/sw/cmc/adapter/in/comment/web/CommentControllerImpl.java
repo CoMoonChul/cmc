@@ -1,7 +1,6 @@
-package com.sw.cmc.adapter.in.comment;
+package com.sw.cmc.adapter.in.comment.web;
 
 import com.sw.cmc.adapter.in.comment.dto.*;
-import com.sw.cmc.adapter.in.comment.web.CommentControllerApi;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.domain.comment.CommentDomain;
 import lombok.RequiredArgsConstructor;

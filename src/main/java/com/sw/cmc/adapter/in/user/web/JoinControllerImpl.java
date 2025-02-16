@@ -1,9 +1,8 @@
-package com.sw.cmc.adapter.in.user;
+package com.sw.cmc.adapter.in.user.web;
 
 import com.sw.cmc.adapter.in.user.dto.JoinCheckResponse;
 import com.sw.cmc.adapter.in.user.dto.JoinRequest;
 import com.sw.cmc.adapter.in.user.dto.JoinResponse;
-import com.sw.cmc.adapter.in.user.web.JoinControllerApi;
 import com.sw.cmc.application.port.in.user.JoinUseCase;
 import com.sw.cmc.domain.user.Join;
 import lombok.RequiredArgsConstructor;

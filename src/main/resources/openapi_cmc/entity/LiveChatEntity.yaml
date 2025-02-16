@@ -1,0 +1,32 @@
+components:
+  schemas:
+    LiveChat:
+      type: object
+      x-class-extra-annotation: "@jakarta.persistence.Entity"
+      properties:
+        LiveChatId:
+          type: long
+          x-field-extra-annotation: |
+            @jakarta.persistence.Id
+            @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+            @jakarta.persistence.Column(columnDefinition = "BIGINT COMMENT '채팅 메시지 ID'")
+        liveCodingId:
+          type: long
+          x-field-extra-annotation: |
+            @jakarta.persistence.Column(columnDefinition = "BIGINT COMMENT '라이브 코딩 방 ID'")
+        userNum:
+          type: long
+          x-field-extra-annotation: |
+            @jakarta.persistence.Column(columnDefinition = "BIGINT COMMENT '메시지 보낸 사용자 ID'")
+        content:
+          type: string
+          x-field-extra-annotation: |
+            @jakarta.persistence.Column(columnDefinition = "TEXT COMMENT '메시지 내용'")
+        createdAt:
+          type: string
+          x-field-extra-annotation: |
+            @jakarta.persistence.Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP COMMENT '메시지 보낸 시간'")
+        updatedAt:
+          type: string
+          x-field-extra-annotation: |
+            @jakarta.persistence.Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP COMMENT '메시지 수정 시간'")

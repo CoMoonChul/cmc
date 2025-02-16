@@ -1,10 +1,9 @@
-package com.sw.cmc.adapter.in.view;
+package com.sw.cmc.adapter.in.view.web;
 
 import com.sw.cmc.adapter.in.view.dto.UpdateBattleViewReqDTO;
 import com.sw.cmc.adapter.in.view.dto.UpdateBattleViewResDTO;
 import com.sw.cmc.adapter.in.view.dto.UpdateReviewViewReqDTO;
 import com.sw.cmc.adapter.in.view.dto.UpdateReviewViewResDTO;
-import com.sw.cmc.adapter.in.view.web.ViewControllerApi;
 import com.sw.cmc.application.port.in.view.ViewUseCase;
 import com.sw.cmc.domain.view.BattleViewDomain;
 import com.sw.cmc.domain.view.ReviewViewDomain;

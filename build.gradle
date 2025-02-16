@@ -37,6 +37,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	// JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -77,6 +78,9 @@ dependencies {
 	// .env
 	implementation 'io.github.cdimascio:dotenv-java:3.0.2'
 
+	// web socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools' // 테스트용
 
 	// spring security
 //	implementation 'org.springframework.security:spring-security-core'
@@ -91,14 +95,14 @@ tasks.named('test') {
 }
 
 def cmcSwaggerMap = [
-		"guide" : "guide.yaml",
 		"user" : "user.yaml",
 		"comment": "comment.yaml",
 		"view": "view.yaml",
 		"review": "review.yaml",
 		"battle": "battle.yaml",
 		"like": "like.yaml",
-		"notice": "notice.yaml"
+		"notice": "notice.yaml",
+		"livecode": "livecode.yaml"
 ]
 
 cmcSwaggerMap.each { entry ->
