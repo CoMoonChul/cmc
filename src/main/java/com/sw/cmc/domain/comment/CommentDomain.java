@@ -4,10 +4,10 @@ import lombok.*;
 
 /**
  * packageName    : com.sw.cmc.domain.comment
- * fileName       : CreateComment
+ * fileName       : CommentDomain
  * author         : ihw
  * date           : 2025. 2. 13.
- * description    : 댓글 생성 도메인 객체
+ * description    : 댓글 도메인 객체
  */
 @Getter
 @Builder

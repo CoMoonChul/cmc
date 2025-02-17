@@ -3,6 +3,7 @@ package com.sw.cmc.adapter.in.comment.web;
 import com.sw.cmc.adapter.in.comment.dto.*;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.domain.comment.CommentDomain;
+import com.sw.cmc.domain.comment.CommentListDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,12 @@ public class CommentControllerImpl implements CommentControllerApi {
 
     private final ModelMapper modelMapper;
     private final CommentUseCase commentUseCase;
+
+    @Override
+    public ResponseEntity<SelectCommentListResDTO> selectCommentList(Long targetId, Integer commentTarget, Integer page, Integer size) throws Exception {
+        CommentListDomain result = commentUseCase.selectCommentList(targetId, commentTarget, page, size);
+        return ResponseEntity.ok(modelMapper.map(result, SelectCommentListResDTO.class));
+    }
 
     @Override
     public ResponseEntity<SelectCommentResDTO> selectComment(Long id) throws Exception {

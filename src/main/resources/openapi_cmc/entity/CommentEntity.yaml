@@ -1,6 +1,8 @@
 Comment:
   type: object
-  x-class-extra-annotation: "@jakarta.persistence.Entity"
+  x-class-extra-annotation: |
+    @jakarta.persistence.Entity
+    @jakarta.persistence.Table(name="comment")
   properties:
     comment_id:
       type: long

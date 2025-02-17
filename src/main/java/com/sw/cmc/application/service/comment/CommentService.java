@@ -6,12 +6,23 @@ import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.comment.CommentDomain;
+import com.sw.cmc.domain.comment.CommentListDomain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * packageName    : com.sw.cmc.application.service.comment
@@ -42,6 +53,23 @@ public class CommentService implements CommentUseCase {
                 .commentTarget(found.getCommentTarget())
                 .createdAt(found.getCreatedAt())
                 .updatedAt(found.getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    public CommentListDomain selectCommentList(Long targetId, Integer commentTarget, Integer page, Integer size) throws Exception {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Comment> res =  commentRepository.findByTargetIdAndCommentTarget(targetId, commentTarget, pageable);
+        List<CommentDomain> commentDomains = res.getContent().stream()
+                .map(this::convertToCommentDomain)
+                .toList();
+
+        return CommentListDomain.builder()
+                .pageNumber(res.getPageable().getPageNumber())
+                .pageSize(res.getPageable().getPageSize())
+                .totalElements(res.getTotalElements())
+                .totalPages(res.getTotalPages())
+                .commentList(commentDomains)
                 .build();
     }
 
@@ -89,5 +117,17 @@ public class CommentService implements CommentUseCase {
                 .createdAt(saved.getCreatedAt())
                 .updatedAt(saved.getUpdatedAt())
                 .build();
+    }
+
+    private CommentDomain convertToCommentDomain(Comment comment) {
+        return new CommentDomain(
+                comment.getCommentId(),
+                comment.getContent(),
+                comment.getUserNum(),
+                comment.getTargetId(),
+                comment.getCommentTarget(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        );
     }
 }

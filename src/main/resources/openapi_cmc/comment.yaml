@@ -37,6 +37,51 @@ paths:
         '400':
           description: Invalid status value
 
+  /selectCommentList:
+    get:
+      tags:
+        - comment-controller
+      summary: 댓글 다건 조회
+      description: 댓글 다건 조회
+      operationId: selectCommentList
+      parameters:
+        - name: targetId
+          in: query
+          description: 타겟 id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: commentTarget
+          in: query
+          description: 타겟 구분
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: 페이지 번호
+          required: true
+          schema:
+            default: 0
+            type: integer
+        - name: size
+          in: query
+          description: 페이지 사이즈
+          required: true
+          schema:
+            default: 10
+            type: integer
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/SelectCommentListResDTO"
+        '400':
+          description: Invalid status value
+
   /createComment:
     post:
       tags:
