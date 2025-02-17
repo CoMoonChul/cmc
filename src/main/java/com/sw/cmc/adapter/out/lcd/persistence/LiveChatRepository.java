@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * fileName       : LiveChatRepository
  * author         : Ko
  * date           : 2025-02-08
- * description    :
+ * description    : LiveChat repository
  */
 
 

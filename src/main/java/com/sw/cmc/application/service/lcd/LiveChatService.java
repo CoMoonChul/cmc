@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * fileName       : LiveChatService
  * author         : Ko
  * date           : 2025-02-08
- * description    :
+ * description    : LiveChat service
  */
 
 @Service

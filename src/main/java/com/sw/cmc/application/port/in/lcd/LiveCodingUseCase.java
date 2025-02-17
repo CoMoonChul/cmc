@@ -7,12 +7,24 @@ import com.sw.cmc.domain.lcd.LiveCodingDomain;
  * fileName       : LiveCodingUseCase
  * author         : Ko
  * date           : 2025-02-16
- * description    :
+ * description    : LiveCoding useCase
  */
 public interface LiveCodingUseCase {
 
-    // 방 생성
-    LiveCodingDomain createLiveCoding(Long hostId);
+
+    /**
+     * methodName : createLiveCoding
+     * author : KO YOUNG SUNG
+     * description : 라이브 코딩 방 생성
+     *
+     * @param hostId
+     * @return live coding domain
+     * @throws Exception the exception
+     *
+     */
+    LiveCodingDomain createLiveCoding(Long hostId)  throws Exception;
+
+
 
     // 참가자 수 업데이트
 //    LiveCodingDomain updateParticipantCount(Long roomId, Long newCount);

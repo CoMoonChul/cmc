@@ -14,7 +14,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  * fileName       : CorsConfig
  * author         : 82104
  * date           : 2025-02-12
- * description    :
+ * description    : Cors config
  */
 @Configuration
 @EnableWebSocketMessageBroker

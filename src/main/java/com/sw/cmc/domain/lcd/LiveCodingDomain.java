@@ -2,7 +2,6 @@ package com.sw.cmc.domain.lcd;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
  * fileName       : LiveCoding
  * author         : Ko
  * date           : 2025-02-08
- * description    :
+ * description    : 라이브 코딩 도메인 객체
  */
 @Getter
 @Entity
@@ -26,13 +25,18 @@ public class LiveCodingDomain  {
     @Column(nullable = false)
     private Long hostId;  // 방장 ID
 
-    @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;  // 생성 일시
 
-
     @Column(nullable = false)
     private Long participantCount;  // 참가자 수
+
+    @PrePersist
+    public void onPrePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now(); // 엔터티가 저장되기 전에 현재 시간을 설정
+        }
+    }
 
     @Builder
     public LiveCodingDomain(Long hostId) {

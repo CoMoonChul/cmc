@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
  * fileName       : LiveChatController
  * author         : Ko
  * date           : 2025-02-08
- * description    :
+ * description    : LiveChat controller
  */
 @RestController
 @RequiredArgsConstructor
