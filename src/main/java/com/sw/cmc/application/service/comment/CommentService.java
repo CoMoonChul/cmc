@@ -19,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * packageName    : com.sw.cmc.application.service.comment
  * fileName       : CommentService
@@ -40,24 +42,30 @@ public class CommentService implements CommentUseCase {
     public CommentDomain selectComment(Long id) throws Exception {
         Comment found = commentRepository.findById(id)
                 .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("COMMENT001")));
-//        return CommentDomain.builder()
-//                .commentId(found.getCommentId())
-//                .content(found.getContent())
-//                .userNum(found.getUser().getUserNum())
-//                .targetId(found.getTargetId())
-//                .commentTarget(found.getCommentTarget())
-//                .createdAt(found.getCreatedAt())
-//                .updatedAt(found.getUpdatedAt())
-//                .build();
-        return null;
+        return CommentDomain.builder()
+                .commentId(found.getCommentId())
+                .content(found.getContent())
+                .userNum(found.getUser().getUserNum())
+                .targetId(found.getTargetId())
+                .commentTarget(found.getCommentTarget())
+                .createdAt(found.getCreatedAt())
+                .updatedAt(found.getUpdatedAt())
+                .build();
     }
 
     @Override
     public CommentListDomain selectCommentList(Long targetId, Integer commentTarget, Integer page, Integer size) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Comment> res =  commentRepository.findByTargetIdAndCommentTarget(targetId, commentTarget, pageable);
+        Page<Comment> res = commentRepository.findByTargetIdAndCommentTarget(targetId, commentTarget, pageable);
+        List<CommentDomain> list = res.getContent().stream().map(this::convertEntityToDomain).toList();
 
-        return null;
+        return CommentListDomain.builder()
+                .pageNumber(res.getPageable().getPageNumber())
+                .pageSize(res.getPageable().getPageSize())
+                .totalElements(res.getTotalElements())
+                .totalPages(res.getTotalPages())
+                .commentList(list)
+                .build();
     }
 
     @Override
@@ -66,16 +74,15 @@ public class CommentService implements CommentUseCase {
         commentDomain.validateCreateComment();
         Comment saved = commentRepository.save(modelMapper.map(commentDomain, Comment.class));
         entityManager.refresh(saved);
-//        return CommentDomain.builder()
-//                .commentId(saved.getCommentId())
-//                .content(saved.getContent())
-//                .userNum(saved.getUser().getUserNum())
-//                .targetId(saved.getTargetId())
-//                .commentTarget(saved.getCommentTarget())
-//                .createdAt(saved.getCreatedAt())
-//                .updatedAt(saved.getUpdatedAt())
-//                .build();
-        return null;
+        return CommentDomain.builder()
+                .commentId(saved.getCommentId())
+                .content(saved.getContent())
+                .userNum(saved.getUser().getUserNum())
+                .targetId(saved.getTargetId())
+                .commentTarget(saved.getCommentTarget())
+                .createdAt(saved.getCreatedAt())
+                .updatedAt(saved.getUpdatedAt())
+                .build();
     }
 
     @Override
@@ -96,15 +103,28 @@ public class CommentService implements CommentUseCase {
         found.setTargetId(commentDomain.getTargetId());
         found.setCommentTarget(commentDomain.getCommentTarget());
         Comment saved = commentRepository.save(found);
-//        return CommentDomain.builder()
-//                .commentId(saved.getCommentId())
-//                .content(saved.getContent())
-//                .userNum(saved.getUser().getUserNum())
-//                .targetId(saved.getTargetId())
-//                .commentTarget(saved.getCommentTarget())
-//                .createdAt(saved.getCreatedAt())
-//                .updatedAt(saved.getUpdatedAt())
-//                .build();
-        return null;
+        return CommentDomain.builder()
+                .commentId(saved.getCommentId())
+                .content(saved.getContent())
+                .userNum(saved.getUser().getUserNum())
+                .targetId(saved.getTargetId())
+                .commentTarget(saved.getCommentTarget())
+                .createdAt(saved.getCreatedAt())
+                .updatedAt(saved.getUpdatedAt())
+                .build();
+    }
+
+    private CommentDomain convertEntityToDomain(Comment c) {
+        return new CommentDomain(
+                c.getCommentId(),
+                c.getContent(),
+                c.getUser().getUserNum(),
+                c.getTargetId(),
+                c.getCommentTarget(),
+                c.getCreatedAt(),
+                c.getUpdatedAt(),
+                c.getUser().getUsername(),
+                c.getUser().getEmail()
+        );
     }
 }
