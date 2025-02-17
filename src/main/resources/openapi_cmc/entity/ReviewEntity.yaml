@@ -8,15 +8,19 @@ Review:
         @jakarta.persistence.Id
         @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     user_num:
-      type: long
+      type: string
     title:
       type: string
+      x-field-extra-annotation: |
+        @jakarta.persistence.Column(length = 255, nullable = false)
     content:
       type: string
+      x-field-extra-annotation: |
+        @jakarta.persistence.Column(columnDefinition = "TEXT", nullable = false)
     createdAt:
       type: string
       x-field-extra-annotation: |
-        @jakarta.persistence.Column(name="updated_at", updatable=false, insertable=false)
+        @jakarta.persistence.Column(name="created_at", updatable=false, insertable=false)
     updatedAt:
       type: string
       x-field-extra-annotation: |
