@@ -1,5 +1,7 @@
 package com.sw.cmc.application.port.in.review;
 
+import com.sw.cmc.domain.comment.CommentDomain;
+import com.sw.cmc.domain.review.ReViewDomain;
 import com.sw.cmc.entity.Review;
 
 import java.util.List;
@@ -20,5 +22,5 @@ public interface ReviewUseCase {
      * @return review domain
      * @throws Exception the exception
      */
-    List<Review> selectReview(String userNum) throws Exception;
+    ReViewDomain selectReview(Long reviewId) throws Exception;
 }

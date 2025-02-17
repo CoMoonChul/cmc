@@ -13,33 +13,21 @@ tags:
 
 paths:
   /selectReview:
+# /reviews/{id}
     get:
       tags:
         - review-controller
-      summary: 리뷰 리스트 조회
-      description: 리뷰 리스트 조회
+      summary: 리뷰 단건 조회
+      description: 리뷰 단건 조회
       operationId: selectReview
       parameters:
-        - name: userNum
+        - name: review_id
           in: query
-          description: 유저 ID
+          description: 리뷰 ID
           required: true
           schema:
-            type: string
-#        - name: page // 페이징 작업중
-#          in: query
-#          description: 페이지 번호 (0부터 시작)
-#          required: false
-#          schema:
-#            type: integer
-#            default: 0
-#        - name: size
-#          in: query
-#          description: 한 페이지당 리뷰 개수
-#          required: false
-#          schema:
-#            type: integer
-#            default: 10
+            type: integer
+            format: int64
       responses:
         '200':
           description: 리뷰 조회 성공
@@ -47,5 +35,59 @@ paths:
             application/json:
               schema:
                 $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/SelectReviewResDTO"
+        '400':
+          description: Invalid status value
+  /selectReviewList:
+    get:
+      tags:
+        - review-controller
+      summary: 리뷰 리스트 조회
+      description: 리뷰 리스트 조회
+      operationId: selectReviewList
+      parameters:
+        - name: pageNumber
+          in: query
+          description: 페이지 번호 (0부터 시작)
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: pageSize
+          in: query
+          description: 한 페이지당 리뷰 개수
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description:
+            정렬 기준 (createdAt, likes...)
+          required: false
+          schema:
+            type: string
+            enum: [createdAt, updatedAt, title]
+            default: "createdAt"
+        - name: order
+          in: query
+          description: 정렬 순서 (오름/ 내림)
+          required: false
+          schema:
+            type: string
+            enum: [ asc, desc ]
+            default: "desc"
+        - name: keyword
+          in: query
+          description: 검색 키워드
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 리뷰 리스트 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/SelectReviewListResDTO"
         '400':
           description: Invalid status value

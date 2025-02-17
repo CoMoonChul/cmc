@@ -15,5 +15,5 @@ import java.util.List;
  */
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findAllByUserNum(String userNum);
+//    List<Review> findAllByUserNum(String userNum);
 }
