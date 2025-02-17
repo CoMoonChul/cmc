@@ -1,6 +1,7 @@
 package com.sw.cmc.application.port.in.comment;
 
 import com.sw.cmc.domain.comment.CommentDomain;
+import com.sw.cmc.domain.comment.CommentListDomain;
 
 /**
  * packageName    : com.sw.cmc.application.port.in.comment
@@ -54,4 +55,18 @@ public interface CommentUseCase {
      * @throws Exception the exception
      */
     CommentDomain updateComment(CommentDomain commentDomain) throws Exception;
+
+    /**
+     * methodName : selectCommentList
+     * author : IM HYUN WOO
+     * description : targetId, commentTarget 기반 댓글 다건 조회
+     *
+     * @param target  id
+     * @param comment target
+     * @param page
+     * @param size
+     * @return comment list domain
+     * @throws Exception the exception
+     */
+    CommentListDomain selectCommentList(Long targetId, Integer commentTarget, Integer page, Integer size) throws Exception;
 }
