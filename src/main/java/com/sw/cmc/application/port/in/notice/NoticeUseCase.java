@@ -1,7 +1,6 @@
 package com.sw.cmc.application.port.in.notice;
 
-import com.sw.cmc.adapter.in.notice.dto.Notification;
-import com.sw.cmc.domain.notice.NoticeDomain;
+import com.sw.cmc.entity.Notification;
 
 import java.util.List;
 

@@ -55,10 +55,3 @@ paths:
                 $ref: "./dto/view/ViewDTO.yaml#/components/schemas/UpdateBattleViewResDTO"
         "400":
           description: "배틀 조회수 생성/업데이트 실패"
-
-components:
-  schemas:
-    ReviewView:
-      $ref: './entity/ReviewViewEntity.yaml#/ReviewView'
-    BattleView:
-      $ref: './entity/BattleViewEntity.yaml#/BattleView'

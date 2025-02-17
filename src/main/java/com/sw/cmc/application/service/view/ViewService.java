@@ -1,7 +1,5 @@
 package com.sw.cmc.application.service.view;
 
-import com.sw.cmc.adapter.in.view.dto.BattleView;
-import com.sw.cmc.adapter.in.view.dto.ReviewView;
 import com.sw.cmc.adapter.out.battle.persistence.BattleRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.adapter.out.view.persistence.BattleViewRepository;
@@ -11,6 +9,8 @@ import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.view.BattleViewDomain;
 import com.sw.cmc.domain.view.ReviewViewDomain;
+import com.sw.cmc.entity.BattleView;
+import com.sw.cmc.entity.ReviewView;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

@@ -1,6 +1,6 @@
 package com.sw.cmc.adapter.out.user.persistence;
 
-import com.sw.cmc.adapter.in.user.dto.User;
+import com.sw.cmc.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

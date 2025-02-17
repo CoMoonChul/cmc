@@ -1,6 +1,6 @@
 package com.sw.cmc.adapter.out.battle.persistence;
 
-import com.sw.cmc.adapter.in.battle.dto.Battle;
+import com.sw.cmc.entity.Battle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

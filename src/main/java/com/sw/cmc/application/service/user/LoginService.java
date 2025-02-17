@@ -1,7 +1,7 @@
 package com.sw.cmc.application.service.user;
 
 import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
-import com.sw.cmc.adapter.in.user.dto.User;
+import com.sw.cmc.entity.User;
 import com.sw.cmc.adapter.out.user.persistence.LoginRepository;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
 import com.sw.cmc.common.advice.CmcException;

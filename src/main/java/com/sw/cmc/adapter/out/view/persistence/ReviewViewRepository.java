@@ -1,7 +1,6 @@
 package com.sw.cmc.adapter.out.view.persistence;
 
-import com.sw.cmc.adapter.in.comment.dto.Comment;
-import com.sw.cmc.adapter.in.view.dto.ReviewView;
+import com.sw.cmc.entity.ReviewView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

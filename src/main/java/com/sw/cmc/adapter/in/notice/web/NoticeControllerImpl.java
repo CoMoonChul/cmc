@@ -1,9 +1,9 @@
 package com.sw.cmc.adapter.in.notice.web;
 
-import com.sw.cmc.adapter.in.notice.dto.Notification;
 import com.sw.cmc.adapter.in.notice.dto.SelectNoticeListDTO;
 import com.sw.cmc.adapter.in.notice.dto.SelectNoticeResDTO;
 import com.sw.cmc.application.port.in.notice.NoticeUseCase;
+import com.sw.cmc.entity.Notification;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;

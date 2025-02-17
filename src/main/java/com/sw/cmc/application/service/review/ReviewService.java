@@ -1,8 +1,8 @@
 package com.sw.cmc.application.service.review;
 
-import com.sw.cmc.adapter.in.review.dto.Review;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
+import com.sw.cmc.entity.Review;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

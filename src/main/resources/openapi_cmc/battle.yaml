@@ -31,8 +31,3 @@ paths:
           description: "임시"
         "400":
           description: "임시"
-
-components:
-  schemas:
-    Battle:
-      $ref: './entity/BattleEntity.yaml#/Battle'

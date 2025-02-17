@@ -55,10 +55,3 @@ paths:
                 $ref: "./dto/like/LikeDTO.yaml#/components/schemas/DeleteReviewLikeResDTO"
         "400":
           description: "리뷰 좋아요 삭제 실패"
-
-components:
-  schemas:
-    ReviewLike:
-      $ref: './entity/ReviewLikeEntity.yaml#/components/schemas/ReviewLike'
-#    ReviewLikeId:
-#      $ref: './entity/ReviewLikeEntity.yaml#/ReviewLikeId'

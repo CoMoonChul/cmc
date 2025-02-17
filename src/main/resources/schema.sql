@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS user (
     user_num BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(50) NOT NULL,
+    password VARCHAR(100) NOT NULL,
     refresh_token VARCHAR(2048),
     username VARCHAR(50) NOT NULL,
     email VARCHAR(50),

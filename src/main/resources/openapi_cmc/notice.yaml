@@ -35,9 +35,3 @@ paths:
                 $ref: "./dto/notice/NoticeDTO.yaml#/components/schemas/SelectNoticeListDTO"
         '400':
           description: Invalid status value
-
-
-components:
-  schemas:
-    Notification:
-      $ref: './entity/NotificationEntity.yaml#/Notification'
