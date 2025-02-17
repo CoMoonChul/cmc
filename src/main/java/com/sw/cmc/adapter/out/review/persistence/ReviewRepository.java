@@ -1,7 +1,6 @@
 package com.sw.cmc.adapter.out.review.persistence;
 
-import com.sw.cmc.adapter.in.review.dto.Review;
-import com.sw.cmc.adapter.in.view.dto.BattleView;
+import com.sw.cmc.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

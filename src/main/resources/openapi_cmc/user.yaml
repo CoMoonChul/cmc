@@ -100,8 +100,3 @@ paths:
             application/json:
               schema:
                 $ref: "./dto/user/TempLoginDTO.yaml#/components/schemas/TempLoginResDTO"
-
-components:
-  schemas:
-    User:
-      $ref: './entity/UserEntity.yaml#/User'

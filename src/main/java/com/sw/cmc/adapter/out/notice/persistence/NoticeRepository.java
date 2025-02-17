@@ -1,6 +1,6 @@
 package com.sw.cmc.adapter.out.notice.persistence;
 
-import com.sw.cmc.adapter.in.notice.dto.Notification;
+import com.sw.cmc.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

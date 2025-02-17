@@ -1,13 +1,13 @@
 package com.sw.cmc.application.service.like;
 
-import com.sw.cmc.adapter.in.like.dto.ReviewLike;
-import com.sw.cmc.adapter.in.like.dto.ReviewLikeId;
 import com.sw.cmc.adapter.out.like.persistence.ReviewLikeRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.like.LikeUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.like.LikeDomain;
+import com.sw.cmc.entity.ReviewLike;
+import com.sw.cmc.entity.ReviewLikeId;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

@@ -147,8 +147,3 @@ paths:
                 $ref: "./dto/comment/CommentDTO.yaml#/components/schemas/UpdateCommentResDTO"
         "400":
           description: "댓글 수정 실패"
-
-components:
-  schemas:
-    Comment:
-      $ref: './entity/CommentEntity.yaml#/Comment'

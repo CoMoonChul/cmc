@@ -77,10 +77,3 @@ paths:
                 $ref: "./dto/lcd/liveCodingDTO.yaml#/components/schemas/UpdateLiveCodingResDTO"
         "400":
           description: "라이브 코딩 방 정보 업데이트 실패"
-
-components:
-  schemas:
-    LiveCoding:
-      $ref: './entity/liveCodingEntity.yaml#/components/schemas/LiveCoding'
-
-

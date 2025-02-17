@@ -21,6 +21,8 @@ public class CommentDomain {
     private Integer commentTarget;
     private String createdAt;
     private String updatedAt;
+    private String userName;
+    private String email;
 
     public void validateCreateComment() throws Exception {
 

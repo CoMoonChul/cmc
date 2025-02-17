@@ -2,7 +2,7 @@ package com.sw.cmc.application.service.user;
 
 import com.sw.cmc.adapter.in.user.dto.CheckJoinResDTO;
 import com.sw.cmc.adapter.in.user.dto.JoinResDTO;
-import com.sw.cmc.adapter.in.user.dto.User;
+import com.sw.cmc.entity.User;
 import com.sw.cmc.adapter.out.user.persistence.JoinRepository;
 import com.sw.cmc.application.port.in.user.JoinUseCase;
 import com.sw.cmc.common.advice.CmcException;

@@ -1,8 +1,8 @@
 package com.sw.cmc.application.service.notice;
 
-import com.sw.cmc.adapter.in.notice.dto.Notification;
 import com.sw.cmc.adapter.out.notice.persistence.NoticeRepository;
 import com.sw.cmc.application.port.in.notice.NoticeUseCase;
+import com.sw.cmc.entity.Notification;
 import com.sw.cmc.event.notice.SendNotiEmailEvent;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

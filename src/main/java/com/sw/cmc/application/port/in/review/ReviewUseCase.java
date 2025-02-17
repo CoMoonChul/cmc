@@ -1,6 +1,6 @@
 package com.sw.cmc.application.port.in.review;
 
-import com.sw.cmc.adapter.in.review.dto.Review;
+import com.sw.cmc.entity.Review;
 
 import java.util.List;
 

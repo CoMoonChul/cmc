@@ -1,6 +1,6 @@
 package com.sw.cmc.adapter.out.lcd.persistence;
 
-import com.sw.cmc.adapter.in.livecode.dto.LiveCoding;
+import com.sw.cmc.entity.LiveCoding;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package com.sw.cmc.adapter.out.like.persistence;
 
-import com.sw.cmc.adapter.in.like.dto.ReviewLike;
-import com.sw.cmc.adapter.in.like.dto.ReviewLikeId;
+import com.sw.cmc.entity.ReviewLike;
+import com.sw.cmc.entity.ReviewLikeId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -49,8 +49,3 @@ paths:
                 $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/SelectReviewResDTO"
         '400':
           description: Invalid status value
-
-components:
-  schemas:
-    Review:
-      $ref: './entity/ReviewEntity.yaml#/Review'
