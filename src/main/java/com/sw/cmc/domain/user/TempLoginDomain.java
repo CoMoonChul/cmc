@@ -12,13 +12,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class TempLogin {
+public class TempLoginDomain {
     private long userNum;
     private String userId;
     private String password;
     private String username;
     private String email;
     private String userRole;
-    private String createdAt;
-    private String updatedAt;
 }

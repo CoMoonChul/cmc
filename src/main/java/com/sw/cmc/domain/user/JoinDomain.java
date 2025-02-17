@@ -16,13 +16,11 @@ import java.util.regex.Pattern;
  */
 @Getter
 @Setter
-public class Join {
+public class JoinDomain {
     private String userId;
     private String password;
     private String username;
     private String email;
-    private String createdAt;
-    private String updatedAt;
 
     private String resultMessage;
 
