@@ -1,6 +1,6 @@
 components:
   schemas:
-    JoinRequest:
+    JoinReqDTO:
       type: object
       required:
         - userId
@@ -21,7 +21,7 @@ components:
           description: 회원 이메일
       description: 회원가입 요청
 
-    JoinResponse:
+    JoinResDTO:
       type: object
       properties:
         resultMessage:
@@ -29,7 +29,7 @@ components:
           description: 회원가입 결과 메시지
       description: 회원가입 응답
 
-    JoinCheckResponse:
+    CheckJoinResDTO:
       type: object
       properties:
         resultMessage:

@@ -1,9 +1,9 @@
 package com.sw.cmc.adapter.in.user.web;
 
-import com.sw.cmc.adapter.in.user.dto.TempLoginRequest;
-import com.sw.cmc.adapter.in.user.dto.TempLoginResponse;
+import com.sw.cmc.adapter.in.user.dto.TempLoginReqDTO;
+import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
-import com.sw.cmc.domain.user.TempLogin;
+import com.sw.cmc.domain.user.TempLoginDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class LoginControllerImpl implements LoginControllerApi {
     private final ModelMapper modelMapper;
 
     @Override
-    public ResponseEntity<TempLoginResponse> tempLogin(TempLoginRequest tempLoginRequest) throws Exception {
-        return ResponseEntity.ok(loginUseCase.tempLogin(modelMapper.map(tempLoginRequest, TempLogin.class)));
+    public ResponseEntity<TempLoginResDTO> tempLogin(TempLoginReqDTO tempLoginReqDTO) throws Exception {
+        return ResponseEntity.ok(loginUseCase.tempLogin(modelMapper.map(tempLoginReqDTO, TempLoginDomain.class)));
     }
 }

@@ -1,13 +1,13 @@
 package com.sw.cmc.application.service.user;
 
-import com.sw.cmc.adapter.in.user.dto.TempLoginResponse;
+import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
 import com.sw.cmc.adapter.in.user.dto.User;
 import com.sw.cmc.adapter.out.user.persistence.LoginRepository;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.LoginUtil;
 import com.sw.cmc.common.util.MessageUtil;
-import com.sw.cmc.domain.user.TempLogin;
+import com.sw.cmc.domain.user.TempLoginDomain;
 import com.sw.cmc.domain.user.Token;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,21 +32,21 @@ public class LoginService implements LoginUseCase {
     private final LoginRepository loginRepository;
 
     @Override
-    public TempLoginResponse tempLogin(final TempLogin tempLogin) throws Exception {
+    public TempLoginResDTO tempLogin(final TempLoginDomain tempLoginDomain) throws Exception {
         // 회원 조회
-        final TempLogin tempLoginInfo = modelMapper.map(loginRepository.findByUserId(tempLogin.getUserId())
-                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("USER001"))), TempLogin.class);
+        final TempLoginDomain tempLoginDomainInfo = modelMapper.map(loginRepository.findByUserId(tempLoginDomain.getUserId())
+                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("USER001"))), TempLoginDomain.class);
 
         // 관리자 확인
-        if (!Objects.equals(tempLoginInfo.getUserRole(), "ADMIN")) {
+        if (!Objects.equals(tempLoginDomainInfo.getUserRole(), "ADMIN")) {
             throw new CmcException(messageUtil.getFormattedMessage("USER002"));
         }
 
         // 토큰 생성
-        Token token = loginUtil.createToken(tempLoginInfo.getUserNum());
+        Token token = loginUtil.createToken(tempLoginDomainInfo.getUserNum());
 
         // User 엔티티
-        final User user = modelMapper.map(tempLoginInfo, User.class);
+        final User user = modelMapper.map(tempLoginDomainInfo, User.class);
 
         // Refresh Token 저장
         user.setRefreshToken(token.getRefreshToken());
@@ -54,6 +54,6 @@ public class LoginService implements LoginUseCase {
         // DB 저장
         loginRepository.save(user);
 
-        return modelMapper.map(token, TempLoginResponse.class);
+        return modelMapper.map(token, TempLoginResDTO.class);
     }
 }

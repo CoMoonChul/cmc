@@ -1,6 +1,6 @@
 components:
   schemas:
-    TempLoginRequest:
+    TempLoginReqDTO:
       type: object
       required:
         - userId
@@ -10,7 +10,7 @@ components:
           description: 회원 ID
       description: 임시로그인 요청
 
-    TempLoginResponse:
+    TempLoginResDTO:
       type: object
       properties:
         accessToken:

@@ -1,10 +1,10 @@
 package com.sw.cmc.adapter.in.user.web;
 
-import com.sw.cmc.adapter.in.user.dto.JoinCheckResponse;
-import com.sw.cmc.adapter.in.user.dto.JoinRequest;
-import com.sw.cmc.adapter.in.user.dto.JoinResponse;
+import com.sw.cmc.adapter.in.user.dto.CheckJoinResDTO;
+import com.sw.cmc.adapter.in.user.dto.JoinReqDTO;
+import com.sw.cmc.adapter.in.user.dto.JoinResDTO;
 import com.sw.cmc.application.port.in.user.JoinUseCase;
-import com.sw.cmc.domain.user.Join;
+import com.sw.cmc.domain.user.JoinDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +25,17 @@ public class JoinControllerImpl implements JoinControllerApi {
     private final ModelMapper modelMapper;
 
     @Override
-    public ResponseEntity<JoinResponse> join(JoinRequest joinRequest) throws Exception {
-        return ResponseEntity.ok(joinUseCase.join(modelMapper.map(joinRequest, Join.class)));
+    public ResponseEntity<JoinResDTO> join(JoinReqDTO joinReqDTO) throws Exception {
+        return ResponseEntity.ok(joinUseCase.join(modelMapper.map(joinReqDTO, JoinDomain.class)));
     }
 
     @Override
-    public ResponseEntity<JoinCheckResponse> checkUserId(String userId) throws Exception {
-        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUserId(userId), JoinCheckResponse.class));
+    public ResponseEntity<CheckJoinResDTO> checkUserId(String userId) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUserId(userId), CheckJoinResDTO.class));
     }
 
     @Override
-    public ResponseEntity<JoinCheckResponse> checkUsername(String username) throws Exception {
-        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUsername(username), JoinCheckResponse.class));
+    public ResponseEntity<CheckJoinResDTO> checkUsername(String username) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUsername(username), CheckJoinResDTO.class));
     }
 }
