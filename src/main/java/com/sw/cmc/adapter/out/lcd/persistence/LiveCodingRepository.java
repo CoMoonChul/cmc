@@ -1,6 +1,6 @@
 package com.sw.cmc.adapter.out.lcd.persistence;
 
-import com.sw.cmc.domain.lcd.LiveCodingDomain;
+import com.sw.cmc.adapter.in.livecode.dto.LiveCoding;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
  * fileName       : LiveCodingRepository
  * author         : Ko
  * date           : 2025-02-08
- * description    :
+ * description    : LiveCoding Repository
  */
 @Repository
-public interface LiveCodingRepository extends JpaRepository<LiveCodingDomain, Long> {
-    LiveCodingDomain findByHostId(Long hostId);
+public interface LiveCodingRepository extends JpaRepository<LiveCoding, Long> {
+    LiveCoding findByHostId(Long hostId);
 }

@@ -10,7 +10,7 @@ import lombok.Setter;
  * fileName       : webSocketMessage
  * author         : 82104
  * date           : 2025-02-11
- * description    :
+ * description    : 웹소켓 도메인 객체
  */
 
 @Getter

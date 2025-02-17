@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
  * fileName       : LiveChat
  * author         : Ko
  * date           : 2025-02-08
- * description    :
+ * description    : 라이브 채팅 도메인 객체
  */
 
 @Entity

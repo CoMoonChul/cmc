@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * fileName       : LiveCodingService
  * author         : Ko
  * date           : 2025-02-08
- * description    :
+ * description    : LiveCoding service
  */
 @Service
 @RequiredArgsConstructor

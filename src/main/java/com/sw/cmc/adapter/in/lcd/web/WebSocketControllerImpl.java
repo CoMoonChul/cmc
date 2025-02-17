@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
  * fileName       : WebSocketController
  * author         : 82104
  * date           : 2025-02-11
- * description    :
+ * description    : 웹소켓 컨트롤러
  */
 
 @RestController

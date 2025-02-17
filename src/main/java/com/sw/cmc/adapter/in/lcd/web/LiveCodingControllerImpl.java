@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * fileName       : LiveCodingController
  * author         : Ko
  * date           : 2025-02-08
- * description    :
+ * description    : 실시간 코딩 controller
  */
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +26,6 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
 
 
     @Override
-    @PostMapping("/create")
     public ResponseEntity<CreateLiveCodingResDTO> createLiveCoding(@RequestBody CreateLiveCodingReqDTO liveCodingRequest) throws Exception {
         // 요청 DTO를 도메인 객체로 변환
         LiveCodingDomain liveCodingDomain = liveCodingUseCase.createLiveCoding(liveCodingRequest.getHostId());
