@@ -1,5 +1,6 @@
 package com.sw.cmc.domain.notice;
 
+import com.sw.cmc.entity.NotificationTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,15 @@ public class NoticeDomain {
     private Long userNum;
     private Long notiTemplateId;
     private String sendAt;
+    private String sendState;
     private String linkUrl;
-    private String createAt;
+    private String createdAt;
     private Long createUser;
+    private String notiTemplateNm;
+    private String notiTitle;
+    private String notiContent;
+    private String notiType;
+
+
+
 }

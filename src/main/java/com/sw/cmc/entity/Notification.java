@@ -22,13 +22,22 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notiId;
 
+    @Column(nullable = false)
     private String userNum;
 
-    private Long notiTemplateId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "noti_template_id", referencedColumnName = "notiTemplateId", nullable = false)
+    private NotificationTemplate notiTemplate;
 
     private String sendAt;
+
+    private String sendState;
+
+    private String linkUrl;
 
     private String createdAt;
 
     private Long createUser;
+
+
 }

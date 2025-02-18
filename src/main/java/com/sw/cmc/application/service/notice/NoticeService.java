@@ -2,6 +2,10 @@ package com.sw.cmc.application.service.notice;
 
 import com.sw.cmc.adapter.out.notice.persistence.NoticeRepository;
 import com.sw.cmc.application.port.in.notice.NoticeUseCase;
+import com.sw.cmc.domain.comment.CommentDomain;
+import com.sw.cmc.domain.notice.NotiListDomain;
+import com.sw.cmc.domain.notice.NoticeDomain;
+import com.sw.cmc.entity.Comment;
 import com.sw.cmc.entity.Notification;
 import com.sw.cmc.event.notice.SendNotiEmailEvent;
 import jakarta.persistence.EntityManager;
@@ -9,9 +13,15 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * packageName    : com.sw.cmc.application.service.notice
@@ -36,6 +46,20 @@ public class NoticeService implements NoticeUseCase {
         return notice;
     }
 
+    @Override
+    public NotiListDomain selectPageNotice(String userNum, Integer page, Integer size) throws Exception {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Notification> res = noticeRepository.findByUserNum(userNum, pageable);
+        List<NoticeDomain> list = res.getContent().stream().map(this::convertEntityToNotice).toList();
+        return NotiListDomain.builder()
+                .pageNumber(res.getPageable().getPageNumber())
+                .pageSize(res.getPageable().getPageSize())
+                .totalPages(res.getTotalPages())
+                .totalElements(res.getTotalElements())
+                .notiList(list)
+                .build();
+    }
+
     public void ExampleFunction() throws Exception {
         // event.notice.SendNotiEmailEvent는 adapter.in.smtp.event.SmtpEventListener를 트리거하게 됩니다.
         // (SendNotiEmailEvent라는 타입 기반 이벤트 트리거)
@@ -56,5 +80,23 @@ public class NoticeService implements NoticeUseCase {
                 .text(template + (StringUtils.equals(type, "01") ? "반가워" : "오랜만이야"))
                 .build();
         eventPublisher.publishEvent(sendNotiEmailEvent);
+    }
+
+
+    private NoticeDomain convertEntityToNotice(Notification n) {
+        return new NoticeDomain(
+                n.getNotiId(),
+                Long.parseLong(n.getUserNum()),  // String → Long 변환
+                n.getNotiTemplate().getNotiTemplateId(),  // NotificationTemplate → Long 변환
+                n.getSendAt(),
+                n.getSendState(),
+                n.getLinkUrl(),
+                n.getCreatedAt(),
+                n.getCreateUser(),
+                n.getNotiTemplate().getNotiTemplateNm(),  // 추가된 필드 매핑
+                n.getNotiTemplate().getNotiTitle(),
+                n.getNotiTemplate().getNotiContent(),
+                n.getNotiTemplate().getNotiType()
+        );
     }
 }

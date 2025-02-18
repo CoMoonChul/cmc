@@ -35,3 +35,44 @@ paths:
                 $ref: "./dto/notice/NoticeDTO.yaml#/components/schemas/SelectNoticeListDTO"
         '400':
           description: Invalid status value
+
+  /selectPageNotice:
+    get:
+      tags:
+        - notice-controller
+      summary: 알림 리스트 조회(페이징)
+      description: 페이징된 알림 리스트를 조회합니다.
+      operationId: selectPageNotice
+      parameters:
+        - name: userNum
+          in: query
+          description: 유저 ID
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: 요청할 페이지 번호 (0부터 시작)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            example: 0
+        - name: size
+          in: query
+          description: 한 페이지 당 개수
+          required: false
+          schema:
+            type: integer
+            format: int32
+            example: 10
+      responses:
+        '200':
+          description: 알림 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/notice/NoticeDTO.yaml#/components/schemas/SelectNoticeListDTO"
+        '400':
+          description: 잘못된 요청입니다.
+

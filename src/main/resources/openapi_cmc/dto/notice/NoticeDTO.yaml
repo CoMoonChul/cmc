@@ -9,6 +9,30 @@ components:
           type: string
           description: 회원 ID
 
+    SelectNoticePageReqDTO:
+      type: object
+      properties:
+        userNum:
+          type: string
+          description: 회원 ID
+        page:
+          type: integer
+          format: int32
+          description: 요청할 페이지 번호 (0부터 시작)
+          example: 0
+        size:
+          type: integer
+          format: int32
+          description: 한 페이지에 표시할 개수
+          example: 10
+        sort:
+          type: string
+          description: '정렬 기준 필드 (예: createdAt, sendAt)'
+          example: "createdAt,desc"
+
+
+
+
     SelectNoticeResDTO:
       type: object
       properties:
@@ -23,21 +47,39 @@ components:
           format: int64
         send_at:
           type: string
+        send_state:
+          type: string
+        link_url:
+          type: string
         created_at:
           type: string
         create_user:
           type: integer
           format: int32
+        noti_template_nm:
+          type: string
+        noti_title:
+          type: string
+        noti_content:
+          type: string
+        noti_type:
+          type: string
 
     SelectNoticeListDTO:
       type: object
       properties:
-        total:
+        pageNumber:
           type: integer
-          format: int32
-        noticeList:
+        pageSize:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        notiList:
           type: array
           items:
             $ref: '#/components/schemas/SelectNoticeResDTO'
+
 
 
