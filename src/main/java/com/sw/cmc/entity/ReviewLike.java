@@ -31,6 +31,6 @@ public class ReviewLike {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("reviewId")
-    @JoinColumn(name = "reviewId", referencedColumnName = "reviewId", nullable = false)
+    @JoinColumn(name = "review_id", referencedColumnName = "review_id", nullable = false)
     private Review review;
 }

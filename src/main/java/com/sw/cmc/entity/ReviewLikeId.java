@@ -1,5 +1,6 @@
 package com.sw.cmc.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +22,10 @@ import java.io.Serializable;
 @Embeddable
 public class ReviewLikeId implements Serializable {
 
+    @Column(name = "user_num")
     private Long userNum;
+
+    @Column(name = "review_id")
     private Long reviewId;
 
     public ReviewLikeId(Long userNum, Long reviewId) {
