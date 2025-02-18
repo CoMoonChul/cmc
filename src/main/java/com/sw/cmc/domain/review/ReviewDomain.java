@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * packageName    : com.sw.cmc.domain.review
- * fileName       : ReViewDomain
+ * fileName       : ReviewDomain
  * author         : Park Jong Il
  * date           : 25. 2. 18.
  * description    :
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReViewDomain {
+public class ReviewDomain {
     private Long reviewId;
 
 }

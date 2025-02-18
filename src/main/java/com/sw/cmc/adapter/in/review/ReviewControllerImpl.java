@@ -21,6 +21,7 @@ public class ReviewControllerImpl implements ReviewControllerApi {
 
     private final ModelMapper modelMapper;
     private final ReviewUseCase reviewUseCase;
+
     @Override
     public ResponseEntity<SelectReviewResDTO> selectReview(Long reviewId) throws Exception {
         return ResponseEntity.ok(modelMapper.map(reviewUseCase.selectReview(reviewId), SelectReviewResDTO.class));

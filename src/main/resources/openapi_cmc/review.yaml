@@ -13,7 +13,6 @@ tags:
 
 paths:
   /selectReview:
-# /reviews/{id}
     get:
       tags:
         - review-controller
