@@ -78,9 +78,14 @@ dependencies {
 	// .env
 	implementation 'io.github.cdimascio:dotenv-java:3.0.2'
 
+
 	// web socket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools' // 테스트용
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'io.lettuce.core:lettuce-core'
+
 
 	// spring security
 //	implementation 'org.springframework.security:spring-security-core'
