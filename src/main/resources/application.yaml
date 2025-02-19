@@ -92,4 +92,4 @@ security:
     - /v1/join
     # Login
     - /v1/login
-    - /v1/temp/Login
+    - /v1/temp/login
