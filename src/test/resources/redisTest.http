@@ -1,0 +1,22 @@
+### Redis 항목 저장
+POST http://localhost:8080/saveRedis
+Content-Type: application/json
+
+{
+  "key": "ko",
+  "value": "1111"
+}
+
+### Redis 항목 조회
+GET http://localhost:8080/getRedis/AHN
+
+### Redis 항목 삭제
+POST http://localhost:8080/deleteRedis
+Content-Type: application/json
+
+{
+  "key": "k1"
+}
+
+### 모든 Redis 항목 조회
+GET http://localhost:8080/getAllRedis
