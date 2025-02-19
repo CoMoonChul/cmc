@@ -1,0 +1,12 @@
+### Redis 저장
+POST http://localhost:8080/redis/save?key=testKey&value=testValue
+
+### Redis 조회
+GET http://localhost:8080/redis/get?key=testKey
+
+### Redis 삭제
+DELETE http://localhost:8080/redis/delete?key=testKey
+
+### Redis 전체 키 조회
+GET http://localhost:8080/redis/keys
+
