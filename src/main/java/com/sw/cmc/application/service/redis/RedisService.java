@@ -1,10 +1,14 @@
 package com.sw.cmc.application.service.redis;
 
-import com.sw.cmc.adapter.out.redis.persistence.RedisRepository;
+import com.sw.cmc.adapter.in.redis.dto.SelectRedisResDTO;
+import com.sw.cmc.application.port.in.redis.RedisUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -16,23 +20,35 @@ import java.util.Set;
  */
 @Service
 @RequiredArgsConstructor
-public class RedisService {
+public class RedisService implements RedisUseCase {
 
-    private final RedisRepository redisRepository;
-
-    public void setValue(String key, String value) {
-        redisRepository.save(key, value);
+    private final StringRedisTemplate redisTemplate;
+    @Override
+    public void save(String key, String value) {
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set(key, value);
     }
 
-    public String getValue(String key) {
-        return redisRepository.get(key);
+    @Override
+    public String get(String key) {
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        return ops.get(key);
     }
 
-    public void deleteKey(String key) {
-        redisRepository.delete(key);
+    @Override
+    public List<SelectRedisResDTO> getAll() {
+        return redisTemplate.keys("*").stream()
+                .map(key -> {
+                    String value = redisTemplate.opsForValue().get(key);
+                    SelectRedisResDTO dto = new SelectRedisResDTO();
+                    dto.setKey(key);
+                    dto.setValue(value);
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
-    public Set<String> getAllKeys() {
-        return redisRepository.getAllKeys();
+    @Override
+    public void delete(String key) {
+        redisTemplate.delete(key);
     }
 }

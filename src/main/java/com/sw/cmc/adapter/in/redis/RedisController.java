@@ -1,9 +1,14 @@
 package com.sw.cmc.adapter.in.redis;
 
-import com.sw.cmc.application.service.redis.RedisService;
+
+import com.sw.cmc.application.port.in.redis.RedisUseCase;
+import com.sw.cmc.domain.redis.RedisDomain;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Set;
+
+import java.util.List;
 
 
 /**
@@ -14,36 +19,36 @@ import java.util.Set;
  * description    : redis controller
  */
 @RestController
-@RequestMapping("/redis")
 @RequiredArgsConstructor
-public class RedisController {
-    private final RedisService redisService;
+public class RedisController  {
+    private final ModelMapper modelMapper;
+    private final RedisUseCase redisUseCase;
 
-    // 키-값 저장
-    @PostMapping("/save")
-    public String saveKeyValue(@RequestParam String key, @RequestParam String value) {
-        redisService.setValue(key, value);
-        return "Key-Value pair saved successfully.";
+    @Override
+    public ResponseEntity<RedisResDTO> saveRedis(RedisReqDTO redisReqDTO) throws Exception {
+        RedisDomain redisDomain = modelMapper.map(redisReqDTO, RedisDomain.class);
+        redisUseCase.save(redisReqDTO.getKey(), redisDomain);
+        return ResponseEntity.ok(modelMapper.map(redisDomain, RedisResDTO.class));
     }
 
-    // 키로 값 조회
-    @GetMapping("/get")
-    public String getValue(@RequestParam String key) {
-        String value = redisService.getValue(key);
-        return value != null ? value : "Key not found.";
+    @Override
+    public ResponseEntity<RedisResDTO> getRedis(String key) throws Exception {
+        RedisDomain redisDomain = redisUseCase.get(key);
+        return ResponseEntity.ok(modelMapper.map(redisDomain, RedisResDTO.class));
     }
 
-    // 키 삭제
-    @DeleteMapping("/delete")
-    public String deleteKey(@RequestParam String key) {
-        redisService.deleteKey(key);
-        return "Key deleted successfully.";
+    @Override
+    public ResponseEntity<Void> deleteRedis(String key) throws Exception {
+        redisUseCase.delete(key);
+        return ResponseEntity.noContent().build();
     }
 
-    // 모든 키 조회
-    @GetMapping("/keys")
-    public Set<String> getAllKeys() {
-        return redisService.getAllKeys();
+    @Override
+    public ResponseEntity<List<RedisResDTO>> getAllRedis() throws Exception {
+        List<RedisDomain> redisDomains = redisUseCase.getAll();
+        List<RedisResDTO> response = redisDomains.stream()
+                .map(domain -> modelMapper.map(domain, RedisResDTO.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
-
 }

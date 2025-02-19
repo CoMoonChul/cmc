@@ -1,10 +1,14 @@
 package com.sw.cmc.adapter.out.redis.persistence;
 
-import lombok.RequiredArgsConstructor;
+import com.sw.cmc.domain.redis.RedisDomain;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * packageName    : com.sw.cmc.adapter.out.redis.persistence
@@ -14,28 +18,27 @@ import java.util.Set;
  * description    : redis repository
  */
 @Repository
-@RequiredArgsConstructor
-public class RedisRepository {
+public class RedisRepository  {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public void save(String key, String value) {
+    @Autowired
+    public RedisRepository(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    // Redis에 데이터 저장
+    public void save(String key, Object value) {
         redisTemplate.opsForValue().set(key, value);
     }
 
-    public String get(String key) {
+    // Redis에서 데이터 조회
+    public Object get(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
+    // Redis에서 데이터 삭제
     public void delete(String key) {
         redisTemplate.delete(key);
-    }
-
-    public Set<String> getAllKeys() {
-        System.out.println('f');
-        System.out.println('f');
-        System.out.println('f');
-        System.out.println('f');
-        return redisTemplate.keys("*");
     }
 }

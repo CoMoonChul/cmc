@@ -1,12 +1,36 @@
 ### Redis 저장
-POST http://localhost:8080/redis/save?key=testKey&value=testValue
+POST http://localhost:8080/redis/save?key=sgan&value=33
 
 ### Redis 조회
-GET http://localhost:8080/redis/get?key=testKey
+GET http://localhost:8080/redis/get?key=A
 
 ### Redis 삭제
 DELETE http://localhost:8080/redis/delete?key=testKey
 
+
 ### Redis 전체 키 조회
 GET http://localhost:8080/redis/keys
 
+################################################################################################################################
+### Redis 항목 저장
+POST http://localhost:8080/saveRedis
+Content-Type: application/json
+
+{
+  "key": "k2",
+  "value": "1111"
+}
+
+### Redis 항목 조회
+GET http://localhost:8080/getRedis/k1
+
+### Redis 항목 삭제
+POST http://localhost:8080/deleteRedis
+Content-Type: application/json
+
+{
+  "key": "k1"
+}
+
+### 모든 Redis 항목 조회
+GET http://localhost:8080/getAllRedis

@@ -105,7 +105,8 @@ def cmcSwaggerMap = [
 		"battle": "battle.yaml",
 		"like": "like.yaml",
 		"notice": "notice.yaml",
-		"livecode": "livecode.yaml"
+		"livecode": "livecode.yaml",
+		"redis": "redis.yaml"
 ]
 
 cmcSwaggerMap.each { entry ->
