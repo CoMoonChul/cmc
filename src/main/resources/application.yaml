@@ -86,30 +86,10 @@ security:
     # Swagger
     - /swagger-ui/**
     - /v3/api-docs/**
-    # Join
+#    # Join
     - /v1/checkUserId
     - /v1/checkUsername
     - /v1/join
-    # Comment
-    - /createComment
-    - /deleteComment
-    - /selectComment
-    - /updateComment
-    - /createComment
-    # Like
-    - /deleteReviewLike
-    - /updateReviewLike
-    # LiveCoding
-    - /createLiveCoding
-    - /deleteLiveCoding
-    - /updateLiveCoding
     # Login
     - /v1/login
     - /v1/tempLogin
-    # Notice
-    - /selectNotice
-    # Review
-    - /selectReview
-    # View
-    - /updateBattleView
-    - /updateReviewView
