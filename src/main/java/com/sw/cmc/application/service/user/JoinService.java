@@ -10,6 +10,8 @@ import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.user.JoinDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,8 @@ public class JoinService implements JoinUseCase {
     private final MessageUtil messageUtil;
     private final ModelMapper modelMapper;
     private final JoinRepository joinRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -47,6 +51,11 @@ public class JoinService implements JoinUseCase {
         if (joinRepository.existsByUsername(joinDomain.getUsername())) {
             throw new CmcException(messageUtil.getFormattedMessage("USER009"));
         }
+
+        String encodedPassword = passwordEncoder.encode(joinDomain.getPassword());
+
+        // 암호화된 비밀번호를 User 객체에 설정
+        joinDomain.setPassword(encodedPassword);
 
         // 회원 생성
         joinRepository.save(modelMapper.map(joinDomain, User.class));

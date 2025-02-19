@@ -1,8 +1,11 @@
 package com.sw.cmc.adapter.in.user.web;
 
+import com.sw.cmc.adapter.in.user.dto.LoginReqDTO;
+import com.sw.cmc.adapter.in.user.dto.LoginResDTO;
 import com.sw.cmc.adapter.in.user.dto.TempLoginReqDTO;
 import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
+import com.sw.cmc.domain.user.LoginDomain;
 import com.sw.cmc.domain.user.TempLoginDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,5 +29,10 @@ public class LoginControllerImpl implements LoginControllerApi {
     @Override
     public ResponseEntity<TempLoginResDTO> tempLogin(TempLoginReqDTO tempLoginReqDTO) throws Exception {
         return ResponseEntity.ok(loginUseCase.tempLogin(modelMapper.map(tempLoginReqDTO, TempLoginDomain.class)));
+    }
+
+    @Override
+    public ResponseEntity<LoginResDTO> login(LoginReqDTO loginReqDTO) throws Exception {
+        return ResponseEntity.ok(loginUseCase.login(modelMapper.map(loginReqDTO, LoginDomain.class)));
     }
 }
