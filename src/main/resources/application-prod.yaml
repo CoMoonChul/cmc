@@ -47,12 +47,12 @@ server:
 
 springdoc:
   api-docs:
-    enabled: true
+    enabled: false
     version: 'OPENAPI_3_0'
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
-    enabled: true
+    enabled: false
     operations-sorter: alpha
     tags-sorter: alpha
     path: /swagger-ui.html
