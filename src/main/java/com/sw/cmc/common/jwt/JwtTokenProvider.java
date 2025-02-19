@@ -1,6 +1,5 @@
 package com.sw.cmc.common.jwt;
 
-import com.sw.cmc.common.config.JwtProperties;
 import com.sw.cmc.domain.user.Token;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

@@ -20,9 +20,10 @@ public class LoginUtil {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public Token createToken(final long userNum) throws Exception {
+    public Token createToken(final long userNum, final String userId) throws Exception {
 
         final Claims claims = Jwts.claims();
+        claims.setSubject(userId);
         claims.put("userNum", userNum);
 
         return jwtTokenProvider.createToken(claims);

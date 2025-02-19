@@ -1,0 +1,32 @@
+components:
+  schemas:
+    LoginReqDTO:
+      type: object
+      required:
+        - userId
+        - password
+      properties:
+        userId:
+          type: string
+          description: 회원 ID
+        password:
+          type: string
+          description: 회원 비밀번호
+      description: 임시로그인 요청
+
+    LoginResDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: Access Token
+        accessTokenExpirationTime:
+          type: number
+          description: Access Token 만료 시간
+        refreshToken:
+          type: string
+          description: Refresh Token
+        refreshTokenExpirationTime:
+          type: number
+          description: Refresh Token 만료 시간
+      description: 임시로그인 응답

@@ -100,3 +100,24 @@ paths:
             application/json:
               schema:
                 $ref: "./dto/user/TempLoginDTO.yaml#/components/schemas/TempLoginResDTO"
+
+  /v1/login:
+    post:
+      tags:
+        - login-controller
+      summary: "API_USER_0004 로그인"
+      description: 로그인 API
+      operationId: "login"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/user/LoginDTO.yaml#/components/schemas/LoginReqDTO"
+      responses:
+        "200":
+          description: "로그인 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/user/LoginDTO.yaml#/components/schemas/LoginResDTO"

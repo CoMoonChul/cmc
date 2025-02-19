@@ -65,3 +65,36 @@ jwt:
     secret-key: eH0SIMQPTgoK7M1ZpyEbkOqmVXGby7JO
     access-token-expiration-time-in-seconds: 300 # 5분
     refresh-token-expiration-time-in-seconds: 77760000 # 90일
+
+security:
+  apiWhitelist:
+    # Swagger
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    # Join
+    - /v1/checkUserId
+    - /v1/checkUsername
+    - /v1/join
+    # Comment
+    - /createComment
+    - /deleteComment
+    - /selectComment
+    - /updateComment
+    - /createComment
+    # Like
+    - /deleteReviewLike
+    - /updateReviewLike
+    # LiveCoding
+    - /createLiveCoding
+    - /deleteLiveCoding
+    - /updateLiveCoding
+    # Login
+    - /v1/login
+    - /v1/tempLogin
+    # Notice
+    - /selectNotice
+    # Review
+    - /selectReview
+    # View
+    - /updateBattleView
+    - /updateReviewView

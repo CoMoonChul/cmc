@@ -1,6 +1,8 @@
 package com.sw.cmc.application.port.in.user;
 
+import com.sw.cmc.adapter.in.user.dto.LoginResDTO;
 import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
+import com.sw.cmc.domain.user.LoginDomain;
 import com.sw.cmc.domain.user.TempLoginDomain;
 
 /**
@@ -12,4 +14,6 @@ import com.sw.cmc.domain.user.TempLoginDomain;
  */
 public interface LoginUseCase {
     TempLoginResDTO tempLogin(TempLoginDomain tempLoginDomain) throws Exception;
+
+    LoginResDTO login(LoginDomain loginDomain) throws Exception;
 }

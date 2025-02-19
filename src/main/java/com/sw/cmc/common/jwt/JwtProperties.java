@@ -1,4 +1,4 @@
-package com.sw.cmc.common.config;
+package com.sw.cmc.common.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
