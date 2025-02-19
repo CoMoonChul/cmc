@@ -61,7 +61,7 @@ paths:
         - name: sort
           in: query
           description:
-            정렬 기준 (createdAt, likes...)
+            정렬 기준 (createdAt, likes)
           required: false
           schema:
             type: string
@@ -81,6 +81,19 @@ paths:
           required: false
           schema:
             type: string
+#        - name: filterType
+#          in: query
+#          description: 사용자 관련 필터 타입 (작성/답변/좋아요한 리뷰)
+#          required: false
+#          schema:
+#            type: string
+#            enum: [ written, replied, liked ]
+#        - name: userNum
+#          in: query
+#          description: 사용자 식별자
+#          required: false
+#          schema:
+#            type: integer
       responses:
         '200':
           description: 리뷰 리스트 조회 성공

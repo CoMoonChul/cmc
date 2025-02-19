@@ -18,5 +18,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewDomain {
     private Long reviewId;
-
+    private Long userNum;
+    private String title;
+    private String content;
+    private String createdAt;
+    private String updatedAt;
 }
