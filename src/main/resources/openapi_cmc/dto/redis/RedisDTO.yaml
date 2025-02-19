@@ -1,0 +1,40 @@
+components:
+  schemas:
+    SaveRedisReqDTO:
+      type: object
+      required:
+        - key
+        - value
+      properties:
+        key:
+          type: string
+          description: Redis 항목의 키
+        value:
+          type: string
+          description: Redis 항목의 값
+
+    SaveRedisResDTO:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 성공 메시지
+
+    SelectRedisResDTO:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Redis 항목의 키
+        value:
+          type: string
+          description: Redis 항목의 값
+
+    DeleteRedisReqDTO:
+      type: object
+      required:
+        - key
+      properties:
+        key:
+          type: string
+          description: Redis 항목의 키
