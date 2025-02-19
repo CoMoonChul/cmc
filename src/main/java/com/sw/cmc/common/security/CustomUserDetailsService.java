@@ -1,10 +1,12 @@
 package com.sw.cmc.common.security;
 
-import com.sw.cmc.adapter.in.user.dto.User;
+import com.sw.cmc.entity.User;
 import com.sw.cmc.adapter.out.user.persistence.LoginRepository;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
+import com.sw.cmc.domain.user.LoginDomain;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
