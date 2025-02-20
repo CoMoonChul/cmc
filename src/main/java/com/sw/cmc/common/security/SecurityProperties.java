@@ -12,7 +12,7 @@ import java.util.List;
  * fileName       : SecurityProperties
  * author         : SungSuHan
  * date           : 2025-02-19
- * description    :
+ * description    : API 화이트리스트 설정
  */
 @Component
 @ConfigurationProperties(prefix = "security")

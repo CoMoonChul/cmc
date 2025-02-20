@@ -22,7 +22,7 @@ import java.util.Objects;
  * fileName       : JwtAuthenticationFilter
  * author         : SungSuHan
  * date           : 2025-02-17
- * description    :
+ * description    : JWT Token 검증, SecurityContext 설정
  */
 @Component
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (Objects.nonNull(userDetails)) {
                 JwtAuthenticationToken authentication = new JwtAuthenticationToken(userDetails, token, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication); // 사용자의 정보 저장
             }
         }
         filterChain.doFilter(request, response);
@@ -59,4 +59,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         return null;
     }
+
 }

@@ -10,7 +10,7 @@ import java.util.Collection;
  * fileName       : JwtAuthenticationToken
  * author         : SungSuHan
  * date           : 2025-02-17
- * description    :
+ * description    : JWT Token 인증 정보
  */
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
@@ -40,4 +40,5 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     public Object getPrincipal() {
         return principal;
     }
+
 }

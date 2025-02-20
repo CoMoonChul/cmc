@@ -14,7 +14,7 @@ import java.util.Date;
  * fileName       : JwtTokenProvider
  * author         : SungSuHan
  * date           : 2025-02-10
- * description    :
+ * description    : JWT Token 생성, 검증
  */
 @Component
 public class JwtTokenProvider {
@@ -32,11 +32,6 @@ public class JwtTokenProvider {
         refreshTokenExpirationTimeInSeconds = 1_000 * properties.getToken().getRefreshTokenExpirationTimeInSeconds();
     }
 
-    /**
-     * methodName : createToken
-     * author : SungSuHan
-     * description :
-     */
     public Token createToken(final Claims claims) throws Exception {
         return Token.builder()
                 .accessToken(createJwtToken(claims, JwtTokenType.ACCESS))
@@ -46,11 +41,6 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    /**
-     * methodName : createJwtToken
-     * author : SungSuHan
-     * description :
-     */
     public String createJwtToken(final Claims claims, final JwtTokenType tokenType) throws Exception {
         final Date now = new Date();
         return Jwts.builder()
@@ -62,20 +52,10 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    /**
-     * methodName : getClaims
-     * author : SungSuHan
-     * description :
-     */
     public Claims getClaims(final String token) {
         return jwtParser.parseClaimsJws(token).getBody();
     }
 
-    /**
-     * methodName : validateToken
-     * author : SungSuHan
-     * description :
-     */
     public boolean validateToken(final String token) {
         try {
             jwtParser.parseClaimsJws(token);
@@ -84,4 +64,5 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
 }

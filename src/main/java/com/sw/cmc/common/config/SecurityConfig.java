@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * fileName       : SecurityConfig
  * author         : SungSuHan
  * date           : 2025-02-17
- * description    :
+ * description    : Spring Security 보안 설정
  */
 @Configuration
 @EnableWebSecurity

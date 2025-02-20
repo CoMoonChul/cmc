@@ -10,7 +10,6 @@ import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.user.JoinDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +30,7 @@ public class JoinService implements JoinUseCase {
     private final MessageUtil messageUtil;
     private final ModelMapper modelMapper;
     private final JoinRepository joinRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional

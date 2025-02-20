@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * fileName       : JwtProperties
  * author         : SungSuHan
  * date           : 2025-02-10
- * description    :
+ * description    : JWT Token 설정
  */
 @Getter
 @Configuration

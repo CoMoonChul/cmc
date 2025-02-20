@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * fileName       : CustomUserDetailsService
  * author         : SungSuHan
  * date           : 2025-02-17
- * description    :
+ * description    : 사용자 인증 정보 서비스
  */
 @Service
 @RequiredArgsConstructor
@@ -31,6 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user =  loginRepository.findByUserId(userId)
                 .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("USER001")));
 
-        return new org.springframework.security.core.userdetails.User(user.getUserId(), user.getPassword(), new ArrayList<>());
+        return new CustomUserDetails(user.getUserId(), user.getPassword(), user.getUserNum(), new ArrayList<>());
     }
+
 }
