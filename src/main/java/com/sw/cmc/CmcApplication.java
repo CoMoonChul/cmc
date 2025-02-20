@@ -18,6 +18,8 @@ public class CmcApplication {
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 		System.setProperty("SMTP_USERNAME", dotenv.get("SMTP_USERNAME"));
 		System.setProperty("SMTP_PASSWORD", dotenv.get("SMTP_PASSWORD"));
+		System.setProperty("AI_KEY", dotenv.get("AI_KEY"));
+		System.setProperty("AI_MODEL", dotenv.get("AI_MODEL"));
 		SpringApplication.run(CmcApplication.class, args);
 	}
 

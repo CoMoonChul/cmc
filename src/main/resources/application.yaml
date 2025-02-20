@@ -93,3 +93,10 @@ security:
     # Login
     - /v1/login
     - /v1/temp/login
+
+
+openai:
+  model: ${AI_MODEL}
+  secret-key: ${AI_KEY}
+  url:
+    temp: https://api.openai.com/v1/chat/completions
