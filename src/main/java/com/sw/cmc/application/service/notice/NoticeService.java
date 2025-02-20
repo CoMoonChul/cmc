@@ -2,12 +2,12 @@ package com.sw.cmc.application.service.notice;
 
 import com.sw.cmc.adapter.out.notice.persistence.NoticeRepository;
 import com.sw.cmc.application.port.in.notice.NoticeUseCase;
-import com.sw.cmc.domain.comment.CommentDomain;
+import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.domain.notice.NotiListDomain;
 import com.sw.cmc.domain.notice.NoticeDomain;
-import com.sw.cmc.entity.Comment;
 import com.sw.cmc.entity.Notification;
 import com.sw.cmc.event.notice.SendNotiEmailEvent;
+import com.sw.cmc.event.notice.SendNotiInAppEvent;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -18,10 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * packageName    : com.sw.cmc.application.service.notice
@@ -38,6 +37,7 @@ public class NoticeService implements NoticeUseCase {
     private final ModelMapper modelMapper;
     private final NoticeRepository noticeRepository;
     private final ApplicationEventPublisher eventPublisher;
+
 
 
     @Override
@@ -60,6 +60,25 @@ public class NoticeService implements NoticeUseCase {
                 .build();
     }
 
+    @Override
+    @Transactional
+    public void saveNotification(Notification notification) throws Exception {
+        // Notification 저장
+        Notification saved = noticeRepository.save(notification);
+        entityManager.refresh(saved);
+    }
+
+    @Override
+    public NoticeDomain deleteNotice(NoticeDomain noticeDomain) throws Exception {
+        noticeRepository.deleteById(noticeDomain.getNotiId());
+        return noticeDomain;
+    }
+
+    public void createNoti(String userNum, Long notiTemplateId, String sendAt, String linkUrl, Long createUser, String sendState) throws Exception {
+        eventPublisher.publishEvent(new SendNotiInAppEvent(userNum, notiTemplateId, sendAt, linkUrl, createUser, sendState));
+    }
+
+
     public void ExampleFunction() throws Exception {
         // event.notice.SendNotiEmailEvent는 adapter.in.smtp.event.SmtpEventListener를 트리거하게 됩니다.
         // (SendNotiEmailEvent라는 타입 기반 이벤트 트리거)
@@ -81,6 +100,8 @@ public class NoticeService implements NoticeUseCase {
                 .build();
         eventPublisher.publishEvent(sendNotiEmailEvent);
     }
+
+
 
 
     private NoticeDomain convertEntityToNotice(Notification n) {

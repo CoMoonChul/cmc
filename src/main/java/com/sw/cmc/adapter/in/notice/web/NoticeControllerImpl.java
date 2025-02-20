@@ -1,8 +1,11 @@
 package com.sw.cmc.adapter.in.notice.web;
+import com.sw.cmc.adapter.in.notice.dto.DeleteNoticeReqDTO;
+import com.sw.cmc.adapter.in.notice.dto.DeleteNoticeResDTO;
 import com.sw.cmc.adapter.in.notice.dto.SelectNoticeListDTO;
 import com.sw.cmc.adapter.in.notice.dto.SelectNoticeResDTO;
 import com.sw.cmc.application.port.in.notice.NoticeUseCase;
 import com.sw.cmc.domain.notice.NotiListDomain;
+import com.sw.cmc.domain.notice.NoticeDomain;
 import com.sw.cmc.entity.Notification;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -58,7 +61,13 @@ public class NoticeControllerImpl implements NoticeControllerApi {
     public ResponseEntity<SelectNoticeListDTO> selectPageNotice(String userNum, Integer page, Integer size) throws Exception {
         NotiListDomain result = noticeUseCase.selectPageNotice(userNum, page, size);
         return ResponseEntity.ok(modelMapper.map(result, SelectNoticeListDTO.class));
+    }
 
-
+    @Override
+    public ResponseEntity<DeleteNoticeResDTO> deleteNotice(DeleteNoticeReqDTO deleteNoticeReqDTO) throws Exception {
+        NoticeDomain noticeDomain = NoticeDomain.builder()
+                .notiId(deleteNoticeReqDTO.getNotiId())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(noticeUseCase.deleteNotice(noticeDomain), DeleteNoticeResDTO.class));
     }
 }

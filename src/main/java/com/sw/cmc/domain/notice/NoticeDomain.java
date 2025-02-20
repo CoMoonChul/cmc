@@ -30,7 +30,4 @@ public class NoticeDomain {
     private String notiTitle;
     private String notiContent;
     private String notiType;
-
-
-
 }

@@ -112,8 +112,8 @@ CREATE TABLE IF NOT EXISTS notification (
     send_at TIMESTAMP,
     send_state CHAR(1) DEFAULT 'N' NOT NULL,
     link_url VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    create_user BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    create_user BIGINT,
     CONSTRAINT fk_noti_user FOREIGN KEY (user_num) REFERENCES user(user_num),
     CONSTRAINT fk_noti_template FOREIGN KEY (noti_template_id) REFERENCES notification_template(noti_template_id),
     CONSTRAINT fk_noti_create_user FOREIGN KEY (create_user) REFERENCES user(user_num)
