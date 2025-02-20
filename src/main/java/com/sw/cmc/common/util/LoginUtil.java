@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * fileName       : LoginUtil
  * author         : SungSuHan
  * date           : 2025-02-10
- * description    :
+ * description    : 공통 로그인 유틸
  */
 @Component
 @RequiredArgsConstructor
