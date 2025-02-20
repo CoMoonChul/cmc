@@ -22,12 +22,22 @@ components:
           maxLength: 5000
         created_at:
           type: string
-          format: date-time
           description: 생성 일시
         updated_at:
           type: string
-          format: date-time
           description: 최종 수정 일시
+#        like_count:
+#          type: integer
+#          description: 좋아요 수
+#        reply_count:
+#          type: integer
+#          description: 답변 수
+#        is_liked:
+#          type: boolean
+#          description: 현재 사용자의 좋아요 여부
+#        has_replied:
+#          type: boolean
+#          description: 현재 사용자의 답변 여부
 #        images:
 #          type: array
 #          description: 리뷰 이미지 URL 목록
@@ -41,26 +51,39 @@ components:
       allOf:
         - $ref: '#/components/schemas/Review'
         - type: object
-          properties:
-            user:
-              type: object
-              properties:
-                nickname:
-                  type: string
-                  description: 작성자 닉네임
-                profile_image:
-                  type: string
-                  format: uri
-                  description: 프로필 이미지 URL
+#          properties:
+#            user:
+#              type: object
+#              properties:
+#                nickname:
+#                  type: string
+#                  description: 작성자 닉네임
+#                profile_image:
+#                  type: string
+#                  format: uri
+#                  description: 프로필 이미지 URL
 
     # 리뷰 목록 조회 응답 DTO
     SelectReviewListResDTO:
       type: object
       properties:
-        content:
+        reviewList:
           type: array
           items:
-            $ref: '#/components/schemas/Review'
+            allOf:
+              - $ref: '#/components/schemas/Review'
+              - type: object
+#                properties:
+#                  user:
+#                    type: object
+#                    properties:
+#                      nickname:
+#                        type: string
+#                        description: 작성자 닉네임
+#                      profile_image:
+#                        type: string
+#                        format: uri
+#                        description: 프로필 이미지 URL
         pageable:
           type: object
           properties:
@@ -70,13 +93,13 @@ components:
             pageSize:
               type: integer
               description: 페이지 크기
-            total_elements:
-              type: integer
-              format: int64
-              description: 전체 리뷰 수
-            total_pages:
-              type: integer
-              description: 전체 페이지 수
-#            has_next:
-#              type: boolean
-#              description: 다음 페이지 존재 여부
+            sort:
+              type: string
+              description: 정렬
+#            total_elements:
+#              type: integer
+#              format: int64
+#              description: 전체 리뷰 수
+#            total_pages:
+#              type: integer
+#              description: 전체 페이지 수
