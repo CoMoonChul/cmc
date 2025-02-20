@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,10 +20,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewListDomain {
+    //    private Integer pageNumber;                // 현재 페이지 번호
+    //    private Integer pageSize;                  // 한 페이지에 표시할 리뷰 수
+    //    private string sort;                       // 분류
+    private Pageable pageable; // 페이징 처리 obj pageable
     private List<ReviewDomain> reviewList;    // 리뷰 목록
-    private Integer pageNumber;                // 현재 페이지 번호
-    private Integer pageSize;                  // 한 페이지에 표시할 리뷰 수
-    private Long totalElements;                // 전체 리뷰 개수
-    private Integer totalPages;                // 전체 페이지 수
+
+
+
 }
 

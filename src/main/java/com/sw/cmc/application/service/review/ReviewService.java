@@ -69,10 +69,10 @@ public class ReviewService implements ReviewUseCase {
 
         // ReviewListDomain 객체 반환
         return ReviewListDomain.builder()
-                .pageNumber(reviews.getPageable().getPageNumber())
-                .pageSize(reviews.getPageable().getPageSize())
-                .totalElements(reviews.getTotalElements())
-                .totalPages(reviews.getTotalPages())
+                .pageable(PageRequest.of(reviews.getPageable().getPageNumber(),
+                                reviews.getPageable().getPageSize(),
+                                Sort.by(Sort.Direction.fromString(order), sort))
+                )
                 .reviewList(reviewList)
                 .build();
     }
