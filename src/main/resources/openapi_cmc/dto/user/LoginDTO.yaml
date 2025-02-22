@@ -1,5 +1,34 @@
 components:
   schemas:
+    # API_USER_9999 임시로그인
+    TempLoginReqDTO:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+          description: 회원 ID
+      description: 임시로그인 요청
+
+    TempLoginResDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: AccessToken
+        accessTokenExpirationTime:
+          type: number
+          description: AccessToken 만료 시간
+        refreshToken:
+          type: string
+          description: RefreshToken
+        refreshTokenExpirationTime:
+          type: number
+          description: RefreshToken 만료 시간
+      description: 임시로그인 응답
+
+    # API_USER_0004 로그인
     LoginReqDTO:
       type: object
       required:
@@ -12,21 +41,24 @@ components:
         password:
           type: string
           description: 회원 비밀번호
-      description: 임시로그인 요청
+      description: 로그인 요청
 
     LoginResDTO:
       type: object
       properties:
         accessToken:
           type: string
-          description: Access Token
-        accessTokenExpirationTime:
-          type: number
-          description: Access Token 만료 시간
+          description: AccessToken
         refreshToken:
           type: string
-          description: Refresh Token
-        refreshTokenExpirationTime:
-          type: number
-          description: Refresh Token 만료 시간
-      description: 임시로그인 응답
+          description: RefreshToken
+      description: 로그인 응답
+
+    # API_USER_0005 AccessToken 재발급
+    RefreshResDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: AccessToken
+      description: AccessToken 재발급 응답

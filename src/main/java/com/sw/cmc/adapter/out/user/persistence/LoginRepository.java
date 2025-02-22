@@ -16,4 +16,6 @@ import java.util.Optional;
 @Repository
 public interface LoginRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(String userId);
+
+    Optional<User> findByUserNum(Long userNum);
 }

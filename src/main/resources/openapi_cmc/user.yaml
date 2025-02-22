@@ -16,7 +16,7 @@ tags:
 
 paths:
   # join-controller
-  /v1/join:
+  /user/join:
     post:
       tags:
         - join-controller
@@ -37,7 +37,7 @@ paths:
               schema:
                 $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinResDTO"
 
-  /v1/checkUserId:
+  /user/checkUserId:
     get:
       tags:
         - join-controller
@@ -58,7 +58,7 @@ paths:
               schema:
                 $ref: "./dto/user/JoinDTO.yaml#/components/schemas/CheckJoinResDTO"
 
-  /v1/checkUsername:
+  /user/checkUsername:
     get:
       tags:
         - join-controller
@@ -80,7 +80,7 @@ paths:
                 $ref: "./dto/user/JoinDTO.yaml#/components/schemas/CheckJoinResDTO"
 
   # login-controller
-  /v1/temp/login:
+  /user/tempLogin:
     post:
       tags:
         - login-controller
@@ -92,16 +92,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./dto/user/TempLoginDTO.yaml#/components/schemas/TempLoginReqDTO"
+              $ref: "./dto/user/LoginDTO.yaml#/components/schemas/TempLoginReqDTO"
       responses:
         "200":
           description: "임시로그인 성공"
           content:
             application/json:
               schema:
-                $ref: "./dto/user/TempLoginDTO.yaml#/components/schemas/TempLoginResDTO"
+                $ref: "./dto/user/LoginDTO.yaml#/components/schemas/TempLoginResDTO"
 
-  /v1/login:
+  /user/login:
     post:
       tags:
         - login-controller
@@ -121,3 +121,18 @@ paths:
             application/json:
               schema:
                 $ref: "./dto/user/LoginDTO.yaml#/components/schemas/LoginResDTO"
+
+  /user/refresh:
+    post:
+      tags:
+        - login-controller
+      summary: "API_USER_0005 AccessToken 재발급"
+      description: AccessToken 재발급 API
+      operationId: "refresh"
+      responses:
+        "200":
+          description: "AccessToken 재발급 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/user/LoginDTO.yaml#/components/schemas/RefreshResDTO"

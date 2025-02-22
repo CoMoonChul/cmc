@@ -4,7 +4,7 @@ import com.sw.cmc.adapter.in.user.dto.CheckJoinResDTO;
 import com.sw.cmc.adapter.in.user.dto.JoinReqDTO;
 import com.sw.cmc.adapter.in.user.dto.JoinResDTO;
 import com.sw.cmc.application.port.in.user.JoinUseCase;
-import com.sw.cmc.domain.user.JoinDomain;
+import com.sw.cmc.domain.user.UserDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class JoinControllerImpl implements JoinControllerApi {
 
     @Override
     public ResponseEntity<JoinResDTO> join(JoinReqDTO joinReqDTO) throws Exception {
-        return ResponseEntity.ok(joinUseCase.join(modelMapper.map(joinReqDTO, JoinDomain.class)));
+        return ResponseEntity.ok(joinUseCase.join(modelMapper.map(joinReqDTO, UserDomain.class)));
     }
 
     @Override

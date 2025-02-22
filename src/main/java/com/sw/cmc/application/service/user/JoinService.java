@@ -2,19 +2,19 @@ package com.sw.cmc.application.service.user;
 
 import com.sw.cmc.adapter.in.user.dto.CheckJoinResDTO;
 import com.sw.cmc.adapter.in.user.dto.JoinResDTO;
+import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
 import com.sw.cmc.adapter.out.user.persistence.JoinRepository;
 import com.sw.cmc.application.port.in.user.JoinUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
-import com.sw.cmc.domain.user.JoinDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.sw.cmc.domain.user.JoinDomain.*;
+import static com.sw.cmc.domain.user.UserDomain.*;
 
 /**
  * packageName    : com.sw.cmc.application.service.user
@@ -34,29 +34,29 @@ public class JoinService implements JoinUseCase {
 
     @Override
     @Transactional
-    public JoinResDTO join(JoinDomain joinDomain) throws Exception {
+    public JoinResDTO join(UserDomain userDomain) throws Exception {
         // 유효성 검사
-        validateUserId(joinDomain.getUserId(), messageUtil.getFormattedMessage("USER003"));
-        validatePassword(joinDomain.getPassword(), messageUtil.getFormattedMessage("USER004"));
-        validateEmail(joinDomain.getEmail(), messageUtil.getFormattedMessage("USER005"));
-        validateUsername(joinDomain.getUsername(), messageUtil.getFormattedMessage("USER006"));
+        validateUserId(userDomain.getUserId(), messageUtil.getFormattedMessage("USER003"));
+        validatePassword(userDomain.getPassword(), messageUtil.getFormattedMessage("USER004"));
+        validateEmail(userDomain.getEmail(), messageUtil.getFormattedMessage("USER005"));
+        validateUsername(userDomain.getUsername(), messageUtil.getFormattedMessage("USER006"));
 
         // 아이디 중복 검사
-        if (joinRepository.existsByUserId(joinDomain.getUserId())) {
+        if (joinRepository.existsByUserId(userDomain.getUserId())) {
             throw new CmcException(messageUtil.getFormattedMessage("USER007"));
         }
         // 닉네임 중복 검사
-        if (joinRepository.existsByUsername(joinDomain.getUsername())) {
+        if (joinRepository.existsByUsername(userDomain.getUsername())) {
             throw new CmcException(messageUtil.getFormattedMessage("USER009"));
         }
 
-        String encodedPassword = passwordEncoder.encode(joinDomain.getPassword());
+        String encodedPassword = passwordEncoder.encode(userDomain.getPassword());
 
         // 암호화된 비밀번호를 User 객체에 설정
-        joinDomain.setPassword(encodedPassword);
+        userDomain.setPassword(encodedPassword);
 
         // 회원 생성
-        joinRepository.save(modelMapper.map(joinDomain, User.class));
+        joinRepository.save(modelMapper.map(userDomain, User.class));
 
         return new JoinResDTO().resultMessage(messageUtil.getFormattedMessage("USER011"));
     }

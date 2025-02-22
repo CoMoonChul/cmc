@@ -9,18 +9,21 @@ import java.util.regex.Pattern;
 
 /**
  * packageName    : com.sw.cmc.domain.user
- * fileName       : Join
+ * fileName       : UserDomain
  * author         : SungSuHan
- * date           : 2025-02-11
- * description    :
+ * date           : 2025-02-17
+ * description    : 유저 도메인
  */
 @Getter
 @Setter
-public class JoinDomain {
+public class UserDomain {
+    private long userNum;
     private String userId;
     private String password;
+    private String refreshToken;
     private String username;
     private String email;
+    private String userRole;
 
     private String resultMessage;
 

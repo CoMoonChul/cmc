@@ -23,6 +23,7 @@ public class JwtProperties {
     @Setter
     public static class Token {
         private String secretKey;
+        private String encryptionKey;
         private long accessTokenExpirationTimeInSeconds;
         private long refreshTokenExpirationTimeInSeconds;
     }
