@@ -1,6 +1,5 @@
 package com.sw.cmc.common.jwt;
 
-import com.sw.cmc.domain.user.TokenDomain;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -32,8 +31,8 @@ public class JwtTokenProvider {
         refreshTokenExpirationTimeInSeconds = 1_000 * properties.getToken().getRefreshTokenExpirationTimeInSeconds();
     }
 
-    public TokenDomain createToken(final Claims claims) throws Exception {
-        return TokenDomain.builder()
+    public JwtToken createToken(final Claims claims) throws Exception {
+        return JwtToken.builder()
                 .accessToken(createJwtToken(claims, JwtTokenType.ACCESS))
                 .accessTokenExpirationTime(accessTokenExpirationTimeInSeconds)
                 .refreshToken(createJwtToken(claims, JwtTokenType.REFRESH))

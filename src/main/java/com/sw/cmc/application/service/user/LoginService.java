@@ -6,6 +6,7 @@ import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
 import com.sw.cmc.adapter.out.user.persistence.LoginRepository;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
 import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.TokenDomain;
@@ -21,8 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-
-import static com.sw.cmc.domain.user.TokenDomain.encryptToken;
 
 /**
  * packageName    : com.sw.cmc.application.service
@@ -53,18 +52,18 @@ public class LoginService implements LoginUseCase {
         }
 
         // Token 생성
-        TokenDomain tokenDomain = userUtil.createToken(userInfo.getUserNum(), userInfo.getUserId());
+        JwtToken jwtToken = userUtil.createToken(userInfo.getUserNum(), userInfo.getUserId());
 
         // User 엔티티
         final User user = modelMapper.map(userInfo, User.class);
 
-        // RefreshToken 암호화 저장
-        user.setRefreshToken(tokenDomain.getRefreshToken());
+        // RefreshToken 저장
+        user.setRefreshToken(jwtToken.getRefreshToken());
 
         // DB 저장
         loginRepository.save(user);
 
-        return modelMapper.map(tokenDomain, TempLoginResDTO.class);
+        return modelMapper.map(jwtToken, TempLoginResDTO.class);
     }
 
     @Override
@@ -78,14 +77,16 @@ public class LoginService implements LoginUseCase {
         final UserDomain userInfo = modelMapper.map(loginRepository.findByUserId(userDomain.getUserId()), UserDomain.class);
 
         // 토큰 생성
-        TokenDomain tokenDomain = userUtil.createToken(userInfo.getUserNum(), userInfo.getUserId());
+        JwtToken jwtToken = userUtil.createToken(userInfo.getUserNum(), userInfo.getUserId());
 
-        tokenDomain = encryptToken(tokenDomain, userUtil);
+        // RefreshToken 암호화
+        final TokenDomain tokenDomain = modelMapper.map(jwtToken, TokenDomain.class);
+        tokenDomain.setRefreshToken(userUtil.encrypt(jwtToken.getRefreshToken()));
 
         // User 엔티티
         final User user = modelMapper.map(userInfo, User.class);
 
-        // Refresh Token 저장
+        // RefreshToken 저장
         user.setRefreshToken(tokenDomain.getRefreshToken());
 
         // DB 저장
