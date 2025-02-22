@@ -127,6 +127,7 @@ cmcSwaggerMap.each { entry ->
 		outputDir.set(project.file("$buildDir/generated-sources").absolutePath)
 		apiPackage.set("com.sw.cmc.adapter.in.${entry.key}.web")
 		modelPackage.set("com.sw.cmc.adapter.in.${entry.key}.dto")
+		validateSpec.set(false)
 		configOptions.set(
 				[
 						interfaceOnly         : "true",
