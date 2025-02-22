@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * packageName    : com.sw.cmc.application.service.comment
@@ -43,14 +44,14 @@ public class CommentService implements CommentUseCase {
     public CommentDomain selectComment(Long id) throws Exception {
         Comment found = commentRepository.findById(id)
                 .orElseThrow(() -> new CmcException("COMMENT001"));
-        return convertEntityToDomain(found);
+        return modelMapper.map(found, CommentDomain.class);
     }
 
     @Override
     public CommentListDomain selectCommentList(Long targetId, Integer commentTarget, Integer page, Integer size) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Comment> res = commentRepository.findByTargetIdAndCommentTarget(targetId, commentTarget, pageable);
-        List<CommentDomain> list = res.getContent().stream().map(this::convertEntityToDomain).toList();
+        List<CommentDomain> list = res.getContent().stream().map(e -> modelMapper.map(e, CommentDomain.class)).toList();
 
         return CommentListDomain.builder()
                 .pageNumber(res.getPageable().getPageNumber())
@@ -71,13 +72,19 @@ public class CommentService implements CommentUseCase {
         saving.setUser(savingUser);
         Comment saved = commentRepository.save(saving);
         entityManager.refresh(saved);
-        return convertEntityToDomain(saved);
+        return modelMapper.map(saved, CommentDomain.class);
     }
 
     @Override
     @Transactional
     public CommentDomain deleteComment(CommentDomain commentDomain) throws Exception {
-        commentDomain.validateDeleteComment();
+        Comment found = commentRepository.findById(commentDomain.getCommentId())
+                .orElseThrow(() -> new CmcException("COMMENT001"));
+
+        if (!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
+            throw new CmcException("COMMENT005");
+        }
+
         commentRepository.deleteById(commentDomain.getCommentId());
         return commentDomain;
     }
@@ -86,26 +93,12 @@ public class CommentService implements CommentUseCase {
     @Transactional
     public CommentDomain updateComment(CommentDomain commentDomain) throws Exception {
         commentDomain.validateUpdateComment();
+        commentDomain.validateAuthenticatedUser(userUtil.getAuthenticatedUserNum());
         Comment found = commentRepository.findById(commentDomain.getCommentId())
                 .orElseThrow(() -> new CmcException("COMMENT001"));
         found.setContent(commentDomain.getContent());
         found.setTargetId(commentDomain.getTargetId());
         found.setCommentTarget(commentDomain.getCommentTarget());
-        Comment saved = commentRepository.save(found);
-        return convertEntityToDomain(saved);
-    }
-
-    private CommentDomain convertEntityToDomain(Comment c) {
-        return new CommentDomain(
-                c.getCommentId(),
-                c.getContent(),
-                c.getUser().getUserNum(),
-                c.getTargetId(),
-                c.getCommentTarget(),
-                c.getCreatedAt(),
-                c.getUpdatedAt(),
-                c.getUser().getUsername(),
-                c.getUser().getEmail()
-        );
+        return modelMapper.map(commentRepository.save(found), CommentDomain.class);
     }
 }
