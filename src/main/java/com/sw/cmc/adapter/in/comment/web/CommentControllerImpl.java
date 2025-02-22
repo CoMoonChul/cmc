@@ -38,7 +38,6 @@ public class CommentControllerImpl implements CommentControllerApi {
     public ResponseEntity<CreateCommentResDTO> createComment(CreateCommentReqDTO createCommentReqDTO) throws Exception {
         CommentDomain commentDomain = CommentDomain.builder()
                 .content(createCommentReqDTO.getContent())
-                .userNum(createCommentReqDTO.getUserNum())
                 .targetId(createCommentReqDTO.getTargetId())
                 .commentTarget(createCommentReqDTO.getCommentTarget())
                 .build();
