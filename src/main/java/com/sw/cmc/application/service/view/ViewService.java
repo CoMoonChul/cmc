@@ -6,7 +6,6 @@ import com.sw.cmc.adapter.out.view.persistence.BattleViewRepository;
 import com.sw.cmc.adapter.out.view.persistence.ReviewViewRepository;
 import com.sw.cmc.application.port.in.view.ViewUseCase;
 import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.view.BattleViewDomain;
 import com.sw.cmc.domain.view.ReviewViewDomain;
 import com.sw.cmc.entity.BattleView;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 public class ViewService implements ViewUseCase {
 
     private final ModelMapper modelMapper;
-    private final MessageUtil messageUtil;
     private final ReviewViewRepository reviewViewRepository;
     private final BattleViewRepository battleViewRepository;
     private final ReviewRepository reviewRepository;
@@ -38,7 +36,7 @@ public class ViewService implements ViewUseCase {
     @Transactional
     public ReviewViewDomain updateReviewView(ReviewViewDomain reviewViewDomain) throws Exception {
         if (!reviewRepository.existsById(reviewViewDomain.getReviewId())) {
-            throw new CmcException(messageUtil.getFormattedMessage("VIEW001"));
+            throw new CmcException("VIEW001");
         }
 
         ReviewView saved = reviewViewRepository.findById(reviewViewDomain.getReviewId())
@@ -58,7 +56,7 @@ public class ViewService implements ViewUseCase {
     @Transactional
     public BattleViewDomain updateBattleView(BattleViewDomain battleViewDomain) throws Exception {
         if (!battleRepository.existsById(battleViewDomain.getBattleId())) {
-            throw new CmcException(messageUtil.getFormattedMessage("VIEW002"));
+            throw new CmcException("VIEW002");
         }
 
         BattleView saved = battleViewRepository.findById(battleViewDomain.getBattleId())

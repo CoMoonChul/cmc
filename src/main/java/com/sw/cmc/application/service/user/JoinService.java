@@ -36,18 +36,18 @@ public class JoinService implements JoinUseCase {
     @Transactional
     public JoinResDTO join(UserDomain userDomain) throws Exception {
         // 유효성 검사
-        validateUserId(userDomain.getUserId(), messageUtil.getFormattedMessage("USER003"));
-        validatePassword(userDomain.getPassword(), messageUtil.getFormattedMessage("USER004"));
-        validateEmail(userDomain.getEmail(), messageUtil.getFormattedMessage("USER005"));
-        validateUsername(userDomain.getUsername(), messageUtil.getFormattedMessage("USER006"));
+        validateUserId(userDomain.getUserId());
+        validatePassword(userDomain.getPassword());
+        validateEmail(userDomain.getEmail());
+        validateUsername(userDomain.getUsername());
 
         // 아이디 중복 검사
         if (joinRepository.existsByUserId(userDomain.getUserId())) {
-            throw new CmcException(messageUtil.getFormattedMessage("USER007"));
+            throw new CmcException("USER007");
         }
         // 닉네임 중복 검사
         if (joinRepository.existsByUsername(userDomain.getUsername())) {
-            throw new CmcException(messageUtil.getFormattedMessage("USER009"));
+            throw new CmcException("USER009");
         }
 
         String encodedPassword = passwordEncoder.encode(userDomain.getPassword());
@@ -63,7 +63,7 @@ public class JoinService implements JoinUseCase {
 
     @Override
     public CheckJoinResDTO checkUserId(String userId) throws Exception {
-        validateUserId(userId, messageUtil.getFormattedMessage("USER003"));
+        validateUserId(userId);
 
         return new CheckJoinResDTO()
             .resultMessage(messageUtil.getFormattedMessage(
@@ -73,7 +73,7 @@ public class JoinService implements JoinUseCase {
 
     @Override
     public CheckJoinResDTO checkUsername(String username) throws Exception {
-        validateUsername(username, messageUtil.getFormattedMessage("USER006"));
+        validateUsername(username);
 
         return new CheckJoinResDTO()
             .resultMessage(messageUtil.getFormattedMessage(

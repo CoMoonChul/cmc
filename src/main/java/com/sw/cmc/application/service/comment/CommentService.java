@@ -4,7 +4,6 @@ package com.sw.cmc.application.service.comment;
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.comment.CommentDomain;
 import com.sw.cmc.domain.comment.CommentListDomain;
@@ -38,13 +37,12 @@ public class CommentService implements CommentUseCase {
     private final EntityManager entityManager;
     private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
-    private final MessageUtil messageUtil;
     private final UserUtil userUtil;
 
     @Override
     public CommentDomain selectComment(Long id) throws Exception {
         Comment found = commentRepository.findById(id)
-                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("COMMENT001")));
+                .orElseThrow(() -> new CmcException("COMMENT001"));
         return convertEntityToDomain(found);
     }
 
@@ -89,7 +87,7 @@ public class CommentService implements CommentUseCase {
     public CommentDomain updateComment(CommentDomain commentDomain) throws Exception {
         commentDomain.validateUpdateComment();
         Comment found = commentRepository.findById(commentDomain.getCommentId())
-                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("COMMENT001")));
+                .orElseThrow(() -> new CmcException("COMMENT001"));
         found.setContent(commentDomain.getContent());
         found.setTargetId(commentDomain.getTargetId());
         found.setCommentTarget(commentDomain.getCommentTarget());
