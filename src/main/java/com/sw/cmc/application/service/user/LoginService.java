@@ -3,15 +3,14 @@ package com.sw.cmc.application.service.user;
 import com.sw.cmc.adapter.in.user.dto.LoginResDTO;
 import com.sw.cmc.adapter.in.user.dto.RefreshResDTO;
 import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
-import com.sw.cmc.common.jwt.JwtTokenProvider;
-import com.sw.cmc.common.util.UserUtil;
-import com.sw.cmc.entity.User;
 import com.sw.cmc.adapter.out.user.persistence.LoginRepository;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
 import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.common.util.MessageUtil;
-import com.sw.cmc.domain.user.UserDomain;
+import com.sw.cmc.common.jwt.JwtTokenProvider;
+import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.TokenDomain;
+import com.sw.cmc.domain.user.UserDomain;
+import com.sw.cmc.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +36,6 @@ import static com.sw.cmc.domain.user.TokenDomain.encryptToken;
 public class LoginService implements LoginUseCase {
 
     private final UserUtil userUtil;
-    private final MessageUtil messageUtil;
     private final ModelMapper modelMapper;
     private final LoginRepository loginRepository;
     private final JwtTokenProvider jwtTokenProvider;
@@ -47,11 +45,11 @@ public class LoginService implements LoginUseCase {
     public TempLoginResDTO tempLogin(final UserDomain userDomain) throws Exception {
         // 회원 조회
         final UserDomain userInfo = modelMapper.map(loginRepository.findByUserId(userDomain.getUserId())
-                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("USER001"))), UserDomain.class);
+                .orElseThrow(() -> new CmcException("USER001")), UserDomain.class);
 
         // 관리자 확인
         if (!Objects.equals(userInfo.getUserRole(), "ADMIN")) {
-            throw new CmcException(messageUtil.getFormattedMessage("USER002"));
+            throw new CmcException("USER002");
         }
 
         // Token 생성
@@ -103,7 +101,7 @@ public class LoginService implements LoginUseCase {
 
         // RefreshToken 유효성 검사
         if (StringUtils.isEmpty(refreshToken) || !jwtTokenProvider.validateToken(refreshToken)) {
-            throw new CmcException(messageUtil.getFormattedMessage("USER013"));
+            throw new CmcException("USER013");
         }
 
         // 회원 번호

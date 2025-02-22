@@ -4,7 +4,6 @@ import com.sw.cmc.adapter.out.like.persistence.ReviewLikeRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.like.LikeUseCase;
 import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.like.LikeDomain;
 import com.sw.cmc.entity.ReviewLike;
 import com.sw.cmc.entity.ReviewLikeId;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 public class LikeService implements LikeUseCase {
 
     private final ModelMapper modelMapper;
-    private final MessageUtil messageUtil;
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewRepository reviewRepository;
 
@@ -33,7 +31,7 @@ public class LikeService implements LikeUseCase {
     @Transactional
     public LikeDomain updateReviewLike(LikeDomain likeDomain) throws Exception {
         if (!reviewRepository.existsById(likeDomain.getReviewId())) {
-            throw new CmcException(messageUtil.getFormattedMessage("LIKE001"));
+            throw new CmcException("LIKE001");
         }
 
         ReviewLike param = new ReviewLike();
@@ -56,7 +54,7 @@ public class LikeService implements LikeUseCase {
         id.setReviewId(likeDomain.getReviewId());
         id.setUserNum(likeDomain.getUserNum());
         if (!reviewLikeRepository.existsById(id)) {
-            throw new CmcException(messageUtil.getFormattedMessage("LIKE001"));
+            throw new CmcException("LIKE001");
         }
         reviewLikeRepository.deleteById(id);
         return likeDomain;

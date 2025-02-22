@@ -1,5 +1,7 @@
 package com.sw.cmc.common.advice;
 
+import com.sw.cmc.common.util.MessageUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * description    :
  */
 @ControllerAdvice
+@RequiredArgsConstructor
 public class CmcControllerAdvice {
+
+    private final MessageUtil messageUtil;
+
     /**
      * methodName : handleNoSuchMessageException
      * author : IM HYUN WOO
@@ -30,15 +36,15 @@ public class CmcControllerAdvice {
     }
 
     /**
-     * methodName : handleStashException
+     * methodName : handleCmcException
      * author : IM HYUN WOO
-     * description :
+     * description : CmcException 발생시 공통 메세지 처리
      *
      * @param e
      * @return response entity
      */
     @ExceptionHandler(CmcException.class)
-    public ResponseEntity<String> handleStashException(CmcException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<String> handleCmcException(CmcException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getFormattedMessage(e.getMessage()));
     }
 }

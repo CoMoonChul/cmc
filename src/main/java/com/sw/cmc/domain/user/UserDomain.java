@@ -27,26 +27,26 @@ public class UserDomain {
 
     private String resultMessage;
 
-    public static void validateUserId(String userId, String message) {
+    public static void validateUserId(String userId) {
         if (StringUtils.length(userId) < 4 || StringUtils.length(userId) > 15) {
-            throw new CmcException(message);
+            throw new CmcException("USER003");
         }
     }
-    public static void validatePassword(String password, String message) {
+    public static void validatePassword(String password) {
         final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d).{6,}$";
         if (!Pattern.matches(PASSWORD_REGEX, password)) {
-            throw new CmcException(message);
+            throw new CmcException("USER004");
         }
     }
-    public static void validateEmail(String email, String message) {
+    public static void validateEmail(String email) {
         final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         if (StringUtils.isNotEmpty(email) && !Pattern.matches(EMAIL_REGEX, email)) {
-            throw new CmcException(message);
+            throw new CmcException("USER005");
         }
     }
-    public static void validateUsername(String username, String message) {
+    public static void validateUsername(String username) {
         if (StringUtils.length(username) < 2 || StringUtils.length(username) > 20) {
-            throw new CmcException(message);
+            throw new CmcException("USER006");
         }
     }
 }
