@@ -12,16 +12,16 @@ spring:
     init:
       mode: always
   profiles:
-    active: local
+    active: prd
   application:
     name: cmc
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
   mail:
     host: smtp.gmail.com
     port: 587
@@ -65,3 +65,9 @@ jwt:
     secret-key: eH0SIMQPTgoK7M1ZpyEbkOqmVXGby7JO
     access-token-expiration-time-in-seconds: 300 # 5분
     refresh-token-expiration-time-in-seconds: 77760000 # 90일
+
+openai:
+  model: ${AI_MODEL}
+  secret-key: ${AI_KEY}
+  url:
+    temp: https://api.openai.com/v1/chat/completions
