@@ -2,9 +2,9 @@ package com.sw.cmc.common.util;
 
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.jwt.JwtProperties;
+import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
 import com.sw.cmc.common.security.CustomUserDetails;
-import com.sw.cmc.domain.user.TokenDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
@@ -67,7 +67,7 @@ public class UserUtil {
         return null;
     }
 
-    public TokenDomain createToken(final long userNum, final String userId) throws Exception {
+    public JwtToken createToken(final long userNum, final String userId) throws Exception {
         final Claims claims = Jwts.claims();
 
         claims.setSubject(userId);
