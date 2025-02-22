@@ -123,11 +123,11 @@ cmcSwaggerMap.each { entry ->
 				'ServerHttpRequest': 'org.springframework.http.server.reactive.ServerHttpRequest',
 				'ServerHttpResponse': 'org.springframework.http.server.reactive.ServerHttpResponse'
 		]
-		inputSpec.set("$rootDir/src/main/resources/openapi_cmc/${entry.value}")
-		outputDir.set(project.file("$buildDir/generated-sources").absolutePath)
+		inputSpec.set(file("$rootDir/src/main/resources/openapi_cmc/${entry.value}").absolutePath) // ✅ 절대 경로 적용
+		outputDir.set(file("$buildDir/generated-sources/java").absolutePath)
 		apiPackage.set("com.sw.cmc.adapter.in.${entry.key}.web")
-		modelPackage.set("com.sw.cmc.adapter.in.${entry.key}.dto")
-		validateSpec.set(false)
+		modelPackage.set("com.sw.cmc.adapter.in.${entry.key}.dto")  // ✅ DTO 패키지 명확히 설정
+		validateSpec.set(false) // ✅ 검증 비활성화
 		configOptions.set(
 				[
 						interfaceOnly         : "true",
