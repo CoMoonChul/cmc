@@ -5,9 +5,11 @@ import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
+import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.comment.CommentDomain;
 import com.sw.cmc.domain.comment.CommentListDomain;
 import com.sw.cmc.entity.Comment;
+import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -37,20 +39,13 @@ public class CommentService implements CommentUseCase {
     private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
     private final MessageUtil messageUtil;
+    private final UserUtil userUtil;
 
     @Override
     public CommentDomain selectComment(Long id) throws Exception {
         Comment found = commentRepository.findById(id)
                 .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("COMMENT001")));
-        return CommentDomain.builder()
-                .commentId(found.getCommentId())
-                .content(found.getContent())
-                .userNum(found.getUser().getUserNum())
-                .targetId(found.getTargetId())
-                .commentTarget(found.getCommentTarget())
-                .createdAt(found.getCreatedAt())
-                .updatedAt(found.getUpdatedAt())
-                .build();
+        return convertEntityToDomain(found);
     }
 
     @Override
@@ -72,17 +67,13 @@ public class CommentService implements CommentUseCase {
     @Transactional
     public CommentDomain createComment(CommentDomain commentDomain) throws Exception {
         commentDomain.validateCreateComment();
-        Comment saved = commentRepository.save(modelMapper.map(commentDomain, Comment.class));
+        User savingUser = new User();
+        savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
+        Comment saving = modelMapper.map(commentDomain, Comment.class);
+        saving.setUser(savingUser);
+        Comment saved = commentRepository.save(saving);
         entityManager.refresh(saved);
-        return CommentDomain.builder()
-                .commentId(saved.getCommentId())
-                .content(saved.getContent())
-                .userNum(saved.getUser().getUserNum())
-                .targetId(saved.getTargetId())
-                .commentTarget(saved.getCommentTarget())
-                .createdAt(saved.getCreatedAt())
-                .updatedAt(saved.getUpdatedAt())
-                .build();
+        return convertEntityToDomain(saved);
     }
 
     @Override
@@ -103,15 +94,7 @@ public class CommentService implements CommentUseCase {
         found.setTargetId(commentDomain.getTargetId());
         found.setCommentTarget(commentDomain.getCommentTarget());
         Comment saved = commentRepository.save(found);
-        return CommentDomain.builder()
-                .commentId(saved.getCommentId())
-                .content(saved.getContent())
-                .userNum(saved.getUser().getUserNum())
-                .targetId(saved.getTargetId())
-                .commentTarget(saved.getCommentTarget())
-                .createdAt(saved.getCreatedAt())
-                .updatedAt(saved.getUpdatedAt())
-                .build();
+        return convertEntityToDomain(saved);
     }
 
     private CommentDomain convertEntityToDomain(Comment c) {

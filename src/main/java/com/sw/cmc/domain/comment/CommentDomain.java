@@ -1,6 +1,10 @@
 package com.sw.cmc.domain.comment;
 
-import lombok.*;
+import com.sw.cmc.common.advice.CmcException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * packageName    : com.sw.cmc.domain.comment
@@ -24,15 +28,18 @@ public class CommentDomain {
     private String userName;
     private String email;
 
-    public void validateCreateComment() throws Exception {
+    public void validateCreateComment() throws CmcException {
+        validateContent();
+    }
+
+    public void validateDeleteComment() throws CmcException {
 
     }
 
-    public void validateDeleteComment() throws Exception {
+    public void validateUpdateComment() throws CmcException {
 
     }
 
-    public void validateUpdateComment() throws Exception {
-
+    private void validateContent() throws CmcException {
     }
 }

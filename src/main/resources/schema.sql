@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS group_member (
 
 CREATE TABLE IF NOT EXISTS comment (
     comment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    content TEXT NOT NULL,
+    content VARCHAR(600) NOT NULL,
     user_num BIGINT,
     target_id BIGINT NOT NULL,
     comment_target TINYINT NOT NULL,
