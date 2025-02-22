@@ -2,7 +2,6 @@ package com.sw.cmc.application.service.lcd;
 
 import com.sw.cmc.adapter.out.lcd.persistence.LiveCodingRepository;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
-import com.sw.cmc.common.util.LoginUtil;
 import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LiveCodingService implements LiveCodingUseCase {
 
-    private final LoginUtil loginUtil;
     private final MessageUtil messageUtil;
     private final ModelMapper modelMapper;
     private final LiveCodingRepository liveCodingRepository;

@@ -1,6 +1,6 @@
 package com.sw.cmc.common.jwt;
 
-import com.sw.cmc.domain.user.Token;
+import com.sw.cmc.domain.user.TokenDomain;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -32,8 +32,8 @@ public class JwtTokenProvider {
         refreshTokenExpirationTimeInSeconds = 1_000 * properties.getToken().getRefreshTokenExpirationTimeInSeconds();
     }
 
-    public Token createToken(final Claims claims) throws Exception {
-        return Token.builder()
+    public TokenDomain createToken(final Claims claims) throws Exception {
+        return TokenDomain.builder()
                 .accessToken(createJwtToken(claims, JwtTokenType.ACCESS))
                 .accessTokenExpirationTime(accessTokenExpirationTimeInSeconds)
                 .refreshToken(createJwtToken(claims, JwtTokenType.REFRESH))
@@ -49,6 +49,17 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.forName("HS256"))
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + (tokenType == JwtTokenType.ACCESS ? accessTokenExpirationTimeInSeconds : refreshTokenExpirationTimeInSeconds)))
+                .compact();
+    }
+
+    public String createAccessToken(final Claims claims) throws Exception {
+        final Date now = new Date();
+        return Jwts.builder()
+                .addClaims(claims)
+                .claim("type", JwtTokenType.ACCESS)
+                .signWith(key, SignatureAlgorithm.forName("HS256"))
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + accessTokenExpirationTimeInSeconds))
                 .compact();
     }
 

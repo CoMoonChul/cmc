@@ -18,5 +18,5 @@ import java.util.List;
 @ConfigurationProperties(prefix = "security")
 @Getter
 public class SecurityProperties {
-    private final List<String> apiWhitelist = new ArrayList<>();
+    private final List<String> authorizationWhitelist = new ArrayList<>();
 }

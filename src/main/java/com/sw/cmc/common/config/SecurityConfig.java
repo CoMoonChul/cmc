@@ -2,6 +2,7 @@ package com.sw.cmc.common.config;
 
 import com.sw.cmc.common.filter.JwtAuthenticationFilter;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
+import com.sw.cmc.common.security.CustomAuthenticationEntryPoint;
 import com.sw.cmc.common.security.SecurityProperties;
 import com.sw.cmc.common.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -60,18 +61,22 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         return http
-                // CSRF 보호 비활성화 (JWT 기반 인증에서는 세션 미사용)
+                // CSRF 보호 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
-                // 세션 비활성화 (JWT 기반 인증에서는 모든 요청에 JWT 전송)
+                // 세션 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // API 요청 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(securityProperties.getApiWhitelist().toArray(new String[0])).permitAll() // 인증이 필요 없는 API
-                        .anyRequest().authenticated() // 인증이 필요한 API
+                        .requestMatchers(securityProperties.getAuthorizationWhitelist().toArray(new String[0])).permitAll()
+                        .anyRequest().authenticated()
                 )
-                // JWT 필터 추가
+                // 인증 실패 엔트리 포인트
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
+                // 필터
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -78,18 +78,22 @@ springdoc:
 jwt:
   token:
     secret-key: eH0SIMQPTgoK7M1ZpyEbkOqmVXGby7JO
+    encryption-key: xXxbnY58JCu97J9ErD1U8jKUt5kFGw+/Zq1t9j3Dkj4=
     access-token-expiration-time-in-seconds: 300 # 5분
     refresh-token-expiration-time-in-seconds: 77760000 # 90일
 
 security:
-  apiWhitelist:
+  authorizationWhitelist:
     # Swagger
+    - /
+    - /index.html
     - /swagger-ui/**
     - /v3/api-docs/**
-#    # Join
-    - /v1/checkUserId
-    - /v1/checkUsername
-    - /v1/join
+    # Join
+    - /user/join
+    - /user/checkUserId
+    - /user/checkUsername
     # Login
-    - /v1/login
-    - /v1/temp/login
+    - /user/tempLogin
+    - /user/login
+    - /user/refresh

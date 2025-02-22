@@ -1,9 +1,10 @@
 package com.sw.cmc.application.port.in.user;
 
 import com.sw.cmc.adapter.in.user.dto.LoginResDTO;
+import com.sw.cmc.adapter.in.user.dto.RefreshResDTO;
 import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
-import com.sw.cmc.domain.user.LoginDomain;
-import com.sw.cmc.domain.user.TempLoginDomain;
+import com.sw.cmc.domain.user.UserDomain;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * packageName    : com.sw.cmc.application.port.in
@@ -13,7 +14,9 @@ import com.sw.cmc.domain.user.TempLoginDomain;
  * description    :
  */
 public interface LoginUseCase {
-    TempLoginResDTO tempLogin(TempLoginDomain tempLoginDomain) throws Exception;
+    TempLoginResDTO tempLogin(UserDomain userDomain) throws Exception;
 
-    LoginResDTO login(LoginDomain loginDomain) throws Exception;
+    LoginResDTO login(UserDomain userDomain) throws Exception;
+
+    RefreshResDTO refresh(HttpServletRequest request) throws Exception;
 }

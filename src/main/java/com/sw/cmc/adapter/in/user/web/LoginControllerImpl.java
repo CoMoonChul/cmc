@@ -1,15 +1,13 @@
 package com.sw.cmc.adapter.in.user.web;
 
-import com.sw.cmc.adapter.in.user.dto.LoginReqDTO;
-import com.sw.cmc.adapter.in.user.dto.LoginResDTO;
-import com.sw.cmc.adapter.in.user.dto.TempLoginReqDTO;
-import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
+import com.sw.cmc.adapter.in.user.dto.*;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
-import com.sw.cmc.domain.user.LoginDomain;
-import com.sw.cmc.domain.user.TempLoginDomain;
+import com.sw.cmc.domain.user.UserDomain;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -28,11 +26,16 @@ public class LoginControllerImpl implements LoginControllerApi {
 
     @Override
     public ResponseEntity<TempLoginResDTO> tempLogin(TempLoginReqDTO tempLoginReqDTO) throws Exception {
-        return ResponseEntity.ok(loginUseCase.tempLogin(modelMapper.map(tempLoginReqDTO, TempLoginDomain.class)));
+        return ResponseEntity.ok(loginUseCase.tempLogin(modelMapper.map(tempLoginReqDTO, UserDomain.class)));
     }
 
     @Override
     public ResponseEntity<LoginResDTO> login(LoginReqDTO loginReqDTO) throws Exception {
-        return ResponseEntity.ok(loginUseCase.login(modelMapper.map(loginReqDTO, LoginDomain.class)));
+        return ResponseEntity.ok(loginUseCase.login(modelMapper.map(loginReqDTO, UserDomain.class)));
+    }
+
+    @PostMapping("/user/refresh")
+    public ResponseEntity<RefreshResDTO> refresh(HttpServletRequest request) throws Exception {
+        return ResponseEntity.ok(loginUseCase.refresh(request));
     }
 }
