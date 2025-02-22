@@ -97,3 +97,9 @@ security:
     - /user/tempLogin
     - /user/login
     - /user/refresh
+
+openai:
+  model: ${AI_MODEL}
+  secret-key: ${AI_KEY}
+  url:
+    temp: https://api.openai.com/v1/chat/completions

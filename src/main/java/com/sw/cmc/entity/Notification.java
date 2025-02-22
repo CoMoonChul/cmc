@@ -1,9 +1,7 @@
 package com.sw.cmc.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * packageName    : com.sw.cmc.entity
@@ -12,10 +10,11 @@ import lombok.Setter;
  * date           : 2025. 2. 17.
  * description    : notification entity
  */
-@Getter
-@Setter
-@NoArgsConstructor
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Notification {
 
     @Id

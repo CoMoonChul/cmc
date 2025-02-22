@@ -30,9 +30,6 @@ components:
           description: '정렬 기준 필드 (예: createdAt, sendAt)'
           example: "createdAt,desc"
 
-
-
-
     SelectNoticeResDTO:
       type: object
       properties:
@@ -80,6 +77,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SelectNoticeResDTO'
+
+    DeleteNoticeReqDTO:
+      type: object
+      properties:
+        noti_id:
+          type: integer
+          format: int64
+          description: 알림 ID
+
+    DeleteNoticeResDTO:
+      type: object
+      properties:
+        noti_id:
+          type: integer
+          format: int64
+          description: 알림 ID
+
 
 
 
