@@ -12,29 +12,6 @@ tags:
     description: Notice api controller
 
 paths:
-  /selectNotice:
-    get:
-      tags:
-        - notice-controller
-      summary: 알림 리스트 조회
-      description: 알림 리스트 조회
-      operationId: selectNotice
-      parameters:
-        - name: userNum
-          in: query
-          description: 유저ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 알림 조회 성공
-          content:
-            application/json:
-              schema:
-                $ref: "./dto/notice/NoticeDTO.yaml#/components/schemas/SelectNoticeListDTO"
-        '400':
-          description: Invalid status value
 
   /selectPageNotice:
     get:
@@ -44,12 +21,6 @@ paths:
       description: 페이징된 알림 리스트를 조회합니다.
       operationId: selectPageNotice
       parameters:
-        - name: userNum
-          in: query
-          description: 유저 ID
-          required: true
-          schema:
-            type: string
         - name: page
           in: query
           description: 요청할 페이지 번호 (0부터 시작)

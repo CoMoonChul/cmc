@@ -30,4 +30,8 @@ public class NoticeDomain {
     private String notiTitle;
     private String notiContent;
     private String notiType;
+    private String reasonNoti;
+
+    public NoticeDomain(Long notiId, long l, Long notiTemplateId, String sendAt, String sendState, String linkUrl, String createdAt, Long createUser, String notiTemplateNm, String notiTitle, String notiContent, String notiType) {
+    }
 }

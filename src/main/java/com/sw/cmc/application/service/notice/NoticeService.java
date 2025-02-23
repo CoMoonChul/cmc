@@ -3,6 +3,7 @@ package com.sw.cmc.application.service.notice;
 import com.sw.cmc.adapter.out.notice.persistence.NoticeRepository;
 import com.sw.cmc.application.port.in.notice.NoticeUseCase;
 import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.notice.NotiListDomain;
 import com.sw.cmc.domain.notice.NoticeDomain;
 import com.sw.cmc.entity.Notification;
@@ -21,13 +22,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * packageName    : com.sw.cmc.application.service.notice
  * fileName       : NoticeService
  * author         : An Seung Gi
  * date           : 2025-02-15
- * description    :
+ * description    : notice service
  */
 @Service
 @RequiredArgsConstructor
@@ -37,20 +39,29 @@ public class NoticeService implements NoticeUseCase {
     private final ModelMapper modelMapper;
     private final NoticeRepository noticeRepository;
     private final ApplicationEventPublisher eventPublisher;
-
+    private final UserUtil userUtil;
 
 
     @Override
-    public List<Notification> selectNotice(String userNum) throws Exception {
-        List<Notification> notice = noticeRepository.findAllByUserNum(userNum);
-        return notice;
-    }
-
-    @Override
-    public NotiListDomain selectPageNotice(String userNum, Integer page, Integer size) throws Exception {
+    public NotiListDomain selectPageNotice(Integer page, Integer size) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Long userNum = userUtil.getAuthenticatedUserNum();
         Page<Notification> res = noticeRepository.findByUserNum(userNum, pageable);
         List<NoticeDomain> list = res.getContent().stream().map(this::convertEntityToNotice).toList();
+
+        // 이벤트 리스너 테스트
+        Long notiTemplateId = 3L;
+        String sendAt = "20240102";
+        String linkUrl = "testLink";
+        Long createUser = userNum;
+        String sendState = "N";
+        Map<String, Long> templateParams = Map.of(
+            "userNum", 3L
+        );
+
+        eventPublisher.publishEvent(new SendNotiInAppEvent(userNum, notiTemplateId, sendAt, linkUrl, createUser, sendState, templateParams));
+
+
         return NotiListDomain.builder()
                 .pageNumber(res.getPageable().getPageNumber())
                 .pageSize(res.getPageable().getPageSize())
@@ -62,10 +73,14 @@ public class NoticeService implements NoticeUseCase {
 
     @Override
     @Transactional
-    public void saveNotification(Notification notification) throws Exception {
+    public NoticeDomain saveNotification(NoticeDomain noticeDomain) throws Exception {
         // Notification 저장
-        Notification saved = noticeRepository.save(notification);
+        Notification saved = noticeRepository.save(modelMapper.map(noticeDomain, Notification.class));
         entityManager.refresh(saved);
+        return NoticeDomain.builder()
+                .notiId(saved.getNotiId())
+                .linkUrl(saved.getLinkUrl())
+                .build();
     }
 
     @Override
@@ -74,9 +89,6 @@ public class NoticeService implements NoticeUseCase {
         return noticeDomain;
     }
 
-    public void createNoti(String userNum, Long notiTemplateId, String sendAt, String linkUrl, Long createUser, String sendState) throws Exception {
-        eventPublisher.publishEvent(new SendNotiInAppEvent(userNum, notiTemplateId, sendAt, linkUrl, createUser, sendState));
-    }
 
 
     public void ExampleFunction() throws Exception {

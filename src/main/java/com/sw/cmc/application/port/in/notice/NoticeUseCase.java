@@ -17,18 +17,38 @@ import java.util.List;
 public interface NoticeUseCase {
 
     /**
-     * methodName : selectNotice
+     * methodName : selectPageNotice
      * author : AN SEUNG GI
-     * description :
+     * description : 알림 리스트 조회 (페이징)
      *
+     * @param user num
+     * @param page
+     * @param size
+     * @return noti list domain
+     * @throws Exception the exception
+     */
+    NotiListDomain selectPageNotice(Integer page, Integer size) throws Exception;
+
+
+    /**
+     * methodName : saveNotification
+     * author : AN SEUNG GI
+     * description : 알림 등록
+     *
+     * @param notification
+     * @throws Exception the exception
+     */
+    NoticeDomain saveNotification(NoticeDomain noticeDomain) throws Exception;
+
+
+    /**
+     * methodName : deleteNotice
+     * author : AN SEUNG GI
+     * description : 알림 삭제
+     *
+     * @param notice domain
      * @return notice domain
      * @throws Exception the exception
      */
-    List<Notification> selectNotice(String userNum) throws Exception;
-
-    NotiListDomain selectPageNotice(String userNum, Integer page, Integer size) throws Exception;
-
-    void saveNotification(Notification notification) throws Exception;
-
     NoticeDomain deleteNotice(NoticeDomain noticeDomain) throws Exception;
 }

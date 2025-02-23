@@ -21,13 +21,13 @@ import java.util.List;
  */
 @Repository
 public interface NoticeRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findAllByUserNum(String userNum);
+
 
 
     @Query("SELECT noti FROM Notification noti " +
             "LEFT JOIN FETCH noti.notiTemplate " +
             "WHERE noti.userNum = :userNum")
-    Page<Notification> findByUserNum(@Param("userNum") String userNum, Pageable pageable);
+    Page<Notification> findByUserNum(@Param("userNum") Long userNum, Pageable pageable);
 
 
 }
