@@ -7,6 +7,7 @@ import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.notice.NotiListDomain;
 import com.sw.cmc.domain.notice.NoticeDomain;
 import com.sw.cmc.entity.Notification;
+import com.sw.cmc.entity.NotificationTemplate;
 import com.sw.cmc.event.notice.SendNotiEmailEvent;
 import com.sw.cmc.event.notice.SendNotiInAppEvent;
 import jakarta.persistence.EntityManager;
@@ -47,7 +48,9 @@ public class NoticeService implements NoticeUseCase {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Long userNum = userUtil.getAuthenticatedUserNum();
         Page<Notification> res = noticeRepository.findByUserNum(userNum, pageable);
-        List<NoticeDomain> list = res.getContent().stream().map(this::convertEntityToNotice).toList();
+        List<NoticeDomain> list = res.getContent().stream()
+                .map(n -> modelMapper.map(n, NoticeDomain.class)) // 람다식으로 개별 매핑
+                .toList();
 
         // 이벤트 리스너 테스트
         Long notiTemplateId = 3L;
@@ -56,7 +59,7 @@ public class NoticeService implements NoticeUseCase {
         Long createUser = userNum;
         String sendState = "N";
         Map<String, Long> templateParams = Map.of(
-            "userNum", 3L
+            "userNum", 1000000001L
         );
 
         eventPublisher.publishEvent(new SendNotiInAppEvent(userNum, notiTemplateId, sendAt, linkUrl, createUser, sendState, templateParams));
@@ -74,14 +77,18 @@ public class NoticeService implements NoticeUseCase {
     @Override
     @Transactional
     public NoticeDomain saveNotification(NoticeDomain noticeDomain) throws Exception {
-        // Notification 저장
-        Notification saved = noticeRepository.save(modelMapper.map(noticeDomain, Notification.class));
+
+        Notification notification = modelMapper.map(noticeDomain, Notification.class);
+
+        Notification saved = noticeRepository.save(notification);
         entityManager.refresh(saved);
+
         return NoticeDomain.builder()
                 .notiId(saved.getNotiId())
                 .linkUrl(saved.getLinkUrl())
                 .build();
     }
+
 
     @Override
     public NoticeDomain deleteNotice(NoticeDomain noticeDomain) throws Exception {
@@ -116,20 +123,4 @@ public class NoticeService implements NoticeUseCase {
 
 
 
-    private NoticeDomain convertEntityToNotice(Notification n) {
-        return new NoticeDomain(
-                n.getNotiId(),
-                Long.parseLong(n.getUserNum()),  // String → Long 변환
-                n.getNotiTemplate().getNotiTemplateId(),  // NotificationTemplate → Long 변환
-                n.getSendAt(),
-                n.getSendState(),
-                n.getLinkUrl(),
-                n.getCreatedAt(),
-                n.getCreateUser(),
-                n.getNotiTemplate().getNotiTemplateNm(),  // 추가된 필드 매핑
-                n.getNotiTemplate().getNotiTitle(),
-                n.getNotiTemplate().getNotiContent(),
-                n.getNotiTemplate().getNotiType()
-        );
-    }
 }

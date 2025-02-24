@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class NoticeDomain {
     private Long notiId;
     private Long userNum;
-    private Long notiTemplateId;
+    private NotificationTemplate notiTemplate;
     private String sendAt;
     private String sendState;
     private String linkUrl;
@@ -32,6 +32,6 @@ public class NoticeDomain {
     private String notiType;
     private String reasonNoti;
 
-    public NoticeDomain(Long notiId, long l, Long notiTemplateId, String sendAt, String sendState, String linkUrl, String createdAt, Long createUser, String notiTemplateNm, String notiTitle, String notiContent, String notiType) {
-    }
+
+
 }

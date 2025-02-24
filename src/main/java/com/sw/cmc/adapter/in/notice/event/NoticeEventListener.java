@@ -45,13 +45,11 @@ public class NoticeEventListener {
         String notiTemplate = template.getNotiContent();
         String reasonNoti = replacePlaceholders(notiTemplate, event.getTemplateParams());
 
-
-
         NoticeDomain noticeDomain = NoticeDomain.builder()
                 .userNum(event.getUserNum())
                 .sendAt(event.getSendAt())
                 .linkUrl(event.getLinkUrl())
-                .notiTemplateId(template.getNotiTemplateId())
+                .notiTemplate(template)
                 .createUser(event.getCreateUser())
                 .createdAt(LocalDateTime.now().toString()) // 현재 시간 설정
                 .sendState(event.getSendState())
