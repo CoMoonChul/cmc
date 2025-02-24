@@ -1,10 +1,7 @@
 package com.sw.cmc.domain.notice;
 
 import com.sw.cmc.entity.NotificationTemplate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * packageName    : com.sw.cmc.domain.notice
@@ -14,6 +11,7 @@ import lombok.NoArgsConstructor;
  * description    : 알람 도메인 객체
  */
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -61,6 +61,8 @@ components:
           type: string
         noti_type:
           type: string
+        reason_noti:
+          type: string
 
     SelectNoticeListDTO:
       type: object
