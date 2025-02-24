@@ -59,7 +59,7 @@ public class NoticeService implements NoticeUseCase {
         Long createUser = userNum;
         String sendState = "N";
         Map<String, Long> templateParams = Map.of(
-            "userNum", 1000000001L
+            "userNum", userNum
         );
 
         eventPublisher.publishEvent(new SendNotiInAppEvent(userNum, notiTemplateId, sendAt, linkUrl, createUser, sendState, templateParams));
@@ -91,12 +91,18 @@ public class NoticeService implements NoticeUseCase {
 
 
     @Override
+    @Transactional
     public NoticeDomain deleteNotice(NoticeDomain noticeDomain) throws Exception {
         noticeRepository.deleteById(noticeDomain.getNotiId());
         return noticeDomain;
     }
 
-
+    @Override
+    @Transactional
+    public int deleteAllNotice() throws Exception {
+        Long userNum = userUtil.getAuthenticatedUserNum();
+        return noticeRepository.deleteByUserNum(userNum);
+    }
 
     public void ExampleFunction() throws Exception {
         // event.notice.SendNotiEmailEvent는 adapter.in.smtp.event.SmtpEventListener를 트리거하게 됩니다.

@@ -12,6 +12,7 @@ import lombok.*;
  */
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,6 +38,8 @@ public class Notification {
     private String createdAt;
 
     private Long createUser;
+
+    private String reasonNoti;
 
 
 }

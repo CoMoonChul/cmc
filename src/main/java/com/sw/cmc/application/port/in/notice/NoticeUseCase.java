@@ -51,4 +51,15 @@ public interface NoticeUseCase {
      * @throws Exception the exception
      */
     NoticeDomain deleteNotice(NoticeDomain noticeDomain) throws Exception;
+
+
+    /**
+     * methodName : deleteAllNotice
+     * author : AN SEUNG GI
+     * description : 알림 전체 삭제
+     *
+     * @return int
+     * @throws Exception the exception
+     */
+    int deleteAllNotice() throws Exception;
 }
