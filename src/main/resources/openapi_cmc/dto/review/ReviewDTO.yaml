@@ -70,9 +70,10 @@ components:
         reviewList:
           type: array
           items:
-            allOf:
-              - $ref: '#/components/schemas/Review'
-              - type: object
+#            allOf:
+#              - $ref: '#/components/schemas/Review'
+              $ref: '#/components/schemas/Review'
+#              - type: object
 #                properties:
 #                  user:
 #                    type: object
@@ -95,7 +96,7 @@ components:
               description: 페이지 크기
             sort:
               type: string
-              description: 정렬
+              description: 정렬기준
 #            total_elements:
 #              type: integer
 #              format: int64
@@ -103,3 +104,94 @@ components:
 #            total_pages:
 #              type: integer
 #              description: 전체 페이지 수
+    # 리뷰 생성 요청 DTO
+    CreateReviewReqDTO:
+      type: object
+      required:
+        - user_num
+        - title
+        - content
+      properties:
+        user_num:
+          type: integer
+          format: int64
+          description: 회원 번호
+        title:
+          type: string
+          description: 리뷰 제목
+          maxLength: 200
+        content:
+          type: string
+          description: 리뷰 내용
+          maxLength: 5000
+    # 리뷰 생성 응답 DTO
+    CreateReviewResDTO:
+      type: object
+      properties:
+        review_id:
+          type: integer
+          format: int64
+          description: 생성된 리뷰 ID
+        success:
+          type: boolean
+          description: 생성 성공 여부
+
+    # 리뷰 삭제 요청 DTO
+    DeleteReviewReqDTO:
+      type: object
+      required:
+        - review_id
+        - user_num
+      properties:
+        review_id:
+          type: integer
+          format: int64
+          description: 삭제할 리뷰 ID
+        user_num:
+          type: integer
+          format: int64
+          description: 회원 번호
+
+    # 리뷰 삭제 응답 DTO
+    DeleteReviewResDTO:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 삭제 성공 여부
+
+
+    # 리뷰 수정 요청 DTO
+    UpdateReviewReqDTO:
+      type: object
+      required:
+        - review_id
+        - user_num
+        - title
+        - content
+      properties:
+        review_id:
+          type: integer
+          format: int64
+          description: 수정할 리뷰 ID
+        user_num:
+          type: integer
+          format: int64
+          description: 회원 번호
+        title:
+          type: string
+          description: 수정할 리뷰 제목
+          maxLength: 200
+        content:
+          type: string
+          description: 수정할 리뷰 내용
+          maxLength: 5000
+
+    # 리뷰 수정 응답 DTO
+    UpdateReviewResDTO:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 수정 성공 여부
+

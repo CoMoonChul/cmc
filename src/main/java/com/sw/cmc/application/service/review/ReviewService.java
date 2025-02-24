@@ -3,9 +3,12 @@ package com.sw.cmc.application.service.review;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.common.util.UserUtil;
+import com.sw.cmc.domain.comment.CommentDomain;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
 import com.sw.cmc.entity.Review;
+import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,6 +34,7 @@ public class ReviewService implements ReviewUseCase {
     private final EntityManager entityManager;
     private final ModelMapper modelMapper;
     private final ReviewRepository reviewRepository;
+    private final UserUtil userUtil;
 
     @Override
     public ReviewDomain selectReview(Long reviewId) throws Exception {
@@ -73,6 +77,18 @@ public class ReviewService implements ReviewUseCase {
                 )
                 .reviewList(reviewList)
                 .build();
+    }
+
+    @Override
+    public ReviewDomain createReview(ReviewDomain reviewDomain) throws Exception {
+        reviewDomain.validateCreateReview();
+        User savingUser = new User();
+        savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
+        Review saving = modelMapper.map(reviewDomain, Review.class);
+        saving.setUser(savingUser);
+        Review saved = reviewRepository.save(saving);
+        entityManager.refresh(saved);
+        return modelMapper.map(saved, ReviewDomain.class);
     }
 
     private ReviewDomain convertEntityToDomain(Review review) {

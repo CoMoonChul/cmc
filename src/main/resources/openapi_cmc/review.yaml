@@ -103,3 +103,68 @@ paths:
                 $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/SelectReviewListResDTO"
         '400':
           description: Invalid status value
+  /createReview:
+    post:
+      tags:
+        - review-controller
+      summary: 리뷰 생성
+      description: 리뷰 생성
+      operationId: createReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/CreateReviewReqDTO"
+      responses:
+        "200":
+          description: "리뷰 생성 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/CreateReviewResDTO"
+        "400":
+          description: "리뷰 생성 실패"
+  /deleteReview:
+    post:
+      tags:
+        - review-controller
+      summary: "리뷰 삭제"
+      operationId: "deleteReview"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/DeleteReviewReqDTO"
+      responses:
+        "200":
+          description: "리뷰 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/DeleteReviewResDTO"
+        "400":
+          description: "리뷰 삭제 실패"
+
+  /updateReview:
+    post:
+      tags:
+        - review-controller
+      summary: "리뷰 수정"
+      operationId: "updateReview"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/UpdateReviewReqDTO"
+      responses:
+        "200":
+          description: "리뷰 수정 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/review/ReviewDTO.yaml#/components/schemas/UpdateReviewResDTO"
+        "400":
+          description: "리뷰 수정 실패"
