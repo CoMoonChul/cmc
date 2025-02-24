@@ -1,5 +1,6 @@
 package com.sw.cmc.domain.review;
 
+import com.sw.cmc.common.advice.CmcException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +24,8 @@ public class ReviewDomain {
     private String content;
     private String createdAt;
     private String updatedAt;
+
+    public void validateCreateReview() throws CmcException {
+        // 추후 추가
+    }
 }
