@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * packageName    : com.sw.cmc.domain.review
@@ -25,7 +26,66 @@ public class ReviewDomain {
     private String createdAt;
     private String updatedAt;
 
+    /**
+     * methodName : validateCreateReview
+     * author : PARK JONG IL
+     * description : 리뷰 등록 validation
+     *
+     * @throws CmcException the cmc exception
+     */
     public void validateCreateReview() throws CmcException {
-        // 추후 추가
+        validateTitle();
+        validateTitleMaxLength();
+        validateContent();
+        validateContentMaxLength();
+    }
+
+    /**
+     * methodName : validateCreateReview
+     * author : PARK JONG IL
+     * description : 리뷰 제목 0자 이상 validation
+     *
+     * @throws CmcException the cmc exception
+     */
+    public void validateTitle() throws CmcException {
+        if (StringUtils.length(title) < 1 ) {
+            throw new CmcException("REVIEW003");
+        }
+    }
+    /**
+     * methodName : validateCreateReview
+     * author : PARK JONG IL
+     * description : 리뷰 제목 50자 이내 validation
+     *
+     * @throws CmcException the cmc exception
+     */
+    public void validateTitleMaxLength() throws CmcException {
+        if (StringUtils.length(title) > 50) {
+            throw new CmcException("REVIEW005");
+        }
+    }
+    /**
+     * methodName : validateCreateReview
+     * author : PARK JONG IL
+     * description : 리뷰 내용 0자 이상 validation
+     *
+     * @throws CmcException the cmc exception
+     */
+    public void validateContent() throws CmcException {
+        if (StringUtils.length(content) < 1 ) {
+            throw new CmcException("REVIEW004");
+        }
+    }
+    /**
+     * methodName : validateCreateReview
+     * author : PARK JONG IL
+     * description : 리뷰 내용 2000자 이내 validation
+     *
+     * @throws CmcException the cmc exception
+     */
+    public void validateContentMaxLength() throws CmcException {
+        if (StringUtils.length(content) > 2000 ) {
+            throw new CmcException("REVIEW006");
+        }
     }
 }

@@ -108,33 +108,25 @@ components:
     CreateReviewReqDTO:
       type: object
       required:
-        - user_num
         - title
         - content
       properties:
-        user_num:
-          type: integer
-          format: int64
-          description: 회원 번호
         title:
           type: string
           description: 리뷰 제목
-          maxLength: 200
+          maxLength: 50
         content:
           type: string
           description: 리뷰 내용
-          maxLength: 5000
+          maxLength: 2000
     # 리뷰 생성 응답 DTO
     CreateReviewResDTO:
       type: object
       properties:
-        review_id:
-          type: integer
-          format: int64
-          description: 생성된 리뷰 ID
-        success:
-          type: boolean
-          description: 생성 성공 여부
+        resultMessage:
+          type: string
+          description: 리뷰 생성 결과 메시지
+      description: 리뷰 생성 응답
 
     # 리뷰 삭제 요청 DTO
     DeleteReviewReqDTO:

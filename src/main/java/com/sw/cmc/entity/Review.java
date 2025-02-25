@@ -33,9 +33,9 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long reviewId;
-
-    @Column(name = "user_num", nullable = false)
-    private Long userNum;
+//
+//    @Column(name = "user_num", nullable = false)
+//    private Long userNum;
 
     @Column(name = "title", length = 200, nullable = false)
     private String title;
@@ -53,7 +53,7 @@ public class Review {
 
     // User 엔티티와의 관계 설정
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_num", insertable = false, updatable = false)
+    @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
     private User user;
 //
 //    // 좋아요 관계 설정
@@ -91,8 +91,8 @@ public class Review {
     }
 
     // 생성자
-    public Review(Long userNum, String title, String content) {
-        this.userNum = userNum;
+    public Review(String title, String content) {
+//        this.userNum = userNum;
         this.title = title;
         this.content = content;
     }
