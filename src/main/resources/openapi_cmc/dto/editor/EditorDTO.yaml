@@ -36,6 +36,31 @@ components:
           type: string
           description: 변경일자
 
+    UpdateEditorReqDTO:
+      type: object
+      required:
+        - code_edit_num
+      properties:
+        code_edit_num:
+          type: integer
+          format: int64
+        content:
+          type: string
+          description: 내용
+        language:
+          type: string
+          description: 사용언어
+
+    UpdateEditorResDTO:
+      type: object
+      properties:
+        code_edit_num:
+          type: integer
+          format: int64
+        updated_at:
+          type: string
+          description: 변경일자
+
 
 
 

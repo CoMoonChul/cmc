@@ -21,4 +21,15 @@ public interface EditorUseCase {
      * @throws Exception the exception
      */
     EditorDomain createEditor(EditorDomain editorDomain) throws Exception;
+
+    /**
+     * methodName : updateEditor
+     * author : AN SEUNG GI
+     * description : 에디터 수정
+     *
+     * @param editor domain
+     * @return editor domain
+     * @throws Exception the exception
+     */
+    EditorDomain updateEditor(EditorDomain editorDomain) throws Exception;
 }

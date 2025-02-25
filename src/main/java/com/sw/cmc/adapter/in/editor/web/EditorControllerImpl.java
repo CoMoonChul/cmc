@@ -2,6 +2,8 @@ package com.sw.cmc.adapter.in.editor.web;
 
 import com.sw.cmc.adapter.in.editor.dto.CreateEditorReqDTO;
 import com.sw.cmc.adapter.in.editor.dto.CreateEditorResDTO;
+import com.sw.cmc.adapter.in.editor.dto.UpdateEditorReqDTO;
+import com.sw.cmc.adapter.in.editor.dto.UpdateEditorResDTO;
 import com.sw.cmc.application.port.in.editor.EditorUseCase;
 import com.sw.cmc.domain.editor.EditorDomain;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +32,15 @@ public class EditorControllerImpl implements EditorControllerApi{
                 .language(createEditorReqDTO.getLanguage())
                 .build();
         return ResponseEntity.ok(modelMapper.map(editorUseCase.createEditor(editorDomain), CreateEditorResDTO.class));
+    }
+
+    @Override
+    public ResponseEntity<UpdateEditorResDTO> updateEditor(UpdateEditorReqDTO updateEditorReqDTO) throws Exception {
+        EditorDomain editorDomain = EditorDomain.builder()
+                .codeEditNum(updateEditorReqDTO.getCodeEditNum())
+                .content(updateEditorReqDTO.getContent())
+                .language(updateEditorReqDTO.getLanguage())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(editorUseCase.updateEditor(editorDomain), UpdateEditorResDTO.class));
     }
 }

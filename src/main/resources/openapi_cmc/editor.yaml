@@ -35,4 +35,27 @@ paths:
         '400':
           description: 잘못된 요청입니다.
 
+  /updateEditor:
+    post:
+      tags:
+        - editor-controller
+      summary: 코드 에디터 수정
+      description: 코드 에디터 테이블 내용을 수정한다
+      operationId: updateEditor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/editor/EditorDTO.yaml#/components/schemas/UpdateEditorReqDTO"
+      responses:
+        '200':
+          description: 에디터 수정 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/editor/EditorDTO.yaml#/components/schemas/UpdateEditorResDTO"
+        '400':
+          description: 잘못된 요청입니다.
+
 

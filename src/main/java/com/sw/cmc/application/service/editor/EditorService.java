@@ -2,6 +2,7 @@ package com.sw.cmc.application.service.editor;
 
 import com.sw.cmc.adapter.out.editor.persistence.EditorRepository;
 import com.sw.cmc.application.port.in.editor.EditorUseCase;
+import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.editor.EditorDomain;
 import com.sw.cmc.entity.Editor;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 /**
  * packageName    : com.sw.cmc.application.service.editor
@@ -44,6 +47,20 @@ public class EditorService implements EditorUseCase {
                 .language(saved.getLanguage())
                 .createdAt(saved.getCreatedAt())
                 .updatedAt(saved.getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public EditorDomain updateEditor(EditorDomain editorDomain) throws Exception {
+        Editor found = editorRepository.findById(editorDomain.getCodeEditNum())
+                .orElseThrow(()-> new CmcException("EDIT001"));
+        found.setContent(editorDomain.getContent());
+        found.setLanguage(editorDomain.getLanguage());
+        found.setUpdatedAt(LocalDateTime.now().toString());
+        return EditorDomain.builder()
+                .codeEditNum(found.getCodeEditNum())
+                .updatedAt(found.getUpdatedAt())
                 .build();
     }
 }
