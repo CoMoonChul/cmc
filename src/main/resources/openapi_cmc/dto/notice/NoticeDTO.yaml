@@ -96,6 +96,14 @@ components:
           format: int64
           description: 알림 ID
 
+    DeleteNoticeAllResDTO:
+      type: object
+      properties:
+        delete_count:
+          type: integer
+          format: int64
+          description: 삭제 건수
+
 
 
 

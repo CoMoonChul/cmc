@@ -52,4 +52,13 @@ public interface ReviewUseCase {
 //    long getReviewLikeCount(Long reviewId) throws Exception;
 //
 //    long getReviewCommentCount(Long reviewId) throws Exception;
+    /**
+     * methodName : selectReviewList
+     * author : Park Jong Il
+     * description : 리뷰 생성
+     *
+     * @param review Domain
+     * @throws Exception the exception
+     */
+    ReviewDomain createReview(ReviewDomain reviewDomain) throws Exception;
 }

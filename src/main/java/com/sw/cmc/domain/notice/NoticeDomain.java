@@ -29,6 +29,7 @@ public class NoticeDomain {
     private String notiContent;
     private String notiType;
     private String reasonNoti;
+    private int deleteCount;
 
 
 

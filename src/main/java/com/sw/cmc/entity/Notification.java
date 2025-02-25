@@ -12,6 +12,7 @@ import lombok.*;
  */
 @Entity
 @Getter
+@Setter
 @Builder
 @Setter
 @NoArgsConstructor
@@ -35,6 +36,7 @@ public class Notification {
 
     private String linkUrl;
 
+    @Column(name = "created_at", updatable = false, insertable = false)
     private String createdAt;
 
     private Long createUser;

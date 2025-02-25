@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * fileName       : NoticeEventListener
  * author         : An Seung Gi
  * date           : 2025-02-19
- * description    :
+ * description    : 알림 이벤트 리스너
  */
 
 @Component

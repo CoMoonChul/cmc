@@ -52,6 +52,19 @@ public class NoticeService implements NoticeUseCase {
                 .map(n -> modelMapper.map(n, NoticeDomain.class)) // 람다식으로 개별 매핑
                 .toList();
 
+        // 이벤트 리스너 테스트
+        Long notiTemplateId = 3L;
+        String sendAt = "20240102";
+        String linkUrl = "testLink";
+        Long createUser = userNum;
+        String sendState = "N";
+        Map<String, Long> templateParams = Map.of(
+            "userNum", userNum
+        );
+
+        eventPublisher.publishEvent(new SendNotiInAppEvent(userNum, notiTemplateId, sendAt, linkUrl, createUser, sendState, templateParams));
+
+
         return NotiListDomain.builder()
                 .pageNumber(res.getPageable().getPageNumber())
                 .pageSize(res.getPageable().getPageSize())
@@ -78,12 +91,18 @@ public class NoticeService implements NoticeUseCase {
 
 
     @Override
+    @Transactional
     public NoticeDomain deleteNotice(NoticeDomain noticeDomain) throws Exception {
         noticeRepository.deleteById(noticeDomain.getNotiId());
         return noticeDomain;
     }
 
-
+    @Override
+    @Transactional
+    public int deleteAllNotice() throws Exception {
+        Long userNum = userUtil.getAuthenticatedUserNum();
+        return noticeRepository.deleteByUserNum(userNum);
+    }
 
     public void ExampleFunction() throws Exception {
         // event.notice.SendNotiEmailEvent는 adapter.in.smtp.event.SmtpEventListener를 트리거하게 됩니다.

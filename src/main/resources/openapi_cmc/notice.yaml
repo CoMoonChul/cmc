@@ -68,3 +68,19 @@ paths:
                 $ref: "./dto/notice/NoticeDTO.yaml#/components/schemas/DeleteNoticeResDTO"
         "400":
           description: "댓글 삭제 실패"
+
+  /deleteNoticeAll:
+    post:
+      tags:
+        - notice-controller
+      summary: "알림 전체 삭제"
+      operationId: "deleteNoticeAll"
+      responses:
+        "200":
+          description: "댓글 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/notice/NoticeDTO.yaml#/components/schemas/DeleteNoticeAllResDTO"
+        "400":
+          description: "댓글 삭제 실패"

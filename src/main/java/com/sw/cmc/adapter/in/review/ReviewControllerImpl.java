@@ -1,20 +1,17 @@
 package com.sw.cmc.adapter.in.review;
 
+import com.sw.cmc.adapter.in.review.dto.CreateReviewReqDTO;
+import com.sw.cmc.adapter.in.review.dto.CreateReviewResDTO;
 import com.sw.cmc.adapter.in.review.dto.SelectReviewListResDTO;
 import com.sw.cmc.adapter.in.review.dto.SelectReviewResDTO;
 import com.sw.cmc.adapter.in.review.web.ReviewControllerApi;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
-import com.sw.cmc.domain.comment.CommentListDomain;
+import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.awt.print.Pageable;
 
 /**
  * packageName    : com.sw.cmc.adapter.in.review
@@ -46,4 +43,34 @@ public class ReviewControllerImpl implements ReviewControllerApi {
         ReviewListDomain result = reviewUseCase.selectReviewList(page, size, sort, order, keyword);
         return ResponseEntity.ok(modelMapper.map(result, SelectReviewListResDTO.class));
     }
+
+    @Override
+    public ResponseEntity<CreateReviewResDTO> createReview(CreateReviewReqDTO createReviewReqDTO) throws Exception {
+        ReviewDomain reviewDomain = ReviewDomain.builder()
+                .userNum(createReviewReqDTO.getUserNum())
+                .title(createReviewReqDTO.getTitle())
+                .content(createReviewReqDTO.getContent())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(reviewUseCase.createReview(reviewDomain), CreateReviewResDTO.class));
+    }
+//
+//    @Override
+//    public ResponseEntity<DeleteReviewResDTO> deleteReview(DeleteReviewReqDTO deleteReviewReqDTO) throws Exception {
+//        ReviewDomain reviewDomain = ReviewDomain.builder()
+//                .reviewId(deleteReviewReqDTO.getReview_id())
+//                .userNum(deleteReviewReqDTO.getUser_num())
+//                .build();
+//        return ResponseEntity.ok(modelMapper.map(reviewUseCase.deleteReview(reviewDomain), DeleteReviewResDTO.class));
+//    }
+//
+//    @Override
+//    public ResponseEntity<UpdateReviewResDTO> updateReview(UpdateReviewReqDTO updateReviewReqDTO) throws Exception {
+//        ReviewDomain reviewDomain = ReviewDomain.builder()
+//                .reviewId(updateReviewReqDTO.getReview_id())
+//                .userNum(updateReviewReqDTO.getUser_num())
+//                .title(updateReviewReqDTO.getTitle())
+//                .content(updateReviewReqDTO.getContent())
+//                .build();
+//        return ResponseEntity.ok(modelMapper.map(reviewUseCase.updateReview(reviewDomain), UpdateReviewResDTO.class));
+//    }
 }
