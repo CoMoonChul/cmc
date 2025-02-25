@@ -130,25 +130,20 @@ components:
       type: object
       required:
         - review_id
-        - user_num
       properties:
         review_id:
           type: integer
           format: int64
           description: 삭제할 리뷰 ID
-        user_num:
-          type: integer
-          format: int64
-          description: 회원 번호
 
     # 리뷰 삭제 응답 DTO
     DeleteReviewResDTO:
       type: object
       properties:
-        success:
-          type: boolean
-          description: 삭제 성공 여부
-
+        review_id:
+          type: integer
+          format: int64
+          description: 삭제된 리뷰 ID
 
     # 리뷰 수정 요청 DTO
     UpdateReviewReqDTO:

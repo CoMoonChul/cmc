@@ -27,9 +27,6 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long reviewId;
-//
-//    @Column(name = "user_num", nullable = false)
-//    private Long userNum;
 
     @Column(name = "title", length = 200, nullable = false)
     private String title;
