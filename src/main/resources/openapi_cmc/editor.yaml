@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: Editor api
+  description: Cmc Editor api
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: editor-controller
+    description: Editor api controller
+
+paths:
+  /createEditor:
+    post:
+      tags:
+        - editor-controller
+      summary: 코드 에디터 저장
+      description: 코드 에디터 테이블에 저장한다
+      operationId: createEditor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/editor/EditorDTO.yaml#/components/schemas/CreateEditorReqDTO"
+      responses:
+        '200':
+          description: 에디터 저장 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/editor/EditorDTO.yaml#/components/schemas/CreateEditorResDTO"
+        '400':
+          description: 잘못된 요청입니다.
+
+
