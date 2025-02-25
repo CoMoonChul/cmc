@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * packageName    : com.sw.cmc.application.service.editor
@@ -62,5 +63,17 @@ public class EditorService implements EditorUseCase {
                 .codeEditNum(found.getCodeEditNum())
                 .updatedAt(found.getUpdatedAt())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public EditorDomain deleteEditor(EditorDomain editorDomain) throws Exception {
+        Editor found = editorRepository.findById(editorDomain.getCodeEditNum())
+                .orElseThrow(()-> new CmcException("EDIT001"));
+        if (!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
+            throw new CmcException("COMMENT005");
+        }
+        editorRepository.deleteById(editorDomain.getCodeEditNum());
+        return editorDomain;
     }
 }

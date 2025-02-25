@@ -61,6 +61,23 @@ components:
           type: string
           description: 변경일자
 
+    DeleteEditorReqDTO:
+      type: object
+      required:
+        - code_edit_num
+      properties:
+        code_edit_num:
+          type: integer
+          format: int64
+
+    DeleteEditorResDTO:
+      type: object
+      properties:
+        code_edit_num:
+          type: integer
+          format: int64
+
+
 
 
 

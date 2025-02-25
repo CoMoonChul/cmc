@@ -32,4 +32,15 @@ public interface EditorUseCase {
      * @throws Exception the exception
      */
     EditorDomain updateEditor(EditorDomain editorDomain) throws Exception;
+
+    /**
+     * methodName : deleteEditor
+     * author : AN SEUNG GI
+     * description : 에디터 삭제
+     *
+     * @param editor domain
+     * @return editor domain
+     * @throws Exception the exception
+     */
+    EditorDomain deleteEditor(EditorDomain editorDomain) throws Exception;
 }

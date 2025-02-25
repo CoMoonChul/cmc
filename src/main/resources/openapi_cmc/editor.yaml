@@ -58,4 +58,27 @@ paths:
         '400':
           description: 잘못된 요청입니다.
 
+  /deleteEditor:
+    post:
+      tags:
+        - editor-controller
+      summary: 코드 에디터 삭제
+      description: 코드 에디터 테이블 내용을 삭제한다
+      operationId: deleteEditor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/editor/EditorDTO.yaml#/components/schemas/DeleteEditorReqDTO"
+      responses:
+        '200':
+          description: 에디터 삭제 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/editor/EditorDTO.yaml#/components/schemas/DeleteEditorResDTO"
+        '400':
+          description: 잘못된 요청입니다.
+
 
