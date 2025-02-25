@@ -3,7 +3,6 @@ package com.sw.cmc.application.service.review;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
