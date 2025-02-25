@@ -2,9 +2,12 @@ package com.sw.cmc.application.service.redis;
 
 import com.sw.cmc.application.port.in.redis.RedisUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 
 /**
@@ -35,5 +38,17 @@ public class RedisService implements RedisUseCase {
     @Override
     public void delete(String key) {
         redisTemplate.delete(key);  // Redis에서 키 삭제
+    }
+
+    @Override
+    public void saveHash(String key, Map<String, String> hash) {
+        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+        hashOps.putAll(key, hash);
+    }
+
+    @Override
+    public Map<String, String> getHash(String key) {
+        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+        return hashOps.entries(key);
     }
 }

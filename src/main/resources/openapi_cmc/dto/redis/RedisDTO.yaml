@@ -38,3 +38,61 @@ components:
         key:
           type: string
           description: Redis 항목의 키
+
+    SaveHashReqDTO:
+      type: object
+      required:
+        - key
+        - hash
+      properties:
+        key:
+          type: string
+          description: Redis 해시의 키
+        hash:
+          type: object
+          additionalProperties:
+            type: string  # 해시의 값은 String으로 가정
+
+    SaveHashResDTO:
+        type: object
+        properties:
+          message:
+            type: string
+            description: 성공 메시지
+
+    DeleteHashReqDTO:
+        type: object
+        required:
+          - key
+        properties:
+          key:
+            type: string
+            description: Redis 해시의 키
+
+    DeleteHashResDTO:
+        type: object
+        properties:
+          message:
+            type: string
+            description: 성공 메시지
+
+    SelectHashReqDTO:
+        type: object
+        required:
+          - key
+        properties:
+          key:
+            type: string
+            description: 조회할 Redis 해시의 키
+
+    SelectHashResDTO:
+        type: object
+        properties:
+          hash:
+            type: object
+            additionalProperties:
+              type: string  # 해시의 값은 String으로 가정
+
+
+
+
