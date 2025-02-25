@@ -14,7 +14,6 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notification {
