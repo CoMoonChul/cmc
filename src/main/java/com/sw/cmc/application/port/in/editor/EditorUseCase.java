@@ -1,6 +1,7 @@
 package com.sw.cmc.application.port.in.editor;
 
 import com.sw.cmc.domain.editor.EditorDomain;
+import com.sw.cmc.entity.Editor;
 
 /**
  * packageName    : com.sw.cmc.application.port.in.editor
@@ -43,4 +44,15 @@ public interface EditorUseCase {
      * @throws Exception the exception
      */
     EditorDomain deleteEditor(EditorDomain editorDomain) throws Exception;
+
+    /**
+     * methodName : selectEditor
+     * author : AN SEUNG GI
+     * description : 에디터 단건 조회
+     *
+     * @param editor domain
+     * @return editor domain
+     * @throws Exception the exception
+     */
+    EditorDomain selectEditor(Long id) throws Exception;
 }

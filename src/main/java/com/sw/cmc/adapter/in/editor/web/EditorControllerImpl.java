@@ -48,4 +48,9 @@ public class EditorControllerImpl implements EditorControllerApi{
                 .build();
         return ResponseEntity.ok(modelMapper.map(editorUseCase.deleteEditor(editorDomain), DeleteEditorResDTO.class));
     }
+
+    @Override
+    public ResponseEntity<SelectEditorResDTO> selectEditor(Long id) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(editorUseCase.selectEditor(id), SelectEditorResDTO.class));
+    }
 }

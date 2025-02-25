@@ -76,4 +76,18 @@ public class EditorService implements EditorUseCase {
         editorRepository.deleteById(editorDomain.getCodeEditNum());
         return editorDomain;
     }
+
+    @Override
+    public EditorDomain selectEditor(Long id) throws Exception {
+        Editor found = editorRepository.findById(id)
+                .orElseThrow(()-> new CmcException("EDIT001"));
+        return EditorDomain.builder()
+                .codeEditNum(found.getCodeEditNum())
+                .content(found.getContent())
+                .language(found.getLanguage())
+                .userNum(found.getUser().getUserNum())
+                .createdAt(found.getCreatedAt())
+                .updatedAt(found.getUpdatedAt())
+                .build();
+    }
 }

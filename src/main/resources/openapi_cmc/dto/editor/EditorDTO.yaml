@@ -77,6 +77,30 @@ components:
           type: integer
           format: int64
 
+    SelectEditorResDTO:
+      type: object
+      properties:
+        code_edit_num:
+          type: integer
+          format: int64
+          description: 에디트 키
+        content:
+          type: string
+          description: 내용
+        language:
+          type: string
+          description: 언어
+        user_num:
+          type: integer
+          format: int64
+        created_at:
+          type: string
+          description: 생성일자
+        updated_at:
+          type: string
+          description: 변경일자
+
+
 
 
 
