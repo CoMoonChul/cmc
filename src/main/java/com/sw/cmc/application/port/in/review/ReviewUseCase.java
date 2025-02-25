@@ -2,16 +2,13 @@ package com.sw.cmc.application.port.in.review;
 
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
-import org.hibernate.query.Page;
-
-import java.awt.print.Pageable;
 
 /**
  * packageName    : com.sw.cmc.application.port.in.review
  * fileName       : ReviewUseCase
  * author         : Park Jong Il
  * date           : 25. 2. 16.
- * description    :
+ * description    : review UseCase
  */
 public interface ReviewUseCase {
     /**
@@ -61,4 +58,14 @@ public interface ReviewUseCase {
      * @throws Exception the exception
      */
     ReviewDomain createReview(ReviewDomain reviewDomain) throws Exception;
+    /**
+     * methodName : selectReviewList
+     * author : Park Jong Il
+     * description : 리뷰 삭제
+     *
+     * @param review Domain
+     * @throws Exception the exception
+     */
+    ReviewDomain deleteReview(ReviewDomain reviewDomain) throws Exception;
+
 }

@@ -1,9 +1,6 @@
 package com.sw.cmc.adapter.in.review;
 
-import com.sw.cmc.adapter.in.review.dto.CreateReviewReqDTO;
-import com.sw.cmc.adapter.in.review.dto.CreateReviewResDTO;
-import com.sw.cmc.adapter.in.review.dto.SelectReviewListResDTO;
-import com.sw.cmc.adapter.in.review.dto.SelectReviewResDTO;
+import com.sw.cmc.adapter.in.review.dto.*;
 import com.sw.cmc.adapter.in.review.web.ReviewControllerApi;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.domain.review.ReviewDomain;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * fileName       : ReviewControllerImpl
  * author         : Park Jong Il
  * date           : 25. 2. 16.
- * description    :
+ * description    : Review ControllerImpl
  */
 @RestController
 @RequiredArgsConstructor
@@ -54,14 +51,13 @@ public class ReviewControllerImpl implements ReviewControllerApi {
         return ResponseEntity.ok(modelMapper.map(createdReview, CreateReviewResDTO.class));
     }
 //
-//    @Override
-//    public ResponseEntity<DeleteReviewResDTO> deleteReview(DeleteReviewReqDTO deleteReviewReqDTO) throws Exception {
-//        ReviewDomain reviewDomain = ReviewDomain.builder()
-//                .reviewId(deleteReviewReqDTO.getReview_id())
-//                .userNum(deleteReviewReqDTO.getUser_num())
-//                .build();
-//        return ResponseEntity.ok(modelMapper.map(reviewUseCase.deleteReview(reviewDomain), DeleteReviewResDTO.class));
-//    }
+    @Override
+    public ResponseEntity<DeleteReviewResDTO> deleteReview(DeleteReviewReqDTO deleteReviewReqDTO) throws Exception {
+        ReviewDomain reviewDomain = ReviewDomain.builder()
+                .reviewId(deleteReviewReqDTO.getReviewId())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(reviewUseCase.deleteReview(reviewDomain), DeleteReviewResDTO.class));
+    }
 //
 //    @Override
 //    public ResponseEntity<UpdateReviewResDTO> updateReview(UpdateReviewReqDTO updateReviewReqDTO) throws Exception {

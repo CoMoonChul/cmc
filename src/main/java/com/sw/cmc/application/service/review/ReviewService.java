@@ -1,5 +1,6 @@
 package com.sw.cmc.application.service.review;
 
+import com.sw.cmc.adapter.in.review.dto.DeleteReviewReqDTO;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
@@ -19,13 +20,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * packageName    : com.sw.cmc.application.service.review
  * fileName       : ReviewService
  * author         : Park Jong Il
  * date           : 25. 2. 16.
- * description    :
+ * description    : review service
  */
 @Service
 @RequiredArgsConstructor
@@ -94,7 +96,19 @@ public class ReviewService implements ReviewUseCase {
 
         return convertEntityToDomain(saved);
     }
+    @Override
+    @Transactional
+    public ReviewDomain deleteReview(ReviewDomain reviewDomain) throws Exception {
+        Review found = reviewRepository.findById(reviewDomain.getReviewId())
+                .orElseThrow(() ->new CmcException("REVIEW001"));
 
+        if(!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
+            throw new CmcException("REVIEW002");
+        }
+
+        reviewRepository.deleteById(reviewDomain.getReviewId());
+        return reviewDomain;
+    }
     private ReviewDomain convertEntityToDomain(Review review) {
         return new ReviewDomain(
             review.getReviewId(),
