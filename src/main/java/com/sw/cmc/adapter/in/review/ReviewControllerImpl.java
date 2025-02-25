@@ -47,11 +47,11 @@ public class ReviewControllerImpl implements ReviewControllerApi {
     @Override
     public ResponseEntity<CreateReviewResDTO> createReview(CreateReviewReqDTO createReviewReqDTO) throws Exception {
         ReviewDomain reviewDomain = ReviewDomain.builder()
-                .userNum(createReviewReqDTO.getUserNum())
                 .title(createReviewReqDTO.getTitle())
                 .content(createReviewReqDTO.getContent())
                 .build();
-        return ResponseEntity.ok(modelMapper.map(reviewUseCase.createReview(reviewDomain), CreateReviewResDTO.class));
+        ReviewDomain createdReview = reviewUseCase.createReview(reviewDomain);
+        return ResponseEntity.ok(modelMapper.map(createdReview, CreateReviewResDTO.class));
     }
 //
 //    @Override
