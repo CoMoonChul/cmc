@@ -1,17 +1,17 @@
 package com.sw.cmc.adapter.in.redis;
 
 
-import com.sw.cmc.adapter.in.redis.dto.DeleteRedisReqDTO;
-import com.sw.cmc.adapter.in.redis.dto.SaveRedisReqDTO;
-import com.sw.cmc.adapter.in.redis.dto.SaveRedisResDTO;
-import com.sw.cmc.adapter.in.redis.dto.SelectRedisResDTO;
+import com.sw.cmc.adapter.in.redis.dto.*;
 import com.sw.cmc.adapter.in.redis.web.RedisControllerApi;
 import com.sw.cmc.application.port.in.redis.RedisUseCase;
 import com.sw.cmc.domain.redis.RedisDomain;
+import com.sw.cmc.domain.redis.RedisHashDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 /**
@@ -64,4 +64,32 @@ public class RedisControllerImpl implements RedisControllerApi {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    @Override
+    public ResponseEntity<SaveHashResDTO> saveHash(@RequestBody SaveHashReqDTO saveHashReqDTO) throws Exception {
+        RedisHashDomain redisHashDomain = RedisHashDomain.builder()
+                .key(saveHashReqDTO.getKey())
+                .hash(saveHashReqDTO.getHash())
+                .build();
+        redisUseCase.saveHash(redisHashDomain.getKey(), redisHashDomain.getHash());
+
+        SaveHashResDTO response = new SaveHashResDTO();
+        response.setMessage("해시가 성공적으로 저장되었습니다.");
+        return ResponseEntity.status(201).body(response);
+    }
+
+    @Override
+    public ResponseEntity<SelectHashResDTO> getHash(@RequestBody SelectHashReqDTO selectHashReqDTO) throws Exception {
+        Map<String, String> hash = redisUseCase.getHash(selectHashReqDTO.getKey());
+        if (hash != null && !hash.isEmpty()) {
+            SelectHashResDTO response = new SelectHashResDTO();
+            response.setHash(hash);
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }
