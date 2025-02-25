@@ -24,5 +24,5 @@ public class SendNotiInAppEvent {
     private final String linkUrl; // 이동 url
     private final Long createUser; // 알림 생성 유저
     private final String sendState; // 발송 상태
-    private final Map<String, Long> templateParams;
+    private final Map<String, String> templateParams;
 }

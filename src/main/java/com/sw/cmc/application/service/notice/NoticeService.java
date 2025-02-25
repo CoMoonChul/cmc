@@ -53,14 +53,14 @@ public class NoticeService implements NoticeUseCase {
                 .toList();
 
         // 이벤트 리스너 테스트
-        Long notiTemplateId = 3L;
-        String sendAt = "20240102";
-        String linkUrl = "testLink";
-        Long createUser = userNum;
-        String sendState = "N";
-        Map<String, Long> templateParams = Map.of(
-            "userNum", userNum
-        );
+        Long notiTemplateId = 5L; // 템플릿 ID
+        String sendAt = "20250225"; // 발송시간
+        String linkUrl = "/testJoinUrl"; // 알림 url
+        Long createUser = userNum; // 알림 생성자
+        String sendState = "Y"; // 발송상태
+        Map<String, String> templateParams = Map.of(
+            "groupNm", "코문철파티"
+        ); // 템플릿 내용
 
         eventPublisher.publishEvent(new SendNotiInAppEvent(userNum, notiTemplateId, sendAt, linkUrl, createUser, sendState, templateParams));
 

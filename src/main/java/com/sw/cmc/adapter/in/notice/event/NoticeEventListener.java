@@ -59,7 +59,7 @@ public class NoticeEventListener {
         noticeUseCase.saveNotification(noticeDomain);
     }
 
-    private String replacePlaceholders(String template, Map<String, Long> values) {
+    private String replacePlaceholders(String template, Map<String, String> values) {
         // 정규 표현식을 사용하여 {}로 감싸진 부분을 찾음
         Pattern pattern = Pattern.compile("\\{(.*?)\\}");
         Matcher matcher = pattern.matcher(template);
@@ -67,7 +67,7 @@ public class NoticeEventListener {
         StringBuffer result = new StringBuffer();
         while (matcher.find()) {
             String placeholder = matcher.group(1); // {} 내부의 텍스트를 추출
-            Long replacement = values.get(placeholder); // 대체할 값 찾기
+            String replacement = values.get(placeholder); // 대체할 값 찾기
             if (replacement == null) {
                 ///
             }
