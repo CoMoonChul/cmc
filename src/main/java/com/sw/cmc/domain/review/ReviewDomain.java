@@ -64,13 +64,7 @@ public class ReviewDomain {
             throw new CmcException("REVIEW005");
         }
     }
-    /**
-     * methodName : validateCreateReview
-     * author : PARK JONG IL
-     * description : 리뷰 내용 0자 이상 validation
-     *
-     * @throws CmcException the cmc exception
-     */
+
     public void validateContent() throws CmcException {
         if (StringUtils.length(content) < 1 ) {
             throw new CmcException("REVIEW004");

@@ -15,11 +15,11 @@ components:
         title:
           type: string
           description: 리뷰 제목
-          maxLength: 200
+          maxLength: 50
         content:
           type: string
           description: 리뷰 내용
-          maxLength: 5000
+          maxLength: 2000
         created_at:
           type: string
           description: 생성 일시
@@ -121,12 +121,9 @@ components:
           maxLength: 2000
     # 리뷰 생성 응답 DTO
     CreateReviewResDTO:
-      type: object
-      properties:
-        resultMessage:
-          type: string
-          description: 리뷰 생성 결과 메시지
-      description: 리뷰 생성 응답
+      allOf:
+        - $ref: '#/components/schemas/Review'
+        - type: object
 
     # 리뷰 삭제 요청 DTO
     DeleteReviewReqDTO:

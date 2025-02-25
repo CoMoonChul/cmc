@@ -1,13 +1,10 @@
 package com.sw.cmc.application.service.review;
 
-import com.sw.cmc.adapter.in.comment.dto.CreateCommentResDTO;
-import com.sw.cmc.adapter.in.review.dto.CreateReviewResDTO;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.common.util.UserUtil;
-import com.sw.cmc.domain.comment.CommentDomain;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
 import com.sw.cmc.entity.Review;
@@ -97,8 +94,7 @@ public class ReviewService implements ReviewUseCase {
 
         entityManager.refresh(saved);
 
-
-        return modelMapper.map(saved, ReviewDomain.class);
+        return convertEntityToDomain(saved);
     }
 
     private ReviewDomain convertEntityToDomain(Review review) {

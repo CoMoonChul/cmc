@@ -50,14 +50,8 @@ public class ReviewControllerImpl implements ReviewControllerApi {
                 .title(createReviewReqDTO.getTitle())
                 .content(createReviewReqDTO.getContent())
                 .build();
-//        return ResponseEntity.ok(modelMapper.map(reviewUseCase.createReview(reviewDomain), CreateReviewResDTO.class));
         ReviewDomain createdReview = reviewUseCase.createReview(reviewDomain);
-
-        // 응답 DTO 생성 및 메시지 설정
-        CreateReviewResDTO response = modelMapper.map(createdReview, CreateReviewResDTO.class);
-        response.setResultMessage("리뷰가 정상적으로 생성되었습니다.");
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(modelMapper.map(createdReview, CreateReviewResDTO.class));
     }
 //
 //    @Override
