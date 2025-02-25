@@ -36,7 +36,6 @@ public class ReviewService implements ReviewUseCase {
     private final ModelMapper modelMapper;
     private final ReviewRepository reviewRepository;
     private final UserUtil userUtil;
-    private final MessageUtil messageUtil;
 
     @Override
     public ReviewDomain selectReview(Long reviewId) throws Exception {
