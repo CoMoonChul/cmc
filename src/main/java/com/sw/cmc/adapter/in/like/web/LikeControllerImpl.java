@@ -29,7 +29,6 @@ public class LikeControllerImpl implements LikeControllerApi {
     public ResponseEntity<DeleteReviewLikeResDTO> deleteReviewLike(DeleteReviewLikeReqDTO deleteReviewLikeReqDTO) throws Exception {
         LikeDomain likeDomain = LikeDomain.builder()
                 .reviewId(deleteReviewLikeReqDTO.getReviewId())
-                .userNum(deleteReviewLikeReqDTO.getUserNum())
                 .build();
         return ResponseEntity.ok(modelMapper.map(likeUseCase.deleteReviewLike(likeDomain), DeleteReviewLikeResDTO.class));
     }
@@ -38,7 +37,6 @@ public class LikeControllerImpl implements LikeControllerApi {
     public ResponseEntity<UpdateReviewLikeResDTO> updateReviewLike(UpdateReviewLikeReqDTO updateReviewLikeReqDTO) throws Exception {
         LikeDomain likeDomain = LikeDomain.builder()
                 .reviewId(updateReviewLikeReqDTO.getReviewId())
-                .userNum(updateReviewLikeReqDTO.getUserNum())
                 .build();
         return ResponseEntity.ok(modelMapper.map(likeUseCase.updateReviewLike(likeDomain), UpdateReviewLikeResDTO.class));
     }
