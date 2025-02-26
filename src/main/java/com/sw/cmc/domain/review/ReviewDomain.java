@@ -29,17 +29,16 @@ public class ReviewDomain {
     /**
      * methodName : validateCreateReview
      * author : PARK JONG IL
-     * description : 리뷰 등록 validation
+     * description : 리뷰 등록/수정 validation
      *
      * @throws CmcException the cmc exception
      */
-    public void validateCreateReview() throws CmcException {
+    public void validateCreateAndUpdateReview() throws CmcException {
         validateTitle();
         validateTitleMaxLength();
         validateContent();
         validateContentMaxLength();
     }
-
     /**
      * methodName : validateCreateReview
      * author : PARK JONG IL

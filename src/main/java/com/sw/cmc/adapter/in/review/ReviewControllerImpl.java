@@ -58,15 +58,14 @@ public class ReviewControllerImpl implements ReviewControllerApi {
                 .build();
         return ResponseEntity.ok(modelMapper.map(reviewUseCase.deleteReview(reviewDomain), DeleteReviewResDTO.class));
     }
-//
-//    @Override
-//    public ResponseEntity<UpdateReviewResDTO> updateReview(UpdateReviewReqDTO updateReviewReqDTO) throws Exception {
-//        ReviewDomain reviewDomain = ReviewDomain.builder()
-//                .reviewId(updateReviewReqDTO.getReview_id())
-//                .userNum(updateReviewReqDTO.getUser_num())
-//                .title(updateReviewReqDTO.getTitle())
-//                .content(updateReviewReqDTO.getContent())
-//                .build();
-//        return ResponseEntity.ok(modelMapper.map(reviewUseCase.updateReview(reviewDomain), UpdateReviewResDTO.class));
-//    }
+
+    @Override
+    public ResponseEntity<UpdateReviewResDTO> updateReview(UpdateReviewReqDTO updateReviewReqDTO) throws Exception {
+        ReviewDomain reviewDomain = ReviewDomain.builder()
+                .reviewId(updateReviewReqDTO.getReviewId())
+                .title(updateReviewReqDTO.getTitle())
+                .content(updateReviewReqDTO.getContent())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(reviewUseCase.updateReview(reviewDomain), UpdateReviewResDTO.class));
+    }
 }

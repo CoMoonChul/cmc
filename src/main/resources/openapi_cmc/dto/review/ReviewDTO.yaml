@@ -150,32 +150,23 @@ components:
       type: object
       required:
         - review_id
-        - user_num
         - title
         - content
       properties:
         review_id:
           type: integer
           format: int64
-          description: 수정할 리뷰 ID
-        user_num:
-          type: integer
-          format: int64
-          description: 회원 번호
+          description: 리뷰ID
         title:
           type: string
           description: 수정할 리뷰 제목
-          maxLength: 200
+          maxLength: 50
         content:
           type: string
           description: 수정할 리뷰 내용
-          maxLength: 5000
-
+          maxLength: 2000
     # 리뷰 수정 응답 DTO
     UpdateReviewResDTO:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 수정 성공 여부
-
+      allOf:
+        - $ref: '#/components/schemas/Review'
+        - type: object
