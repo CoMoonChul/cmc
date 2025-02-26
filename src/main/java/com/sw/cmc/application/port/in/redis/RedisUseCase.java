@@ -24,14 +24,14 @@ public interface RedisUseCase {
 
 
     /**
-     * methodName : get
+     * methodName : select
      * author : KO YOUNG SUNG
      * description : 레디스 해쉬 값 조회
      *
      * @param key - 레디스 키
      * @return string
      */
-    String get(String key) throws Exception;
+    String select(String key) throws Exception;
 
 
     /**
@@ -54,13 +54,13 @@ public interface RedisUseCase {
     void saveHash(String key, Map<String, String> hash) throws Exception;
 
     /**
-     * methodName : getHash
+     * methodName : selectHash
      * author : KO YOUNG SUNG
      * description : 레디스 해쉬 값 조회
      * @param key - 레디스 키
      * @return the hash
      */
-    Map<String, String> getHash(String key) throws Exception;
+    Map<String, String> selectHash(String key) throws Exception;
 
 
 }

@@ -26,50 +26,36 @@ paths:
               $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SaveRedisReqDTO"
       responses:
         '201':
-          description: 성공적으로 저장됨
+          description: 레디스 저장 성공
           content:
             application/json:
               schema:
                 $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SaveRedisResDTO"
+        '400':
+          description: 레디스 저장 실패
 
-  /getRedis/{key}:
+  /selectRedis:
     get:
       summary: 특정 키로 Redis 항목 조회
-      operationId: getRedisByKey
+      operationId: selectRedis
       tags:
         - redis-controller  # 태그 추가
       parameters:
         - name: key
-          in: path
+          in: query
           required: true
           description: Redis 항목의 키
           schema:
             type: string
       responses:
         '200':
-          description: 성공적으로 조회됨
+          description: 레디스 성공 실패
           content:
             application/json:
               schema:
                 $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SelectRedisResDTO"
         '404':
-          description: 항목을 찾을 수 없음
-
-  /getAllRedis:
-    get:
-      summary: 모든 Redis 항목 조회
-      operationId: getAllRedis
-      tags:
-        - redis-controller  # 태그 추가
-      responses:
-        '200':
-          description: 모든 항목 조회 성공
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SelectRedisResDTO"
+          description: 레디스 조회 실패
 
   /deleteRedis:
     post:
@@ -85,9 +71,9 @@ paths:
               $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/DeleteRedisReqDTO"
       responses:
         '200':
-          description: 성공적으로 삭제됨
+          description: 레디스 삭제 성공
         '404':
-          description: 항목을 찾을 수 없음
+          description: 레디스 삭제 실패
 
   /saveHash:
     post:
@@ -103,50 +89,33 @@ paths:
               $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SaveHashReqDTO"
       responses:
         '201':
-          description: 성공적으로 저장됨
+          description: 레디스 해시 저장 성공
           content:
             application/json:
               schema:
                 $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SaveHashResDTO"
+        '400':
+          description: 레디스 해시 저장 실패
 
-  /deleteHash:
-      delete:
-        summary: Redis 해시 항목 삭제
-        operationId: deleteHash
-        tags:
-          - redis-controller  # 태그 추가
-        requestBody:
+
+  /selectHash:
+    get:
+      summary: Redis 해시 조회
+      operationId: selectHash
+      tags:
+        - redis-controller  # 태그 추가
+      parameters:
+        - name: key
+          in: query
           required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 레디스 해시 조회 성공
           content:
             application/json:
               schema:
-                $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/DeleteHashReqDTO"
-        responses:
-          '200':
-            description: 성공적으로 삭제됨
-            content:
-              application/json:
-                schema:
-                  $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/DeleteHashResDTO"
-
-  /getHash:
-      post:
-        summary: Redis 해시 조회
-        operationId: getHash
-        tags:
-          - redis-controller  # 태그 추가
-        requestBody:
-          required: true
-          content:
-            application/json:
-              schema:
-                $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SelectHashReqDTO"
-        responses:
-          '200':
-            description: 해시 성공적으로 조회됨
-            content:
-              application/json:
-                schema:
-                  $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SelectHashResDTO"
-          '404':
-            description: 해시를 찾을 수 없음
+                $ref: "./dto/redis/RedisDTO.yaml#/components/schemas/SelectHashResDTO"
+        '404':
+          description: 레디스 해시 조회 실패
