@@ -62,3 +62,12 @@ components:
           type: string
           description: AccessToken
       description: AccessToken 재발급 응답
+
+    # API_USER_0006 로그아웃
+    LogoutResDTO:
+      type: object
+      properties:
+        resultMessage:
+          type: string
+          description: 로그아웃 결과 메시지
+      description: 로그아웃 응답

@@ -38,4 +38,9 @@ public class LoginControllerImpl implements LoginControllerApi {
     public ResponseEntity<RefreshResDTO> refresh(HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(loginUseCase.refresh(request));
     }
+
+    @PostMapping("/user/logout")
+    public ResponseEntity<LogoutResDTO> logout(HttpServletRequest request) throws Exception {
+        return ResponseEntity.ok(loginUseCase.logout(request));
+    }
 }

@@ -1,6 +1,7 @@
 package com.sw.cmc.application.port.in.user;
 
 import com.sw.cmc.adapter.in.user.dto.LoginResDTO;
+import com.sw.cmc.adapter.in.user.dto.LogoutResDTO;
 import com.sw.cmc.adapter.in.user.dto.RefreshResDTO;
 import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
 import com.sw.cmc.domain.user.UserDomain;
@@ -19,4 +20,6 @@ public interface LoginUseCase {
     LoginResDTO login(UserDomain userDomain) throws Exception;
 
     RefreshResDTO refresh(HttpServletRequest request) throws Exception;
+
+    LogoutResDTO logout(HttpServletRequest request) throws Exception;
 }

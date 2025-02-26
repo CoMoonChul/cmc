@@ -1,13 +1,13 @@
 package com.sw.cmc.application.service.user;
 
-import com.sw.cmc.adapter.in.user.dto.LoginResDTO;
-import com.sw.cmc.adapter.in.user.dto.RefreshResDTO;
-import com.sw.cmc.adapter.in.user.dto.TempLoginResDTO;
+import com.sw.cmc.adapter.in.user.dto.*;
 import com.sw.cmc.adapter.out.user.persistence.LoginRepository;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
 import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.common.filter.JwtAuthenticationFilter;
 import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
+import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.TokenDomain;
 import com.sw.cmc.domain.user.UserDomain;
@@ -36,9 +36,11 @@ public class LoginService implements LoginUseCase {
 
     private final UserUtil userUtil;
     private final ModelMapper modelMapper;
+    private final MessageUtil messageUtil;
     private final LoginRepository loginRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Override
     public TempLoginResDTO tempLogin(final UserDomain userDomain) throws Exception {
@@ -116,5 +118,26 @@ public class LoginService implements LoginUseCase {
         refreshResDTO.setAccessToken(userUtil.createAccessToken(userInfo.getUserNum(), userInfo.getUserId()));
 
         return refreshResDTO;
+    }
+
+    @Override
+    public LogoutResDTO logout(HttpServletRequest request) throws Exception {
+        // accessToken 추출
+        String accessToken = jwtAuthenticationFilter.getTokenFromRequest(request);
+
+        // 회원 번호
+        Long userNum = jwtTokenProvider.getClaims(accessToken).get("userNum", Long.class);
+
+        // 회원 조회
+        final User user = modelMapper.map(loginRepository.findByUserNum(userNum)
+                .orElseThrow(() -> new CmcException("USER001")), User.class);
+
+        // RefreshToken 세팅
+        user.setRefreshToken(null);
+
+        // DB 저장
+        loginRepository.save(user);
+
+        return new LogoutResDTO().resultMessage(messageUtil.getFormattedMessage("USER015"));
     }
 }
