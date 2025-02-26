@@ -28,9 +28,4 @@ public class ReviewLike {
     @MapsId("userNum")
     @JoinColumn(name = "userNum", referencedColumnName = "userNum", nullable = false)
     private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("reviewId")
-    @JoinColumn(name = "review_id", referencedColumnName = "review_id", nullable = false)
-    private Review review;
 }

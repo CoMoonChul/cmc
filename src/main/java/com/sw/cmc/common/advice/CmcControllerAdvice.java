@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * fileName       : TempAdvice
  * author         : IHW
  * date           : 2025-01-24
- * description    :
+ * description    : CmcControllerAdvice
  */
 @ControllerAdvice
 @RequiredArgsConstructor
