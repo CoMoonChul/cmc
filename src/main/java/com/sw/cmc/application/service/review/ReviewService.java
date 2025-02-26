@@ -1,6 +1,5 @@
 package com.sw.cmc.application.service.review;
 
-import com.sw.cmc.adapter.in.review.dto.DeleteReviewReqDTO;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
