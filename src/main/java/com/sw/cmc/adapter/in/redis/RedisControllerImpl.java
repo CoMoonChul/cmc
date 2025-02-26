@@ -7,7 +7,6 @@ import com.sw.cmc.application.port.in.redis.RedisUseCase;
 import com.sw.cmc.domain.redis.RedisDomain;
 import com.sw.cmc.domain.redis.RedisHashDomain;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class RedisControllerImpl implements RedisControllerApi {
-    private final ModelMapper modelMapper;
     private final RedisUseCase redisUseCase;
 
     @Override
@@ -52,9 +50,9 @@ public class RedisControllerImpl implements RedisControllerApi {
     }
 
     @Override
-    public ResponseEntity<SelectRedisResDTO> getRedisByKey(String key) throws Exception {
+    public ResponseEntity<SelectRedisResDTO> selectRedis(String key) throws Exception {
         // 특정 키로 Redis 항목 조회
-        String value = redisUseCase.get(key);
+        String value = redisUseCase.select(key);
         if (value != null) {
             SelectRedisResDTO response = new SelectRedisResDTO();
             response.setKey(key);
@@ -80,8 +78,8 @@ public class RedisControllerImpl implements RedisControllerApi {
     }
 
     @Override
-    public ResponseEntity<SelectHashResDTO> getHash(@RequestBody SelectHashReqDTO selectHashReqDTO) throws Exception {
-        Map<String, String> hash = redisUseCase.getHash(selectHashReqDTO.getKey());
+    public ResponseEntity<SelectHashResDTO> selectHash(String key) throws Exception {
+        Map<String, String> hash = redisUseCase.selectHash(key); // 변경된 부분
         if (hash != null && !hash.isEmpty()) {
             SelectHashResDTO response = new SelectHashResDTO();
             response.setHash(hash);
@@ -90,6 +88,7 @@ public class RedisControllerImpl implements RedisControllerApi {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 
 }

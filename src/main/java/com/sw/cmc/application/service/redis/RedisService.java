@@ -30,7 +30,7 @@ public class RedisService implements RedisUseCase {
     }
 
     @Override
-    public String get(String key) {
+    public String select(String key) {
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         return ops.get(key);  // Redis에서 키에 해당하는 값 조회
     }
@@ -47,7 +47,7 @@ public class RedisService implements RedisUseCase {
     }
 
     @Override
-    public Map<String, String> getHash(String key) {
+    public Map<String, String> selectHash(String key) {
         HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
         return hashOps.entries(key);
     }
