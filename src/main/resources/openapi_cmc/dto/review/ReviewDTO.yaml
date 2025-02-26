@@ -170,7 +170,3 @@ components:
       allOf:
         - $ref: '#/components/schemas/Review'
         - type: object
-      properties:
-        success:
-          type: boolean
-          description: 수정 성공 여부

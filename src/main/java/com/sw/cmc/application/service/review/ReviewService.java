@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -84,7 +85,7 @@ public class ReviewService implements ReviewUseCase {
     @Override
     @Transactional
     public ReviewDomain createReview(ReviewDomain reviewDomain) throws Exception {
-        reviewDomain.validateCreateReview();
+        reviewDomain.validateCreateAndUpdateReview();
 
         User savingUser = new User();
         savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
@@ -109,6 +110,28 @@ public class ReviewService implements ReviewUseCase {
         reviewRepository.deleteById(reviewDomain.getReviewId());
         return reviewDomain;
     }
+
+    @Override
+    @Transactional
+    public ReviewDomain updateReview(ReviewDomain reviewDomain) throws Exception {
+        reviewDomain.validateCreateAndUpdateReview();
+        Review found = reviewRepository.findById(reviewDomain.getReviewId())
+                .orElseThrow(() ->new CmcException("REVIEW001"));
+
+        if(!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
+            throw new CmcException("REVIEW002");
+        }
+
+        // 수정 작업 (제목, 게시글, 수정일자 갱신)
+        found.setTitle(reviewDomain.getTitle());
+        found.setContent(reviewDomain.getContent());
+        found.setUpdatedAt(LocalDateTime.now().toString());
+
+        Review saved = reviewRepository.save(found);
+        // 저장
+        return convertEntityToDomain(saved);
+    }
+    // builder 대신 공통으로 활용하는 생성자
     private ReviewDomain convertEntityToDomain(Review review) {
         return new ReviewDomain(
             review.getReviewId(),

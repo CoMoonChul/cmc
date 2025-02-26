@@ -50,7 +50,7 @@ public interface ReviewUseCase {
 //
 //    long getReviewCommentCount(Long reviewId) throws Exception;
     /**
-     * methodName : selectReviewList
+     * methodName : createReview
      * author : Park Jong Il
      * description : 리뷰 생성
      *
@@ -59,7 +59,7 @@ public interface ReviewUseCase {
      */
     ReviewDomain createReview(ReviewDomain reviewDomain) throws Exception;
     /**
-     * methodName : selectReviewList
+     * methodName : deleteReview
      * author : Park Jong Il
      * description : 리뷰 삭제
      *
@@ -67,5 +67,13 @@ public interface ReviewUseCase {
      * @throws Exception the exception
      */
     ReviewDomain deleteReview(ReviewDomain reviewDomain) throws Exception;
-
+    /**
+     * methodName : updateReview
+     * author : Park Jong Il
+     * description : 리뷰 삭제
+     *
+     * @param review Domain
+     * @throws Exception the exception
+     */
+    ReviewDomain updateReview(ReviewDomain reviewDomain) throws Exception;
 }
