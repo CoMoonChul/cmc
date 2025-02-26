@@ -136,3 +136,18 @@ paths:
             application/json:
               schema:
                 $ref: "./dto/user/LoginDTO.yaml#/components/schemas/RefreshResDTO"
+
+  /user/logout:
+    post:
+      tags:
+        - login-controller
+      summary: "API_USER_0006 로그아웃"
+      description: 로그아웃 API
+      operationId: "logout"
+      responses:
+        "200":
+          description: "로그아웃 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/user/LoginDTO.yaml#/components/schemas/LogoutResDTO"
