@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * fileName       : LoginControllerImpl
  * author         : SungSuHan
  * date           : 2025-02-07
- * description    : 로그인 api controller
+ * description    : login-controller
  */
 @RestController
 @RequiredArgsConstructor
@@ -42,5 +42,10 @@ public class LoginControllerImpl implements LoginControllerApi {
     @PostMapping("/user/logout")
     public ResponseEntity<LogoutResDTO> logout(HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(loginUseCase.logout(request));
+    }
+
+    @Override
+    public ResponseEntity<FindAccountResDTO> findAccount(FindAccountReqDTO findAccountReqDTO) throws Exception {
+        return ResponseEntity.ok(loginUseCase.findAccount(modelMapper.map(findAccountReqDTO, UserDomain.class)));
     }
 }

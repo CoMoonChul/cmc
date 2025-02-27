@@ -40,6 +40,7 @@ public class User {
     @Column(columnDefinition = "VARCHAR(50) COMMENT '회원명'", unique = true)
     private String username;
 
+    @NotNull
     @Column(columnDefinition = "VARCHAR(50) COMMENT '회원 이메일'")
     private String email;
 

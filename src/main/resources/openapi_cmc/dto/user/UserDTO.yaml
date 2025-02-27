@@ -1,0 +1,13 @@
+components:
+  schemas:
+    # API_USER_0008 회원 정보 조회
+    GetUserInfoResDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          description: 회원명
+        email:
+          type: string
+          description: 회원 이메일
+      description: 회원 정보 조회 응답

@@ -12,14 +12,20 @@ import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.TokenDomain;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
+import com.sw.cmc.event.notice.SendNotiEmailEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.sw.cmc.domain.user.UserDomain.*;
 
 import java.util.Objects;
 
@@ -38,11 +44,14 @@ public class LoginService implements LoginUseCase {
     private final ModelMapper modelMapper;
     private final MessageUtil messageUtil;
     private final LoginRepository loginRepository;
+    private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ApplicationEventPublisher eventPublisher;
     private final AuthenticationManager authenticationManager;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Override
+    @Transactional
     public TempLoginResDTO tempLogin(final UserDomain userDomain) throws Exception {
         // 회원 조회
         final UserDomain userInfo = modelMapper.map(loginRepository.findByUserId(userDomain.getUserId())
@@ -69,6 +78,7 @@ public class LoginService implements LoginUseCase {
     }
 
     @Override
+    @Transactional
     public LoginResDTO login(final UserDomain userDomain) throws Exception {
         // 사용자 인증
         Authentication authentication = authenticationManager.authenticate(
@@ -121,8 +131,9 @@ public class LoginService implements LoginUseCase {
     }
 
     @Override
+    @Transactional
     public LogoutResDTO logout(HttpServletRequest request) throws Exception {
-        // accessToken 추출
+        // AccessToken 추출
         String accessToken = jwtAuthenticationFilter.getTokenFromRequest(request);
 
         // 회원 번호
@@ -139,5 +150,56 @@ public class LoginService implements LoginUseCase {
         loginRepository.save(user);
 
         return new LogoutResDTO().resultMessage(messageUtil.getFormattedMessage("USER015"));
+    }
+
+    @Override
+    @Transactional
+    public FindAccountResDTO findAccount(UserDomain userDomain) throws Exception {
+        // 이메일
+        String email = userDomain.getEmail();
+        validateEmail(email);
+
+        // DB 조회
+        User user = modelMapper.map(loginRepository.findByEmail(email)
+                .orElseThrow(() -> new CmcException("USER016")), User.class);
+
+        // 회원 ID
+        String userId = user.getUserId();
+
+        // 회원명
+        String username = user.getUsername();
+
+        // 랜덤 비밀번호 생성
+        String password = createRandomPassword();
+
+        // 랜덤 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(password);
+
+        // 암호화된 비밀번호를 User 객체에 설정
+        user.setPassword(encodedPassword);
+
+        // DB 저장
+        loginRepository.save(user);
+
+        // 이메일 전송
+        sendEmail(email, username, userId, password);
+
+        return new FindAccountResDTO().resultMessage(messageUtil.getFormattedMessage("USER017"));
+    }
+
+    public void sendEmail(String email, String username, String userId, String password) throws Exception {
+        String template = "코문철 계정 찾기";
+
+        SendNotiEmailEvent sendNotiEmailEvent = SendNotiEmailEvent.builder()
+                .rsvrEmail(email)
+                .subject(template)
+                .text(
+                        username + "님, 안녕하세요.\n\n" +
+                        username + "님의 아이디와 새로운 비밀번호는 " + userId + " / " + password + " 입니다.\n\n" +
+                        "지금 바로 로그인을 진행해 주세요."
+                    )
+                .build();
+
+        eventPublisher.publishEvent(sendNotiEmailEvent);
     }
 }

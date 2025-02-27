@@ -23,13 +23,11 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MessageUtil messageUtil;
     private final LoginRepository loginRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user =  loginRepository.findByUserId(userId)
-                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("USER001")));
+        User user =  loginRepository.findByUserId(userId).orElseThrow(() -> new CmcException("USER001"));
 
         return new CustomUserDetails(user.getUserId(), user.getPassword(), user.getUserNum(), new ArrayList<>());
     }
