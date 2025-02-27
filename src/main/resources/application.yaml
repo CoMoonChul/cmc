@@ -99,6 +99,13 @@ security:
     - /user/refresh
     - /user/findAccount
 
+    # Comment
+    - /selectComment
+    - /selectCommentList
+    # View
+    - /updateReviewView
+    - /updateBattleView
+
 openai:
   model: ${AI_MODEL}
   secret-key: ${AI_KEY}

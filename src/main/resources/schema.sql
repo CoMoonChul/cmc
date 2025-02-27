@@ -38,14 +38,26 @@ CREATE TABLE IF NOT EXISTS comment (
     CONSTRAINT fk_comment_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS code_editor (
+    code_edit_num BIGINT AUTO_INCREMENT PRIMARY KEY,
+    content LONGTEXT,
+    language VARCHAR(20),
+    user_num BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_code_editor_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS review (
     review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_num BIGINT NOT NULL,
     title VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
+    code_edit_num BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_review_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
+    CONSTRAINT fk_review_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE,
+    CONSTRAINT fk_review_code_edit FOREIGN KEY (code_edit_num) REFERENCES code_editor(code_edit_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS review_like (
@@ -61,16 +73,6 @@ CREATE TABLE IF NOT EXISTS review_view (
     review_id BIGINT UNIQUE NOT NULL,
     view_count BIGINT DEFAULT 0 NOT NULL,
     CONSTRAINT fk_review_view FOREIGN KEY (review_id) REFERENCES review(review_id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS code_editor (
-    code_edit_num BIGINT AUTO_INCREMENT PRIMARY KEY,
-    content LONGTEXT,
-    language VARCHAR(20),
-    user_num BIGINT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_code_editor_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS battle (
@@ -111,6 +113,7 @@ CREATE TABLE IF NOT EXISTS notification (
     noti_template_id BIGINT NOT NULL,
     send_at TIMESTAMP,
     send_state CHAR(1) DEFAULT 'N' NOT NULL,
+    reason_noti VARCHAR(1000),
     link_url VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     create_user BIGINT,

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이메일 알림</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: 'Apple SD Gothic Neo', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .header {
+            font-size: 26px;
+            font-weight: bold;
+            color: #333;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .body {
+            margin-top: 20px;
+            font-size: 17px;
+            line-height: 1.6;
+            color: #444;
+            padding: 0 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">📢 <span th:text="${title}"></span></div>
+    <div class="body">
+        <p th:text="${message}"></p>
+        <a th:href="${link}" class="btn">🔗 확인하기</a>
+    </div>
+    <div class="footer">
+        이 이메일은 자동 발송된 것입니다. 회신하지 마세요.
+    </div>
+</div>
+</body>
+</html>

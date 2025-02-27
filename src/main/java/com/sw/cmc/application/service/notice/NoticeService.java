@@ -9,6 +9,7 @@ import com.sw.cmc.domain.notice.NoticeDomain;
 import com.sw.cmc.entity.Notification;
 import com.sw.cmc.entity.NotificationTemplate;
 import com.sw.cmc.event.notice.SendNotiEmailEvent;
+import com.sw.cmc.event.notice.SendNotiEmailHtmlEvent;
 import com.sw.cmc.event.notice.SendNotiInAppEvent;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class NoticeService implements NoticeUseCase {
                 .toList();
 
         // 이벤트 리스너 테스트
-        Long notiTemplateId = 5L; // 템플릿 ID
+        Long notiTemplateId = 3L; // 템플릿 ID
         String sendAt = "20250225"; // 발송시간
         String linkUrl = "/testJoinUrl"; // 알림 url
         Long createUser = userNum; // 알림 생성자
@@ -63,6 +64,14 @@ public class NoticeService implements NoticeUseCase {
         ); // 템플릿 내용
 
         eventPublisher.publishEvent(new SendNotiInAppEvent(userNum, notiTemplateId, sendAt, linkUrl, createUser, sendState, templateParams));
+
+        String title = "이메일 타이틀 html";
+        String message = "이메일 내용 html";
+        String link = "https://www.naver.com";
+        String to = "sgan@softworks.co.kr";
+        String subject = "이메일 제목 html";
+
+        eventPublisher.publishEvent(new SendNotiEmailHtmlEvent(to, subject, title, message, link));
 
 
         return NotiListDomain.builder()
