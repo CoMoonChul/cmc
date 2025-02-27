@@ -26,6 +26,11 @@ public class ReviewDomain {
     private String createdAt;
     private String updatedAt;
 
+    // Editor 관련 필드 추가
+    private Long codeEditNum;  // code_edit_data의 code_edit_num
+    private String editorContent;  // code_edit_data의 content
+    private String editorLanguage;  // code_edit_data의 language
+
     /**
      * methodName : validateCreateReview
      * author : PARK JONG IL
@@ -59,7 +64,7 @@ public class ReviewDomain {
      * @throws CmcException the cmc exception
      */
     public void validateTitleMaxLength() throws CmcException {
-        if (StringUtils.length(title) > 50) {
+        if (StringUtils.length(title) > 30) {
             throw new CmcException("REVIEW005");
         }
     }

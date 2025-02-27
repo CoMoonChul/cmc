@@ -15,7 +15,7 @@ components:
         title:
           type: string
           description: 리뷰 제목
-          maxLength: 50
+          maxLength: 30
         content:
           type: string
           description: 리뷰 내용
@@ -70,21 +70,7 @@ components:
         reviewList:
           type: array
           items:
-#            allOf:
-#              - $ref: '#/components/schemas/Review'
               $ref: '#/components/schemas/Review'
-#              - type: object
-#                properties:
-#                  user:
-#                    type: object
-#                    properties:
-#                      nickname:
-#                        type: string
-#                        description: 작성자 닉네임
-#                      profile_image:
-#                        type: string
-#                        format: uri
-#                        description: 프로필 이미지 URL
         pageable:
           type: object
           properties:
@@ -97,13 +83,6 @@ components:
             sort:
               type: string
               description: 정렬기준
-#            total_elements:
-#              type: integer
-#              format: int64
-#              description: 전체 리뷰 수
-#            total_pages:
-#              type: integer
-#              description: 전체 페이지 수
     # 리뷰 생성 요청 DTO
     CreateReviewReqDTO:
       type: object
@@ -114,16 +93,40 @@ components:
         title:
           type: string
           description: 리뷰 제목
-          maxLength: 50
+          maxLength: 30
         content:
           type: string
           description: 리뷰 내용
           maxLength: 2000
+        code_edit_data:
+          type: object
+          properties:
+            content:
+              type: string
+              description: 내용
+            language:
+              type: string
+              description: 언어
     # 리뷰 생성 응답 DTO
     CreateReviewResDTO:
       allOf:
         - $ref: '#/components/schemas/Review'
         - type: object
+          properties:
+            code_edit_num:
+              type: integer
+              format: int64
+              description: 에디트 키
+            editor_content:
+              type: string
+              description: 내용
+            editor_language:
+              type: string
+              description: 언어
+            user_num:
+              type: integer
+              format: int64
+
 
     # 리뷰 삭제 요청 DTO
     DeleteReviewReqDTO:
@@ -160,7 +163,7 @@ components:
         title:
           type: string
           description: 수정할 리뷰 제목
-          maxLength: 50
+          maxLength: 30
         content:
           type: string
           description: 수정할 리뷰 내용
