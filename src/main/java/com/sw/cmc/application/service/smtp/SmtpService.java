@@ -1,6 +1,7 @@
 package com.sw.cmc.application.service.smtp;
 
 import com.sw.cmc.application.port.in.smtp.SmtpUseCase;
+import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.domain.smtp.SendEmailDomain;
 import com.sw.cmc.domain.smtp.SendEmailHtmlDomain;
 import jakarta.mail.internet.MimeMessage;
@@ -62,7 +63,7 @@ public class SmtpService implements SmtpUseCase {
 
         String recipientEmail = sendEmailHtmlDomain.getTo();
         if (recipientEmail == null || recipientEmail.trim().isEmpty() || !EmailValidator.getInstance().isValid(recipientEmail.trim())) {
-            throw new IllegalArgumentException("잘못된 이메일 주소: " + recipientEmail);
+            throw new CmcException("SMTP001");
         }
 
         helper.setTo(recipientEmail.trim()); // 앞뒤 공백 제거 후 설정
