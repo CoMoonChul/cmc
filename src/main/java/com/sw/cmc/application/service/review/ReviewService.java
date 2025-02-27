@@ -1,11 +1,13 @@
 package com.sw.cmc.application.service.review;
 
+import com.sw.cmc.adapter.out.editor.persistence.EditorRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
+import com.sw.cmc.entity.Editor;
 import com.sw.cmc.entity.Review;
 import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
@@ -37,6 +39,7 @@ public class ReviewService implements ReviewUseCase {
     private final ModelMapper modelMapper;
     private final ReviewRepository reviewRepository;
     private final UserUtil userUtil;
+    private final EditorRepository editorRepository;
 
     @Override
     public ReviewDomain selectReview(Long reviewId) throws Exception {
@@ -88,10 +91,19 @@ public class ReviewService implements ReviewUseCase {
 
         User savingUser = new User();
         savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
-        Review saving = modelMapper.map(reviewDomain, Review.class);
-        saving.setUser(savingUser);
-        Review saved = reviewRepository.save(saving);
 
+        Editor savingEditor = new Editor();
+        savingEditor.setContent(reviewDomain.getEditorContent());
+        savingEditor.setLanguage(reviewDomain.getEditorLanguage());
+        savingEditor.setUser(savingUser);
+        Editor savedEditor = editorRepository.save(savingEditor);
+
+        Review saving = modelMapper.map(reviewDomain, Review.class);
+        // 입력 받은 데이터들 Mapper에 set (User, Editor)
+        saving.setUser(savingUser);
+        saving.setEditor(savedEditor);
+        // 저장 로직
+        Review saved = reviewRepository.save(saving);
         entityManager.refresh(saved);
 
         return convertEntityToDomain(saved);
@@ -124,21 +136,24 @@ public class ReviewService implements ReviewUseCase {
         // 수정 작업 (제목, 게시글, 수정일자 갱신)
         found.setTitle(reviewDomain.getTitle());
         found.setContent(reviewDomain.getContent());
-        found.setUpdatedAt(LocalDateTime.now().toString());
 
         Review saved = reviewRepository.save(found);
+        entityManager.refresh(saved);
         // 저장
         return convertEntityToDomain(saved);
     }
     // builder 대신 공통으로 활용하는 생성자
     private ReviewDomain convertEntityToDomain(Review review) {
-        return new ReviewDomain(
-            review.getReviewId(),
-            review.getUser().getUserNum(),
-            review.getTitle(),
-            review.getContent(),
-            review.getCreatedAt(),
-            review.getUpdatedAt()
-        );
+        return ReviewDomain.builder()
+                .reviewId(review.getReviewId())
+                .userNum(review.getUser().getUserNum())
+                .title(review.getTitle())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt())
+                .updatedAt(review.getUpdatedAt())
+                .codeEditNum(review.getEditor().getCodeEditNum())
+                .editorContent(review.getEditor().getContent())
+                .editorLanguage(review.getEditor().getLanguage())
+                .build();
     }
 }
