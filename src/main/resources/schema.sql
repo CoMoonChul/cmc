@@ -113,6 +113,7 @@ CREATE TABLE IF NOT EXISTS notification (
     noti_template_id BIGINT NOT NULL,
     send_at TIMESTAMP,
     send_state CHAR(1) DEFAULT 'N' NOT NULL,
+    reason_noti VARCHAR(1000),
     link_url VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     create_user BIGINT,
