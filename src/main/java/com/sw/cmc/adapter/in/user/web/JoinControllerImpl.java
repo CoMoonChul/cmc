@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * fileName       : JoinControllerImpl
  * author         : SungSuHan
  * date           : 2025-02-11
- * description    :
+ * description    : join-controller
  */
 @RestController
 @RequiredArgsConstructor
@@ -31,11 +31,11 @@ public class JoinControllerImpl implements JoinControllerApi {
 
     @Override
     public ResponseEntity<CheckJoinResDTO> checkUserId(String userId) throws Exception {
-        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUserId(userId), CheckJoinResDTO.class));
+        return ResponseEntity.ok(joinUseCase.checkUserId(userId));
     }
 
     @Override
     public ResponseEntity<CheckJoinResDTO> checkUsername(String username) throws Exception {
-        return ResponseEntity.ok(modelMapper.map(joinUseCase.checkUsername(username), CheckJoinResDTO.class));
+        return ResponseEntity.ok(joinUseCase.checkUsername(username));
     }
 }

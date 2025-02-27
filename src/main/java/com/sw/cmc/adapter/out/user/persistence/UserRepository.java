@@ -7,17 +7,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * packageName    : com.sw.cmc.adapter.out.user.persistence
- * fileName       : LoginRepository
+ *packageName    : com.sw.cmc.adapter.out.user.persistence
+ * fileName       : UserRepository
  * author         : SungSuHan
- * date           : 2025-02-11
+ * date           : 2025-02-27
  * description    :
  */
 @Repository
-public interface LoginRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUserId(String userId);
-
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserNum(Long userNum);
-
-    Optional<User> findByEmail(String email);
 }

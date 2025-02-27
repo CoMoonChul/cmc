@@ -2,6 +2,8 @@ package com.sw.cmc.common.filter;
 
 import com.sw.cmc.common.jwt.JwtAuthenticationToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,16 +39,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = getTokenFromRequest(request);
 
-        if (Objects.nonNull(token) && jwtTokenProvider.validateToken(token)) {
-            String userId = jwtTokenProvider.getClaims(token).getSubject();
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+        try {
+            if (Objects.nonNull(token) && jwtTokenProvider.validateToken(token)) {
+                String userId = jwtTokenProvider.getClaims(token).getSubject();
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
-            if (Objects.nonNull(userDetails)) {
-                JwtAuthenticationToken authentication = new JwtAuthenticationToken(userDetails, token, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication); // 사용자의 정보 저장
+                if (Objects.nonNull(userDetails)) {
+                    JwtAuthenticationToken authentication = new JwtAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication); // 사용자의 정보 저장
+                }
             }
+        } catch (ExpiredJwtException e) {
+            request.setAttribute("exception", e);
+            throw e; // 토큰 만료
+        } catch (JwtException | IllegalArgumentException e) {
+            request.setAttribute("exception", e);
+            throw e; // 토큰 미인증
         }
+
         filterChain.doFilter(request, response);
     }
 

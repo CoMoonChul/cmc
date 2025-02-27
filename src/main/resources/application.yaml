@@ -97,6 +97,7 @@ security:
     - /user/tempLogin
     - /user/login
     - /user/refresh
+    - /user/findAccount
 
 openai:
   model: ${AI_MODEL}
