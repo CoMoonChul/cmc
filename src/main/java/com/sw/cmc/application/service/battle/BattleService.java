@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 /**
  * packageName    : com.sw.cmc.application.service.battle
  * fileName       : BattleService
@@ -74,9 +76,44 @@ public class BattleService implements BattleUseCase {
 
     @Override
     @Transactional
+    public BattleDomain updateBattle(BattleDomain battleDomain) throws Exception {
+        battleDomain.validateUpdateBattle();
+        Battle found = battleRepository.findById(battleDomain.getBattleId())
+                .orElseThrow(() -> new CmcException("BATTLE001"));
+
+        if (!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
+            throw new CmcException("BATTLE007");
+        }
+
+        found.setContent(battleDomain.getContent());
+        found.setTitle(battleDomain.getTitle());
+        found.setEndTime(battleDomain.getEndTime());
+        found.setCodeContentLeft(battleDomain.getCodeContentLeft());
+        found.setCodeContentRight(battleDomain.getCodeContentRight());
+
+        Battle saved = battleRepository.save(found);
+        return BattleDomain.builder()
+                .battleId(saved.getBattleId())
+                .title(saved.getTitle())
+                .content(saved.getContent())
+                .endTime(saved.getEndTime())
+                .codeContentLeft(saved.getCodeContentLeft())
+                .codeContentRight(saved.getCodeContentRight())
+                .userNum(saved.getUser().getUserNum())
+                .createdAt(saved.getCreatedAt())
+                .updatedAt(saved.getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    @Transactional
     public BattleDomain deleteBattle(BattleDomain battleDomain) throws Exception {
         Battle found = battleRepository.findById(battleDomain.getBattleId())
-                .orElseThrow(() -> new CmcException("BATTLE007"));
+                .orElseThrow(() -> new CmcException("BATTLE001"));
+
+        if (!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
+            throw new CmcException("BATTLE007");
+        }
 
         battleRepository.deleteById(found.getBattleId());
         return battleDomain;

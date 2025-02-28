@@ -59,6 +59,28 @@ paths:
         "400":
           description: "배틀 생성 실패"
 
+  /updateBattle:
+    post:
+      tags:
+        - battle-controller
+      summary: "배틀 수정"
+      operationId: "updateBattle"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/UpdateBattleReqDTO"
+      responses:
+        "200":
+          description: "배틀 수정 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/UpdateBattleResDTO"
+        "400":
+          description: "배틀 수정 실패"
+
   /deleteBattle:
     post:
       tags:

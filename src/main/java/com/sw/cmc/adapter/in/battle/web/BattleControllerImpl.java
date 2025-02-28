@@ -40,6 +40,19 @@ public class BattleControllerImpl implements BattleControllerApi {
     }
 
     @Override
+    public ResponseEntity<UpdateBattleResDTO> updateBattle(UpdateBattleReqDTO updateBattleReqDTO) throws Exception {
+        BattleDomain battleDomain = BattleDomain.builder()
+                .battleId(updateBattleReqDTO.getBattleId())
+                .title(updateBattleReqDTO.getTitle())
+                .content(updateBattleReqDTO.getContent())
+                .codeContentLeft(updateBattleReqDTO.getCodeContentLeft())
+                .codeContentRight(updateBattleReqDTO.getCodeContentRight())
+                .endTime(updateBattleReqDTO.getEndTime())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(battleUseCase.updateBattle(battleDomain), UpdateBattleResDTO.class));
+    }
+
+    @Override
     public ResponseEntity<DeleteBattleResDTO> deleteBattle(DeleteBattleReqDTO deleteBattleReqDTO) throws Exception {
         BattleDomain battleDomain = BattleDomain.builder()
                 .battleId(deleteBattleReqDTO.getBattleId())
