@@ -40,8 +40,9 @@ public interface RedisUseCase {
      * description : 레디스 값 삭제
      *
      * @param key - 레디스 키
+     * @return boolean
      */
-    void delete(String key) throws Exception;
+    boolean delete(String key) throws Exception;
 
     /**
      * methodName : saveHash
