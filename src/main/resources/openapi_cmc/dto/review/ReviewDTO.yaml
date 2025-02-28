@@ -98,31 +98,19 @@ components:
           type: string
           description: 리뷰 내용
           maxLength: 2000
-        code_edit_data:
-          type: object
-          properties:
-            content:
-              type: string
-              description: 내용
-            language:
-              type: string
-              description: 언어
+        code_content:
+          type: string
+          description: 코드 내용
+
     # 리뷰 생성 응답 DTO
     CreateReviewResDTO:
       allOf:
         - $ref: '#/components/schemas/Review'
         - type: object
           properties:
-            code_edit_num:
-              type: integer
-              format: int64
-              description: 에디트 키
-            editor_content:
+            code_content:
               type: string
-              description: 내용
-            editor_language:
-              type: string
-              description: 언어
+              description: 코드 내용
             user_num:
               type: integer
               format: int64
@@ -168,6 +156,9 @@ components:
           type: string
           description: 수정할 리뷰 내용
           maxLength: 2000
+        code_content:
+          type: string
+          description: 코드 내용
     # 리뷰 수정 응답 DTO
     UpdateReviewResDTO:
       allOf:

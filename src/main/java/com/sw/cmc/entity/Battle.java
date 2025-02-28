@@ -28,9 +28,9 @@ public class Battle {
 
     private String endTime;
 
-    private String code_content_left;
+    private String codeContentLeft;
 
-    private String code_content_right;
+    private String codeContentRight;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)

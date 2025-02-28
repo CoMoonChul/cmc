@@ -24,10 +24,8 @@ public class BattleDomain {
     private String title;
     private String content;
     private String endTime;
-    private Long codeOneNum;
-    private String codeOneContent;
-    private Long codeTwoNum;
-    private String codeTwoContent;
+    private String codeContentLeft;
+    private String codeContentRight;
     private Long userNum;
     private String createdAt;
     private String updatedAt;
@@ -41,8 +39,8 @@ public class BattleDomain {
         validateTitle();
         validateContent();
         validateEndTime();
-        validateCodeOneContent();
-        validateCodeTwoContent();
+        validateCodeContentLeft();
+        validateCodeContentRight();
     }
 
     /**
@@ -88,12 +86,12 @@ public class BattleDomain {
     /**
      * methodName : validateCodeOneContent
      * author : IM HYUN WOO
-     * description : editor code(left) validation
+     * description : codeContentLeft validation
      *
      * @throws CmcException the cmc exception
      */
-    public void validateCodeOneContent() throws CmcException {
-        if (StringUtils.length(codeOneContent) > 20000) {
+    public void validateCodeContentLeft() throws CmcException {
+        if (StringUtils.length(codeContentLeft) > 20000) {
             throw new CmcException("BATTLE005");
         }
     }
@@ -101,12 +99,12 @@ public class BattleDomain {
     /**
      * methodName : validateCodeOneContent
      * author : IM HYUN WOO
-     * description : editor code(right) validation
+     * description : codeContentRight validation
      *
      * @throws CmcException the cmc exception
      */
-    public void validateCodeTwoContent() throws CmcException {
-        if (StringUtils.length(codeTwoContent) > 20000) {
+    public void validateCodeContentRight() throws CmcException {
+        if (StringUtils.length(codeContentRight) > 20000) {
             throw new CmcException("BATTLE006");
         }
     }

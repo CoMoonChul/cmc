@@ -9,10 +9,10 @@ components:
         content:
           type: string
           description: 내용
-        code_one_content:
+        code_content_left:
           type: string
           description: 좌측 코드 내용
-        code_two_content:
+        code_content_right:
           type: string
           description: 우측 코드 내용
         end_time:
@@ -32,10 +32,10 @@ components:
         content:
           type: string
           description: 내용
-        code_one_content:
+        code_content_left:
           type: string
           description: 내용
-        code_two_content:
+        code_content_right:
           type: string
           description: 내용
         end_time:

@@ -46,28 +46,13 @@ public class ReviewControllerImpl implements ReviewControllerApi {
         ReviewDomain reviewDomain = ReviewDomain.builder()
                 .title(createReviewReqDTO.getTitle())
                 .content(createReviewReqDTO.getContent())
-                .editorContent(createReviewReqDTO.getCodeEditData().getContent())
-                .editorLanguage(createReviewReqDTO.getCodeEditData().getLanguage())
+                .codeContent(createReviewReqDTO.getCodeContent())
                 .build();
 
-        // 이 녀석 매개변수 정상인지 확인
         ReviewDomain createdReview = reviewUseCase.createReview(reviewDomain);
-
-        // res dto setter를 이용해 reviewDomain의 데이터를 이식
-        CreateReviewResDTO createReviewResDTO = new CreateReviewResDTO();
-        createReviewResDTO.setUserNum(createdReview.getUserNum());
-        createReviewResDTO.setTitle(createdReview.getTitle());
-        createReviewResDTO.setContent(createdReview.getContent());
-        createReviewResDTO.setCreatedAt(createdReview.getCreatedAt());
-        createReviewResDTO.setUpdatedAt(createdReview.getUpdatedAt());
-        createReviewResDTO.setReviewId(createdReview.getReviewId());
-        createReviewResDTO.setCodeEditNum(createdReview.getCodeEditNum());
-        createReviewResDTO.setEditorContent(createdReview.getEditorContent());
-        createReviewResDTO.setEditorLanguage(createdReview.getEditorLanguage());
-
-        return ResponseEntity.ok(createReviewResDTO);
+        return ResponseEntity.ok(modelMapper.map(createdReview, CreateReviewResDTO.class));
     }
-//
+
     @Override
     public ResponseEntity<DeleteReviewResDTO> deleteReview(DeleteReviewReqDTO deleteReviewReqDTO) throws Exception {
         ReviewDomain reviewDomain = ReviewDomain.builder()
