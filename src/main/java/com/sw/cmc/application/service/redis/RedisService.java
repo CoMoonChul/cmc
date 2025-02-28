@@ -36,8 +36,8 @@ public class RedisService implements RedisUseCase {
     }
 
     @Override
-    public void delete(String key) {
-        redisTemplate.delete(key);  // Redis에서 키 삭제
+    public boolean delete(String key) {
+        return Boolean.TRUE.equals(redisTemplate.delete(key));  // 성공시 true, 실패시 false
     }
 
     @Override

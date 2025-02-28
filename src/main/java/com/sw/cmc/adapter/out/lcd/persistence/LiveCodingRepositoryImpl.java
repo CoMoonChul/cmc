@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -36,6 +37,13 @@ public class LiveCodingRepositoryImpl implements LiveCodingRepository {
 
         // Redis에 방 정보 저장
         redisService.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
+    }
+
+    @Override
+    public boolean deleteLiveCoding(UUID roomId) {
+        // Redis에서 방을 삭제하는 로직
+        String key = "live_coding:" + roomId;  // Redis에서 사용할 key
+        return redisService.delete(key);  // Redis에서 해당 key 삭제
     }
 
 }

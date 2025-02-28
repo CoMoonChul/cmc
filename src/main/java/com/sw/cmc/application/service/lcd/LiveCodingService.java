@@ -1,6 +1,7 @@
 package com.sw.cmc.application.service.lcd;
 
 import com.sw.cmc.adapter.out.lcd.persistence.LiveCodingRepository;
+import com.sw.cmc.application.port.in.lcd.DeleteLcdCase;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,15 @@ public class LiveCodingService implements LiveCodingUseCase {
         liveCodingRepository.saveLiveCoding(liveCodingDomain);  // Repository 사용
 
         return liveCodingDomain;  // 생성된 LiveCodingDomain 반환
+    }
+
+    @Override
+    public DeleteLcdCase deleteLiveCoding(UUID roomId) {
+        boolean isDeleted = liveCodingRepository.deleteLiveCoding(roomId);
+        if (isDeleted) {
+            return DeleteLcdCase.SUCCESS;
+        } else {
+            return DeleteLcdCase.FAIL;
+        }
     }
 }

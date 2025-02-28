@@ -34,15 +34,10 @@ components:
     DeleteLiveCodingResDTO:
       type: object
       properties:
-        roomId:
-          type: string
-          format: uuid
-          description: "삭제된 라이브 코딩 방 ID (UUID 형식)"
         status:
           type: string
-          description: "삭제 상태 ('SUCCESS' 또는 'FAILURE')"
+          description: "SUCCESS / FAIL "
       required:
-        - roomId
         - status
 
     UpdateLiveCodingReqDTO:
@@ -133,7 +128,7 @@ components:
           description: "참가자 ID (userNum)"
         status:
           type: string
-          description: "참가 상태 ('SUCCESS' 또는 'FAILURE')"
+          description: "SUCCESS / FAIL"
       required:
         - roomId
         - participantId
