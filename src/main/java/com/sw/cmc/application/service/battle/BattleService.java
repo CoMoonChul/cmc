@@ -9,6 +9,7 @@ import com.sw.cmc.entity.Battle;
 import com.sw.cmc.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,7 +24,24 @@ import org.springframework.stereotype.Service;
 public class BattleService implements BattleUseCase {
 
     private final BattleRepository battleRepository;
+    private final ModelMapper modelMapper;
     private final UserUtil userUtil;
+
+    @Override
+    public BattleDomain selectBattle(Long id) throws Exception {
+        Battle found = battleRepository.findById(id).orElseThrow(() -> new CmcException("BATTLE001"));
+        return BattleDomain.builder()
+                .battleId(found.getBattleId())
+                .title(found.getTitle())
+                .content(found.getContent())
+                .endTime(found.getEndTime())
+                .codeContentLeft(found.getCodeContentLeft())
+                .codeContentRight(found.getCodeContentRight())
+                .userNum(found.getUser().getUserNum())
+                .createdAt(found.getCreatedAt())
+                .updatedAt(found.getUpdatedAt())
+                .build();
+    }
 
     @Override
     @Transactional
@@ -55,6 +73,7 @@ public class BattleService implements BattleUseCase {
     }
 
     @Override
+    @Transactional
     public BattleDomain deleteBattle(BattleDomain battleDomain) throws Exception {
         Battle found = battleRepository.findById(battleDomain.getBattleId())
                 .orElseThrow(() -> new CmcException("BATTLE007"));

@@ -1,5 +1,38 @@
 components:
   schemas:
+    SelectBattleResDTO:
+      type: object
+      properties:
+        battleId:
+          type: integer
+          format: int64
+          description: 배틀 ID
+        title:
+          type: string
+          description: 제목
+        content:
+          type: string
+          description: 제목
+        endTime:
+          type: string
+          description: 제목
+        codeContentLeft:
+          type: string
+          description: 제목
+        codeContentRight:
+          type: string
+          description: 제목
+        user_num:
+          type: integer
+          format: int64
+          description: 회원 번호
+        created_at:
+          type: string
+          description: 생성 일시
+        updated_at:
+          type: string
+          description: 최종 수정 일시
+
     CreateBattleReqDTO:
       type: object
       properties:
