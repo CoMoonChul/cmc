@@ -34,12 +34,12 @@ public class JoinService implements JoinUseCase {
 
     @Override
     @Transactional
-    public JoinResDTO join(UserDomain userDomain) throws Exception {
+    public UserDomain join(UserDomain userDomain) throws Exception {
         // 유효성 검사
         validateUserId(userDomain.getUserId());
         validatePassword(userDomain.getPassword());
-        validateEmail(userDomain.getEmail());
         validateUsername(userDomain.getUsername());
+        validateEmail(userDomain.getEmail());
 
         // 아이디 중복 검사
         if (joinRepository.existsByUserId(userDomain.getUserId())) {
@@ -50,34 +50,28 @@ public class JoinService implements JoinUseCase {
             throw new CmcException("USER009");
         }
 
-        String encodedPassword = passwordEncoder.encode(userDomain.getPassword());
-
-        // 암호화된 비밀번호를 User 객체에 설정
-        userDomain.setPassword(encodedPassword);
+        // 비밀번호 암호화 저장
+        UserDomain encryptedUserDomain = userDomain.toBuilder()
+                .password(passwordEncoder.encode(userDomain.getPassword()))
+                .build();
 
         // 회원 생성
-        joinRepository.save(modelMapper.map(userDomain, User.class));
+        joinRepository.save(modelMapper.map(encryptedUserDomain, User.class));
 
-        return new JoinResDTO().resultMessage(messageUtil.getFormattedMessage("USER011"));
+        return encryptedUserDomain.toBuilder()
+                .resultMessage(messageUtil.getFormattedMessage("USER011"))
+                .build();
     }
 
     @Override
-    public CheckJoinResDTO checkUserId(String userId) throws Exception {
+    public String checkUserId(String userId) throws Exception {
         validateUserId(userId);
-
-        return new CheckJoinResDTO()
-            .resultMessage(messageUtil.getFormattedMessage(
-                joinRepository.existsByUserId(userId) ? "USER007" : "USER008"
-            ));
+        return messageUtil.getFormattedMessage(joinRepository.existsByUserId(userId) ? "USER007" : "USER008");
     }
 
     @Override
-    public CheckJoinResDTO checkUsername(String username) throws Exception {
+    public String checkUsername(String username) throws Exception {
         validateUsername(username);
-
-        return new CheckJoinResDTO()
-            .resultMessage(messageUtil.getFormattedMessage(
-                joinRepository.existsByUsername(username) ? "USER009" : "USER010"
-            ));
+        return messageUtil.getFormattedMessage(joinRepository.existsByUsername(username) ? "USER009" : "USER010");
     }
 }

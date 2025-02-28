@@ -1,6 +1,5 @@
 package com.sw.cmc.application.service.user;
 
-import com.sw.cmc.adapter.in.user.dto.*;
 import com.sw.cmc.adapter.out.user.persistence.LoginRepository;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
 import com.sw.cmc.common.advice.CmcException;
@@ -28,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.sw.cmc.domain.user.UserDomain.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * packageName    : com.sw.cmc.application.service
@@ -52,21 +52,18 @@ public class LoginService implements LoginUseCase {
 
     @Override
     @Transactional
-    public TempLoginResDTO tempLogin(final UserDomain userDomain) throws Exception {
+    public UserDomain tempLogin(final UserDomain userDomain) throws Exception {
         // 회원 조회
-        final UserDomain userInfo = modelMapper.map(loginRepository.findByUserId(userDomain.getUserId())
-                .orElseThrow(() -> new CmcException("USER001")), UserDomain.class);
+        final User user = loginRepository.findByUserId(userDomain.getUserId())
+                .orElseThrow(() -> new CmcException("USER001"));
 
         // 관리자 확인
-        if (!Objects.equals(userInfo.getUserRole(), "ADMIN")) {
+        if (!Objects.equals(user.getUserRole(), "ADMIN")) {
             throw new CmcException("USER002");
         }
 
         // Token 생성
-        JwtToken jwtToken = userUtil.createToken(userInfo.getUserNum(), userInfo.getUserId());
-
-        // User 엔티티
-        final User user = modelMapper.map(userInfo, User.class);
+        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUserId());
 
         // RefreshToken 저장
         user.setRefreshToken(jwtToken.getRefreshToken());
@@ -74,29 +71,32 @@ public class LoginService implements LoginUseCase {
         // DB 저장
         loginRepository.save(user);
 
-        return modelMapper.map(jwtToken, TempLoginResDTO.class);
+        return UserDomain.builder()
+                    .accessToken(jwtToken.getAccessToken())
+                    .accessTokenExpirationTime(jwtToken.getAccessTokenExpirationTime())
+                    .refreshToken(jwtToken.getRefreshToken())
+                    .refreshTokenExpirationTime(jwtToken.getRefreshTokenExpirationTime())
+                    .build();
     }
 
     @Override
     @Transactional
-    public LoginResDTO login(final UserDomain userDomain) throws Exception {
+    public UserDomain login(final UserDomain userDomain) throws Exception {
         // 사용자 인증
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDomain.getUserId(), userDomain.getPassword())
         );
 
         // 회원 조회
-        final UserDomain userInfo = modelMapper.map(loginRepository.findByUserId(userDomain.getUserId()), UserDomain.class);
+        final User user = loginRepository.findByUserId(userDomain.getUserId())
+                .orElseThrow(() -> new CmcException("USER001"));
 
         // 토큰 생성
-        JwtToken jwtToken = userUtil.createToken(userInfo.getUserNum(), userInfo.getUserId());
+        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUserId());
 
         // RefreshToken 암호화
         final TokenDomain tokenDomain = modelMapper.map(jwtToken, TokenDomain.class);
         tokenDomain.setRefreshToken(userUtil.encrypt(jwtToken.getRefreshToken()));
-
-        // User 엔티티
-        final User user = modelMapper.map(userInfo, User.class);
 
         // RefreshToken 저장
         user.setRefreshToken(tokenDomain.getRefreshToken());
@@ -104,11 +104,14 @@ public class LoginService implements LoginUseCase {
         // DB 저장
         loginRepository.save(user);
 
-        return modelMapper.map(tokenDomain, LoginResDTO.class);
+        return UserDomain.builder()
+                .accessToken(tokenDomain.getAccessToken())
+                .refreshToken(tokenDomain.getRefreshToken())
+                .build();
     }
 
     @Override
-    public RefreshResDTO refresh(HttpServletRequest request) throws Exception {
+    public String refresh(HttpServletRequest request) throws Exception {
         // 쿠키에서 RefreshToken 복호화 추출
         String refreshToken = userUtil.decrypt(userUtil.getRefreshTokenFromCookie(request));
 
@@ -121,18 +124,15 @@ public class LoginService implements LoginUseCase {
         Long userNum = jwtTokenProvider.getClaims(refreshToken).get("userNum", Long.class);
 
         // 회원 조회
-        final UserDomain userInfo = modelMapper.map(loginRepository.findByUserNum(userNum), UserDomain.class);
+        final User user = loginRepository.findByUserNum(userNum).orElseThrow(() -> new CmcException("USER001"));
 
         // AccessToken 재발급
-        RefreshResDTO refreshResDTO = new RefreshResDTO();
-        refreshResDTO.setAccessToken(userUtil.createAccessToken(userInfo.getUserNum(), userInfo.getUserId()));
-
-        return refreshResDTO;
+        return userUtil.createAccessToken(user.getUserNum(), user.getUserId());
     }
 
     @Override
     @Transactional
-    public LogoutResDTO logout(HttpServletRequest request) throws Exception {
+    public String logout(HttpServletRequest request) throws Exception {
         // AccessToken 추출
         String accessToken = jwtAuthenticationFilter.getTokenFromRequest(request);
 
@@ -140,8 +140,7 @@ public class LoginService implements LoginUseCase {
         Long userNum = jwtTokenProvider.getClaims(accessToken).get("userNum", Long.class);
 
         // 회원 조회
-        final User user = modelMapper.map(loginRepository.findByUserNum(userNum)
-                .orElseThrow(() -> new CmcException("USER001")), User.class);
+        final User user = loginRepository.findByUserNum(userNum).orElseThrow(() -> new CmcException("USER001"));
 
         // RefreshToken 세팅
         user.setRefreshToken(null);
@@ -149,19 +148,18 @@ public class LoginService implements LoginUseCase {
         // DB 저장
         loginRepository.save(user);
 
-        return new LogoutResDTO().resultMessage(messageUtil.getFormattedMessage("USER015"));
+        return messageUtil.getFormattedMessage("USER015");
     }
 
     @Override
     @Transactional
-    public FindAccountResDTO findAccount(UserDomain userDomain) throws Exception {
+    public String findAccount(UserDomain userDomain) throws Exception {
         // 이메일
         String email = userDomain.getEmail();
         validateEmail(email);
 
-        // DB 조회
-        User user = modelMapper.map(loginRepository.findByEmail(email)
-                .orElseThrow(() -> new CmcException("USER016")), User.class);
+        // 회원 조회
+        final User user = loginRepository.findByEmail(email).orElseThrow(() -> new CmcException("USER016"));
 
         // 회원 ID
         String userId = user.getUserId();
@@ -184,7 +182,7 @@ public class LoginService implements LoginUseCase {
         // 이메일 전송
         sendEmail(email, username, userId, password);
 
-        return new FindAccountResDTO().resultMessage(messageUtil.getFormattedMessage("USER017"));
+        return messageUtil.getFormattedMessage("USER017");
     }
 
     public void sendEmail(String email, String username, String userId, String password) throws Exception {

@@ -26,16 +26,24 @@ public class JoinControllerImpl implements JoinControllerApi {
 
     @Override
     public ResponseEntity<JoinResDTO> join(JoinReqDTO joinReqDTO) throws Exception {
-        return ResponseEntity.ok(joinUseCase.join(modelMapper.map(joinReqDTO, UserDomain.class)));
+
+        UserDomain userDomain = UserDomain.builder()
+                .userId(joinReqDTO.getUserId())
+                .password(joinReqDTO.getPassword())
+                .username(joinReqDTO.getUsername())
+                .email(joinReqDTO.getEmail())
+                .build();
+
+        return ResponseEntity.ok(modelMapper.map(joinUseCase.join(userDomain), JoinResDTO.class));
     }
 
     @Override
     public ResponseEntity<CheckJoinResDTO> checkUserId(String userId) throws Exception {
-        return ResponseEntity.ok(joinUseCase.checkUserId(userId));
+        return ResponseEntity.ok(new CheckJoinResDTO().resultMessage(joinUseCase.checkUserId(userId)));
     }
 
     @Override
     public ResponseEntity<CheckJoinResDTO> checkUsername(String username) throws Exception {
-        return ResponseEntity.ok(joinUseCase.checkUsername(username));
+        return ResponseEntity.ok(new CheckJoinResDTO().resultMessage(joinUseCase.checkUsername(username)));
     }
 }

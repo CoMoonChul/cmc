@@ -1,8 +1,6 @@
 package com.sw.cmc.adapter.in.user.web;
 
-import com.sw.cmc.adapter.in.user.dto.GetUserInfoResDTO;
-import com.sw.cmc.adapter.in.user.dto.JoinReqDTO;
-import com.sw.cmc.adapter.in.user.dto.JoinResDTO;
+import com.sw.cmc.adapter.in.user.dto.*;
 import com.sw.cmc.application.port.in.user.UserUseCase;
 import com.sw.cmc.domain.user.UserDomain;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +23,17 @@ public class UserControllerImpl implements UserControllerApi {
     private final ModelMapper modelMapper;
 
     @Override
-    public ResponseEntity<GetUserInfoResDTO> getUserInfo() throws Exception {
+    public ResponseEntity<GetMyInfoResDTO> getMyInfo() throws Exception {
+        return ResponseEntity.ok(modelMapper.map(userUseCase.getMyInfo(), GetMyInfoResDTO.class));
+    }
 
+    @Override
+    public ResponseEntity<WithdrawResDTO> withdraw(WithdrawReqDTO withdrawReqDTO) throws Exception {
 
+        UserDomain userDomain = UserDomain.builder()
+                .password(withdrawReqDTO.getPassword())
+                .build();
 
-        return ResponseEntity.ok(userUseCase.getUserInfo());
+        return ResponseEntity.ok(new WithdrawResDTO().resultMessage(userUseCase.withdraw(userDomain)));
     }
 }

@@ -12,9 +12,9 @@ import com.sw.cmc.domain.user.UserDomain;
  * description    :
  */
 public interface JoinUseCase {
-    JoinResDTO join(UserDomain userDomain) throws Exception;
+    UserDomain join(UserDomain userDomain) throws Exception;
 
-    CheckJoinResDTO checkUserId(String userId) throws Exception;
+    String checkUserId(String userId) throws Exception;
 
-    CheckJoinResDTO checkUsername(String username) throws Exception;
+    String checkUsername(String username) throws Exception;
 }

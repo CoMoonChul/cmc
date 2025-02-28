@@ -1,6 +1,6 @@
 package com.sw.cmc.application.port.in.user;
 
-import com.sw.cmc.adapter.in.user.dto.GetUserInfoResDTO;
+import com.sw.cmc.domain.user.UserDomain;
 
 /**
  * packageName    : com.sw.cmc.application.port.in.user
@@ -10,5 +10,7 @@ import com.sw.cmc.adapter.in.user.dto.GetUserInfoResDTO;
  * description    :
  */
 public interface UserUseCase {
-    GetUserInfoResDTO getUserInfo() throws Exception;
+    UserDomain getMyInfo() throws Exception;
+
+    String withdraw(UserDomain userDomain) throws Exception;
 }
