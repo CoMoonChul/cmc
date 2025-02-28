@@ -12,22 +12,24 @@ tags:
     description: Battle api controller
 
 paths:
-  /example:
-    get:
+  /createBattle:
+    post:
       tags:
         - battle-controller
-      summary: "임시"
-      operationId: "example"
-      parameters:
-        - name: id
-          in: query
-          description: 임시 id
-          required: true
-          schema:
-            type: integer
-            format: int64
+      summary: "배틀 생성"
+      operationId: "createBattle"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/CreateBattleReqDTO"
       responses:
         "200":
-          description: "임시"
+          description: "배틀 생성 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/CreateBattleResDTO"
         "400":
-          description: "임시"
+          description: "배틀 생성 실패"

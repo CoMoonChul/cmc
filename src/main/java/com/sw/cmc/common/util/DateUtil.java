@@ -1,5 +1,6 @@
 package com.sw.cmc.common.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -37,5 +38,39 @@ public class DateUtil {
     public static String getTodayDateString() {
         Calendar today =  Calendar.getInstance();
         return YYYYMMDD.format(today.getTime());
+    }
+
+    /**
+     * methodName : isValidDateFormat
+     * author : IM HYUN WOO
+     * description : YYYYMMDD format validation
+     *
+     * @param date str
+     * @return boolean
+     */
+    public static boolean isValidDateFormat(String dateStr) {
+        try {
+            YYYYMMDD.parse(dateStr);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    /**
+     * methodName : isValidDateTimeFormat
+     * author : IM HYUN WOO
+     * description : yyyyMMddHHmmss format validation
+     *
+     * @param date str
+     * @return boolean
+     */
+    public static boolean isValidDateTimeFormat(String dateStr) {
+        try {
+            YMDHMS.parse(dateStr);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 }

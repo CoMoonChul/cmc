@@ -41,7 +41,6 @@ public class CommentDomain {
     public void validateCreateComment() throws CmcException {
         validateContent();
         validateCommentTarget();
-        validateUserName();
     }
 
     /**
@@ -54,7 +53,6 @@ public class CommentDomain {
     public void validateUpdateComment() throws CmcException {
         validateContent();
         validateCommentTarget();
-        validateUserName();
     }
 
     /**
@@ -80,19 +78,6 @@ public class CommentDomain {
     public void validateCommentTarget() throws CmcException {
         if (!CommentTarget.isValidCode(commentTarget)) {
             throw new CmcException("COMMENT003");
-        }
-    }
-
-    /**
-     * methodName : validateUserName
-     * author : IM HYUN WOO
-     * description : 댓글 작성자 validation (blank 여부)
-     *
-     * @throws CmcException the cmc exception
-     */
-    public void validateUserName() throws CmcException {
-        if (StringUtils.isBlank(userName)) {
-            throw new CmcException("COMMENT004");
         }
     }
 

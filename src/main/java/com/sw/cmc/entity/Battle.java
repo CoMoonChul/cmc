@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
 /**
  * packageName    : com.sw.cmc.entity
@@ -23,21 +22,27 @@ public class Battle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long battleId;
 
-    private Long userNum;
-
     private String title;
 
     private String content;
 
-    private Long code1;
-
-    private Long code2;
-
     private String endTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "code_1", referencedColumnName = "codeEditNum", nullable = false)
+    private Editor editorOne;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "code_2", referencedColumnName = "codeEditNum", nullable = false)
+    private Editor editorTwo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
+    private User user;
+
     @Column(name = "created_at", updatable = false, insertable = false)
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @Column(name = "updated_at", insertable = false)
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 }
