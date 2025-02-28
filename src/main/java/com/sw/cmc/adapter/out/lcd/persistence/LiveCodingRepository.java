@@ -2,6 +2,8 @@ package com.sw.cmc.adapter.out.lcd.persistence;
 
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 
+import java.util.UUID;
+
 /**
  * packageName    : com.sw.cmc.adapter.out.lcd.persistence
  * fileName       : LiveCodingRepository
@@ -14,9 +16,20 @@ public interface LiveCodingRepository {
     /**
      * methodName : saveLiveCoding
      * author : KO YOUNG SUNG
-     * description : 라이브 코딩방 생성
+     * description : 라이브코딩방 저장 (레디스)
      *
      * @param liveCodingDomain - liveCodingDomain
      */
     void saveLiveCoding(LiveCodingDomain liveCodingDomain);
+
+    /**
+     * methodName : deleteLiveCoding
+     * author : KO YOUNG SUNG
+     * description : 라이브코딩방 삭제 (레디스)
+     *
+     * @param roomId - 방 id
+     * @return boolean
+     */
+    boolean deleteLiveCoding(UUID roomId);  // 방 삭제 메서드
+
 }
