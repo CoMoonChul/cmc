@@ -12,6 +12,31 @@ tags:
     description: Battle api controller
 
 paths:
+  /selectBattle:
+    get:
+      tags:
+        - battle-controller
+      summary: 배틀 단건 조회
+      description: 배틀 단건 조회
+      operationId: selectBattle
+      parameters:
+        - name: id
+          in: query
+          description: 배틀 id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/SelectBattleResDTO"
+        '400':
+          description: Invalid status value
+
   /createBattle:
     post:
       tags:

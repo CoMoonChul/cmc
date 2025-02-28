@@ -10,6 +10,18 @@ import com.sw.cmc.domain.battle.BattleDomain;
  * description    : Battle usecase
  */
 public interface BattleUseCase {
+
+    /**
+     * methodName : selectBattle
+     * author : IM HYUN WOO
+     * description : 배틀 단건 조회
+     *
+     * @param id
+     * @return battle domain
+     * @throws Exception the exception
+     */
+    BattleDomain selectBattle(Long id) throws Exception;
+
     /**
      * methodName : createBattle
      * author : IM HYUN WOO

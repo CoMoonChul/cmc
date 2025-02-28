@@ -1,9 +1,6 @@
 package com.sw.cmc.adapter.in.battle.web;
 
-import com.sw.cmc.adapter.in.battle.dto.CreateBattleReqDTO;
-import com.sw.cmc.adapter.in.battle.dto.CreateBattleResDTO;
-import com.sw.cmc.adapter.in.battle.dto.DeleteBattleReqDTO;
-import com.sw.cmc.adapter.in.battle.dto.DeleteBattleResDTO;
+import com.sw.cmc.adapter.in.battle.dto.*;
 import com.sw.cmc.application.port.in.battle.BattleUseCase;
 import com.sw.cmc.domain.battle.BattleDomain;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +21,11 @@ public class BattleControllerImpl implements BattleControllerApi {
 
     private final BattleUseCase battleUseCase;
     private final ModelMapper modelMapper;
+
+    @Override
+    public ResponseEntity<SelectBattleResDTO> selectBattle(Long id) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(battleUseCase.selectBattle(id), SelectBattleResDTO.class));
+    }
 
     @Override
     public ResponseEntity<CreateBattleResDTO> createBattle(CreateBattleReqDTO createBattleReqDTO) throws Exception {
