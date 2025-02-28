@@ -5,9 +5,10 @@ import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -31,7 +32,7 @@ public class LiveCodingRepositoryImpl implements LiveCodingRepository {
         Map<String, String> liveCodingMap = new HashMap<>();
         liveCodingMap.put("roomId", liveCodingDomain.getRoomId().toString());
         liveCodingMap.put("hostId", liveCodingDomain.getHostId().toString());
-        liveCodingMap.put("createdAt", liveCodingDomain.getCreatedAt());
+        liveCodingMap.put("createdAt", String.valueOf(liveCodingDomain.getCreatedAt()));
         liveCodingMap.put("participantCount", liveCodingDomain.getParticipantCount().toString());
         liveCodingMap.put("participants", String.join(",", liveCodingDomain.getParticipants().stream().map(String::valueOf).toArray(String[]::new)));
 
@@ -44,6 +45,31 @@ public class LiveCodingRepositoryImpl implements LiveCodingRepository {
         // Redis에서 방을 삭제하는 로직
         String key = "live_coding:" + roomId;  // Redis에서 사용할 key
         return redisService.delete(key);  // Redis에서 해당 key 삭제
+    }
+
+
+    @Override
+    public LiveCodingDomain findByRoomId(UUID roomId) {
+        String key = REDIS_LIVE_CODING_PREFIX + roomId;
+        Map<String, String> liveCodingMap = redisService.selectHash(key);  // 수정된 부분: Map<String, String>으로 처리
+
+        if (liveCodingMap == null || liveCodingMap.isEmpty()) {
+            return null;  // 방이 없으면 null 반환
+        }
+
+        UUID retrievedRoomId = UUID.fromString(liveCodingMap.get("roomId"));
+        Long hostId = Long.valueOf(liveCodingMap.get("hostId"));
+
+        String createdAtStr = liveCodingMap.get("createdAt");
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        LocalDateTime createdAt = LocalDateTime.parse(createdAtStr, formatter);
+
+        Integer participantCount = Integer.valueOf(liveCodingMap.get("participantCount"));
+        List<Long> participants = Arrays.stream(liveCodingMap.get("participants").split(","))
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+
+        return new LiveCodingDomain(retrievedRoomId, hostId, createdAt, participantCount, participants);
     }
 
 }

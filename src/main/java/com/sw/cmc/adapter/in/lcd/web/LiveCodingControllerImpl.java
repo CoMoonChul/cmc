@@ -56,7 +56,7 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
         };
     }
 
-
+    @Override
     public ResponseEntity<InviteLiveCodingResDTO> inviteLiveCoding(@RequestBody InviteLiveCodingReqDTO inviteLiveCodingReqDTO) throws Exception {
         // roomId를 받음
         UUID roomId = inviteLiveCodingReqDTO.getRoomId();
@@ -70,6 +70,25 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
 
         return ResponseEntity.ok(response);  // 200 OK 응답 반환
     }
+
+    @Override
+    public ResponseEntity<SelectLiveCodingResDTO> selectLiveCoding(UUID roomId) throws Exception {
+        // roomId를 이용하여 라이브 코딩 방 정보 조회
+        LiveCodingDomain liveCodingDomain = liveCodingUseCase.selectLiveCoding(roomId);
+
+        // 조회된 정보를 기반으로 응답 DTO 생성
+        SelectLiveCodingResDTO response = new SelectLiveCodingResDTO();
+        response.setRoomId(liveCodingDomain.getRoomId());
+        response.setHostId(liveCodingDomain.getHostId());
+        response.setCreatedAt(String.valueOf(liveCodingDomain.getCreatedAt()));
+        response.setParticipantCount(liveCodingDomain.getParticipantCount());
+        response.setParticipants(liveCodingDomain.getParticipants());
+
+        // 응답 반환
+        return ResponseEntity.ok(response);  // 200 OK 응답 반환
+    }
+
+
 }
 
 

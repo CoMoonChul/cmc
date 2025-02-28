@@ -45,11 +45,22 @@ public interface LiveCodingUseCase {
      */
     String generateInviteLink(UUID roomId) throws Exception;
 
+
+    /**
+     * methodName : selectLiveCoding
+     * author : KO YOUNG SUNG
+     * description : 라이브코딩 방 조회
+     *
+     * @param roomId - 방 id
+     * @return live coding domain
+     * @throws Exception the exception
+     */
+    LiveCodingDomain selectLiveCoding(UUID roomId) throws Exception;
+
 //    // 라이브 코딩 방 정보 업데이트
 //    LiveCodingDomain updateLiveCoding(Long roomId, Long participantCount) throws Exception;
 //
-//    // 라이브 코딩 방 조회
-//    LiveCodingDomain selectLiveCoding(Long roomId) throws Exception;
+
 //
 //    // 라이브 코딩 방 참가
 //    LiveCodingDomain joinLiveCoding(Long roomId, Long participantId) throws Exception;

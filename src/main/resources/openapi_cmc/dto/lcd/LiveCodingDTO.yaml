@@ -86,19 +86,25 @@ components:
           type: integer
           format: int64
           description: "방장 ID (userNum)"
-        participantCount:
-          type: integer
-          format: int64
-          description: "참가자 수"
         createdAt:
           type: string
-          format: date-time
-          description: "방 생성 시간 (ISO 8601 형식)"
+          description: "방 생성 시간"
+        participantCount:
+          type: integer
+          description: "참가자 수"
+        participants:
+          type: array
+          items:
+            type: integer
+            format: int64
+            description: "참가자 ID (userNum)"
       required:
         - roomId
         - hostId
-        - participantCount
         - createdAt
+        - participantCount
+        - participants
+
 
     InviteLiveCodingReqDTO:
       type: object

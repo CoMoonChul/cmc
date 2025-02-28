@@ -30,6 +30,15 @@ public interface LiveCodingRepository {
      * @param roomId - 방 id
      * @return boolean
      */
-    boolean deleteLiveCoding(UUID roomId);  // 방 삭제 메서드
+    boolean deleteLiveCoding(UUID roomId);
 
+    /**
+     * methodName : findByRoomId
+     * author : KO YOUNG SUNG
+     * description :
+     *
+     * @param roomId - 방 id
+     * @return live coding domain
+     */
+    LiveCodingDomain findByRoomId(UUID roomId);
 }
