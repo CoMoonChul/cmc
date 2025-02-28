@@ -25,11 +25,7 @@ public class ReviewDomain {
     private String content;
     private String createdAt;
     private String updatedAt;
-
-    // Editor 관련 필드 추가
-    private Long codeEditNum;  // code_edit_data의 code_edit_num
-    private String editorContent;  // code_edit_data의 content
-    private String editorLanguage;  // code_edit_data의 language
+    private String codeContent;
 
     /**
      * methodName : validateCreateReview

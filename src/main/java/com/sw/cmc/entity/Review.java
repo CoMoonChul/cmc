@@ -47,5 +47,5 @@ public class Review {
     @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
     private User user;
 
-    private String code_content;
+    private String codeContent;
 }
