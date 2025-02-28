@@ -5,7 +5,6 @@ import com.sw.cmc.application.port.in.lcd.DeleteLcdCase;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
-import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * packageName    : com.sw.cmc.application.service
@@ -38,7 +39,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         // 방 ID 생성 (UUID)
         UUID roomId = UUID.randomUUID();
 
-        String createdAt = String.valueOf(LocalDateTime.now());
+        LocalDateTime createdAt = LocalDateTime.now();
 
         // 초기 참가자 목록 (방장만 포함)
         List<Long> participants = new ArrayList<>();
@@ -87,6 +88,15 @@ public class LiveCodingService implements LiveCodingUseCase {
 
         // 생성된 JWT 토큰을 포함한 초대 링크 반환
         return  "https://cmc.com/livecoding/join?token=" + jwtToken.getAccessToken();
+    }
+
+    @Override
+    public LiveCodingDomain selectLiveCoding(UUID roomId) throws Exception {
+            LiveCodingDomain liveCodingDomain = liveCodingRepository.findByRoomId(roomId);
+        if (liveCodingDomain == null) {
+            throw new Exception("라이브 코딩 방이 존재하지 않습니다.");
+        }
+        return liveCodingDomain;
     }
 
 }

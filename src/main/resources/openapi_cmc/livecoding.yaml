@@ -86,26 +86,30 @@ paths:
 
   /selectLiveCoding:
     get:
+      summary: "라이브 코딩 방 조회"
       tags:
         - live-coding-controller
-      summary: "라이브 코딩 방 조회"
       operationId: "selectLiveCoding"
+      description: "주어진 roomId에 해당하는 라이브 코딩 방을 조회합니다."
       parameters:
         - name: roomId
           in: query
+          description: "라이브 코딩 방 ID"
           required: true
           schema:
             type: string
             format: uuid
       responses:
         "200":
-          description: "라이브 코딩 방 조회 성공"
+          description: "라이브 코딩 방 정보 조회 성공"
           content:
             application/json:
               schema:
                 $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/SelectLiveCodingResDTO"
         "404":
-          description: "방이 존재하지 않습니다."
+          description: 방이 존재하지 않습니다.
+        "400":
+          description: "잘못된 요청"
 
   /inviteLiveCoding:
     post:
