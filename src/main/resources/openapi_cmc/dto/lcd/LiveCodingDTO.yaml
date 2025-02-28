@@ -100,39 +100,24 @@ components:
         - participantCount
         - createdAt
 
-    JoinLiveCodingReqDTO:
+    InviteLiveCodingReqDTO:
       type: object
       properties:
         roomId:
           type: string
           format: uuid
-          description: "방 ID (UUID 형식)"
-        participantId:
-          type: integer
-          format: int64
-          description: "참가자 ID (userNum)"
+          description: "초대할 라이브 코딩 방 ID"
       required:
         - roomId
-        - participantId
 
-    JoinLiveCodingResDTO:
+    InviteLiveCodingResDTO:
       type: object
       properties:
-        roomId:
+        inviteLink:
           type: string
-          format: uuid
-          description: "방 ID (UUID 형식)"
-        participantId:
-          type: integer
-          format: int64
-          description: "참가자 ID (userNum)"
-        status:
-          type: string
-          description: "SUCCESS / FAIL"
+          description: "JWT가 포함된 초대 링크"
       required:
-        - roomId
-        - participantId
-        - status
+        - inviteLink
 
     LeaveLiveCodingReqDTO:
       type: object

@@ -22,8 +22,8 @@ public interface LiveCodingUseCase {
      * @param hostId - 호스트 id
      * @return live coding domain
      */
-// 라이브 코딩 방 생성
-    LiveCodingDomain createLiveCoding(Long hostId);
+    // 라이브 코딩 방 생성
+    LiveCodingDomain createLiveCoding(Long hostId) throws Exception;
 
     /**
      * methodName : deleteLiveCoding
@@ -31,10 +31,19 @@ public interface LiveCodingUseCase {
      * description : 라이브코딩방 삭제
      *
      * @param roomId - 방 id
-     * @return delete lcd case
+     * @return DeleteLcdCase - "SUCCESS" or "FAIL"
      */
-    DeleteLcdCase deleteLiveCoding(UUID roomId);  // 방 삭제 (상태 메시지 반환)
+    DeleteLcdCase deleteLiveCoding(UUID roomId) throws Exception;  // 방 삭제 (상태 메시지 반환)
 
+    /**
+     * methodName : generateInviteLink
+     * author : KO YOUNG SUNG
+     * description : 라이브코딩방 초대링크 생성
+     *
+     * @param roomId - 방 id
+     * @return String - 초대링크
+     */
+    String generateInviteLink(UUID roomId) throws Exception;
 
 //    // 라이브 코딩 방 정보 업데이트
 //    LiveCodingDomain updateLiveCoding(Long roomId, Long participantCount) throws Exception;

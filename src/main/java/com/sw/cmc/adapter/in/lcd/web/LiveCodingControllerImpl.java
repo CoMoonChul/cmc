@@ -1,9 +1,6 @@
 package com.sw.cmc.adapter.in.lcd.web;
 
-import com.sw.cmc.adapter.in.livecoding.dto.CreateLiveCodingReqDTO;
-import com.sw.cmc.adapter.in.livecoding.dto.CreateLiveCodingResDTO;
-import com.sw.cmc.adapter.in.livecoding.dto.DeleteLiveCodingReqDTO;
-import com.sw.cmc.adapter.in.livecoding.dto.DeleteLiveCodingResDTO;
+import com.sw.cmc.adapter.in.livecoding.dto.*;
 import com.sw.cmc.adapter.in.livecoding.web.LiveCodingControllerApi;
 import com.sw.cmc.application.port.in.lcd.DeleteLcdCase;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
@@ -11,7 +8,10 @@ import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 /**
  * packageName    : com.sw.cmc.adapter.in.web
@@ -54,6 +54,21 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
                 yield ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);  // 500 응답
             }
         };
+    }
+
+
+    public ResponseEntity<InviteLiveCodingResDTO> inviteLiveCoding(@RequestBody InviteLiveCodingReqDTO inviteLiveCodingReqDTO) throws Exception {
+        // roomId를 받음
+        UUID roomId = inviteLiveCodingReqDTO.getRoomId();
+
+        // 초대 링크 생성 서비스 호출
+        String inviteLink = liveCodingUseCase.generateInviteLink(roomId);
+
+        // 응답 DTO 생성
+        InviteLiveCodingResDTO response = new InviteLiveCodingResDTO();
+        response.setInviteLink(inviteLink);
+
+        return ResponseEntity.ok(response);  // 200 OK 응답 반환
     }
 }
 

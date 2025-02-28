@@ -107,27 +107,30 @@ paths:
         "404":
           description: "방이 존재하지 않습니다."
 
-  /joinLiveCoding:
+  /inviteLiveCoding:
     post:
       tags:
         - live-coding-controller
-      summary: "라이브 코딩 방 참가"
-      operationId: "joinLiveCoding"
+      summary: "라이브 코딩 방 초대 링크 생성"
+      operationId: "inviteLiveCoding"
+      description: "roomId(UUID)를 기반으로 JWT를 포함한 초대 링크를 생성."
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/JoinLiveCodingReqDTO"
+              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/InviteLiveCodingReqDTO"
       responses:
         "200":
-          description: "라이브 코딩 방 참가 성공"
+          description: "초대 링크 생성 성공"
           content:
             application/json:
               schema:
-                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/JoinLiveCodingResDTO"
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/InviteLiveCodingResDTO"
         "400":
-          description: "라이브 코딩 방 참가 실패"
+          description: "잘못된 요청 (roomId 없음)"
+        "500":
+          description: "서버 내부 오류"
 
   /leaveLiveCoding:
     post:
