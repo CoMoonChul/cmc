@@ -60,7 +60,7 @@ public class CmcControllerAdvice {
      * @param e
      * @return response entity
      */
-    @ExceptionHandler({ConstraintViolationException.class, MissingServletRequestParameterException.class, MissingServletRequestPartException.class})
+    @ExceptionHandler({IllegalArgumentException.class, ConstraintViolationException.class, MissingServletRequestParameterException.class, MissingServletRequestPartException.class})
     public ResponseEntity<ErrorResponse> handleEtcException(ConstraintViolationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("COM001", messageUtil.getFormattedMessage("COM001")));
     }
