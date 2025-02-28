@@ -1,7 +1,7 @@
 package com.sw.cmc.domain.user;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.sw.cmc.adapter.in.user.dto.WithdrawReqDTO;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import com.sw.cmc.common.advice.CmcException;
 
@@ -20,12 +20,17 @@ import java.util.stream.IntStream;
  * description    : 유저 도메인
  */
 @Getter
-@Setter
+@Builder (toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDomain {
     private long userNum;
     private String userId;
     private String password;
+    private String accessToken;
+    private long accessTokenExpirationTime;
     private String refreshToken;
+    private long refreshTokenExpirationTime;
     private String username;
     private String email;
     private String userRole;

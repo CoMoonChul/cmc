@@ -1,6 +1,5 @@
 package com.sw.cmc.application.port.in.user;
 
-import com.sw.cmc.adapter.in.user.dto.*;
 import com.sw.cmc.domain.user.UserDomain;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -12,13 +11,13 @@ import jakarta.servlet.http.HttpServletRequest;
  * description    :
  */
 public interface LoginUseCase {
-    TempLoginResDTO tempLogin(UserDomain userDomain) throws Exception;
+    UserDomain tempLogin(UserDomain userDomain) throws Exception;
 
-    LoginResDTO login(UserDomain userDomain) throws Exception;
+    UserDomain login(UserDomain userDomain) throws Exception;
 
-    RefreshResDTO refresh(HttpServletRequest request) throws Exception;
+    String refresh(HttpServletRequest request) throws Exception;
 
-    LogoutResDTO logout(HttpServletRequest request) throws Exception;
+    String logout(HttpServletRequest request) throws Exception;
 
-    FindAccountResDTO findAccount(UserDomain userDomain) throws Exception;
+    String findAccount(UserDomain userDomain) throws Exception;
 }

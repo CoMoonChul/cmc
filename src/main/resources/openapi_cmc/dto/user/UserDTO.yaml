@@ -1,7 +1,7 @@
 components:
   schemas:
-    # API_USER_0008 회원 정보 조회
-    GetUserInfoResDTO:
+    # API_USER_0008 내 정보 조회
+    GetMyInfoResDTO:
       type: object
       properties:
         username:
@@ -10,4 +10,23 @@ components:
         email:
           type: string
           description: 회원 이메일
-      description: 회원 정보 조회 응답
+      description: 내 정보 조회 응답
+
+    # API_USER_0009 회원 탈퇴
+    WithdrawReqDTO:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          description: 회원 비밀번호
+      description: 회원 탈퇴 요청
+
+    WithdrawResDTO:
+      type: object
+      properties:
+        resultMessage:
+          type: string
+          description: 회원 탈퇴 결과 메시지
+      description: 회원 탈퇴 응답

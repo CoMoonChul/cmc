@@ -177,17 +177,38 @@ paths:
                 $ref: "./dto/user/LoginDTO.yaml#/components/schemas/FindAccountResDTO"
 
   # user-controller
-  /user/getUserInfo:
+  /user/getMyInfo:
     post:
       tags:
         - user-controller
-      summary: "API_USER_0008 회원 정보 조회"
-      description: 회원 정보 조회 API
-      operationId: "getUserInfo"
+      summary: "API_USER_0008 내 정보 조회"
+      description: 내 정보 조회 API
+      operationId: "getMyInfo"
       responses:
         "200":
-          description: "회원 정보 조회 성공"
+          description: "내 정보 조회 성공"
           content:
             application/json:
               schema:
-                $ref: "./dto/user/UserDTO.yaml#/components/schemas/GetUserInfoResDTO"
+                $ref: "./dto/user/UserDTO.yaml#/components/schemas/GetMyInfoResDTO"
+
+  /user/withdraw:
+    post:
+      tags:
+        - user-controller
+      summary: "API_USER_0009 회원 탈퇴"
+      description: 회원 탈퇴 API
+      operationId: "withdraw"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/user/UserDTO.yaml#/components/schemas/WithdrawReqDTO"
+      responses:
+        "200":
+          description: "로그인 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/user/UserDTO.yaml#/components/schemas/WithdrawResDTO"

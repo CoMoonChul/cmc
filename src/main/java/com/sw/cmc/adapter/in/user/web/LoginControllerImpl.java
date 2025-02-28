@@ -26,26 +26,43 @@ public class LoginControllerImpl implements LoginControllerApi {
 
     @Override
     public ResponseEntity<TempLoginResDTO> tempLogin(TempLoginReqDTO tempLoginReqDTO) throws Exception {
-        return ResponseEntity.ok(loginUseCase.tempLogin(modelMapper.map(tempLoginReqDTO, UserDomain.class)));
+
+        UserDomain userDomain = UserDomain.builder()
+                .userId(tempLoginReqDTO.getUserId())
+                .build();
+        System.out.println("!!!!!!!!!!" + userDomain.getUserId());
+
+        return ResponseEntity.ok(modelMapper.map(loginUseCase.tempLogin(userDomain), TempLoginResDTO.class));
     }
 
     @Override
     public ResponseEntity<LoginResDTO> login(LoginReqDTO loginReqDTO) throws Exception {
-        return ResponseEntity.ok(loginUseCase.login(modelMapper.map(loginReqDTO, UserDomain.class)));
+
+        UserDomain userDomain = UserDomain.builder()
+                .userId(loginReqDTO.getUserId())
+                .password(loginReqDTO.getPassword())
+                .build();
+
+        return ResponseEntity.ok(modelMapper.map(loginUseCase.login(userDomain), LoginResDTO.class));
     }
 
     @PostMapping("/user/refresh")
     public ResponseEntity<RefreshResDTO> refresh(HttpServletRequest request) throws Exception {
-        return ResponseEntity.ok(loginUseCase.refresh(request));
+        return ResponseEntity.ok(new RefreshResDTO().accessToken(loginUseCase.refresh(request)));
     }
 
     @PostMapping("/user/logout")
     public ResponseEntity<LogoutResDTO> logout(HttpServletRequest request) throws Exception {
-        return ResponseEntity.ok(loginUseCase.logout(request));
+        return ResponseEntity.ok(new LogoutResDTO().resultMessage(loginUseCase.logout(request)));
     }
 
     @Override
     public ResponseEntity<FindAccountResDTO> findAccount(FindAccountReqDTO findAccountReqDTO) throws Exception {
-        return ResponseEntity.ok(loginUseCase.findAccount(modelMapper.map(findAccountReqDTO, UserDomain.class)));
+
+        UserDomain userDomain = UserDomain.builder()
+                .email(findAccountReqDTO.getEmail())
+                .build();
+
+        return ResponseEntity.ok(new FindAccountResDTO().resultMessage(loginUseCase.findAccount(userDomain)));
     }
 }
