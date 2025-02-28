@@ -34,6 +34,17 @@ public interface BattleUseCase {
     BattleDomain createBattle(BattleDomain battleDomain) throws Exception;
 
     /**
+     * methodName : updateBattle
+     * author : IM HYUN WOO
+     * description : 배틀 수정
+     *
+     * @param battle domain
+     * @return battle domain
+     * @throws Exception the exception
+     */
+    BattleDomain updateBattle(BattleDomain battleDomain) throws Exception;
+
+    /**
      * methodName : deleteBattle
      * author : IM HYUN WOO
      * description : 배틀 삭제

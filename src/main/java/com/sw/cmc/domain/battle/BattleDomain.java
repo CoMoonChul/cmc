@@ -44,6 +44,21 @@ public class BattleDomain {
     }
 
     /**
+     * methodName : validateUpdateBattle
+     * author : IM HYUN WOO
+     * description : battle 수정 validation
+     *
+     * @throws CmcException the cmc exception
+     */
+    public void validateUpdateBattle() throws CmcException {
+        validateTitle();
+        validateContent();
+        validateEndTime();
+        validateCodeContentLeft();
+        validateCodeContentRight();
+    }
+
+    /**
      * methodName : validateTitle
      * author : IM HYUN WOO
      * description : battle title validation
