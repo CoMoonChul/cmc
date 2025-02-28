@@ -1,9 +1,9 @@
 package com.sw.cmc.domain.lcd;
 
-import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * packageName    : com.sw.cmc.domain.live_coding.model
@@ -12,39 +12,43 @@ import java.time.LocalDateTime;
  * date           : 2025-02-08
  * description    : 라이브 코딩 도메인 객체
  */
-@Getter
-@Entity
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class LiveCodingDomain  {
+    private UUID roomId;  // 방 ID (UUID)
+    private Long hostId;  // 방장 ID (userNum)
+    private String createdAt;  // 생성 일시
+    private Integer participantCount;  // 참가자 수
+    private List<Long> participants;;  // 참가자 ID 목록 (userNum 리스트)
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Long roomId;  // 방 ID (Primary Key)
-
-    @Column(nullable = false)
-    private Long hostId;  // 방장 ID
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;  // 생성 일시
-
-    @Column(nullable = false)
-    private Long participantCount;  // 참가자 수
-
-    @PrePersist
-    public void onPrePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now(); // 엔터티가 저장되기 전에 현재 시간을 설정
+    public void addParticipant(Long participantId) {
+        if (participants == null) {
+            // 추후 에러 처리
+        }
+        if (participants != null && !participants.contains(participantId)) {
+            participants.add(participantId);
+            participantCount++;
+        }
+    }
+    // 참가자를 제거하는 메서드
+    public void removeParticipant(Long participantId) {
+        if (participants != null && participants.contains(participantId)) {
+            participants.remove(participantId);
+            participantCount--;
         }
     }
 
-    @Builder
-    public LiveCodingDomain(Long hostId) {
-        this.hostId = hostId;
-        this.createdAt = LocalDateTime.now();
-        this.participantCount = 0L;
+    // 방이 비어있는지 확인하는 메서드
+    public boolean isRoomEmpty() {
+        return participants == null || participants.isEmpty();
     }
 
+    // 방 정보의 포맷을 반환하는 메서드 (예: 참가자 수 및 생성 일시)
+    public String getRoomInfo() {
+        return String.format("Room ID: %s | Host ID: %d | Created At: %s | Participants: %d",
+                roomId.toString(), hostId, createdAt, participantCount);
+    }
 
 
 

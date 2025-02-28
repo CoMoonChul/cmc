@@ -117,7 +117,7 @@ def cmcSwaggerMap = [
 		"battle": "battle.yaml",
 		"like": "like.yaml",
 		"notice": "notice.yaml",
-		"livecode": "livecode.yaml",
+		"livecoding": "livecoding.yaml",
 		"redis": "redis.yaml",
 		"editor": "editor.yaml"
 ]

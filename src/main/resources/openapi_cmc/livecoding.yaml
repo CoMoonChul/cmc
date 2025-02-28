@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: LiveCoding API
+  description: CMC LiveCoding API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: live-coding-controller
+    description: LiveCoding API controller
+
+paths:
+  /createLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 생성"
+      operationId: "createLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/CreateLiveCodingReqDTO"
+      responses:
+        "201":
+          description: "라이브 코딩 방 생성 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/CreateLiveCodingResDTO"
+        "400":
+          description: "라이브 코딩 방 생성 실패"
+        "409":
+          description: "방이 이미 존재합니다."
+
+  /deleteLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 삭제"
+      operationId: "deleteLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/DeleteLiveCodingReqDTO"
+      responses:
+        "200":
+          description: "라이브 코딩 방 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/DeleteLiveCodingResDTO"
+        "404":
+          description: "방이 존재하지 않습니다."
+        "400":
+          description: "라이브 코딩 방 삭제 실패"
+
+  /updateLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 정보 업데이트"
+      operationId: "updateLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/UpdateLiveCodingReqDTO"
+      responses:
+        "200":
+          description: "라이브 코딩 방 정보 업데이트 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/UpdateLiveCodingResDTO"
+        "404":
+          description: "방이 존재하지 않습니다."
+        "400":
+          description: "라이브 코딩 방 정보 업데이트 실패"
+
+  /selectLiveCoding:
+    get:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 조회"
+      operationId: "selectLiveCoding"
+      parameters:
+        - name: roomId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "라이브 코딩 방 조회 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/SelectLiveCodingResDTO"
+        "404":
+          description: "방이 존재하지 않습니다."
+
+  /joinLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 참가"
+      operationId: "joinLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/JoinLiveCodingReqDTO"
+      responses:
+        "200":
+          description: "라이브 코딩 방 참가 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/JoinLiveCodingResDTO"
+        "400":
+          description: "라이브 코딩 방 참가 실패"
+
+  /leaveLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방에서 나가기"
+      operationId: "leaveLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/LeaveLiveCodingReqDTO"
+      responses:
+        "200":
+          description: "라이브 코딩 방에서 나가기 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/LeaveLiveCodingResDTO"
+        "400":
+          description: "라이브 코딩 방에서 나가기 실패"
