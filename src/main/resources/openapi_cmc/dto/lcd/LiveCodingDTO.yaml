@@ -1,90 +1,168 @@
 components:
   schemas:
-    LiveCoding:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: 라이브 코딩 방 ID
-        host_id:
-          type: integer
-          format: int64
-          description: 방장 회원 ID
-        created_at:
-          type: string
-          description: 생성 일시
-        updated_at:
-          type: string
-          description: 최종 수정 일시
 
     CreateLiveCodingReqDTO:
       type: object
-      required:
-        - host_id
       properties:
-        host_id:
+        hostId:
           type: integer
           format: int64
-          description: 방장 회원 ID
+          description: "방장 ID (userNum)"
+      required:
+        - hostId
 
     CreateLiveCodingResDTO:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: 라이브 코딩 방 ID
-        host_id:
-          type: integer
-          format: int64
-          description: 방장 회원 ID
-        created_at:
+        roomId:
           type: string
-          description: 생성 일시
-        updated_at:
-          type: string
-          description: 최종 수정 일시
+          format: uuid
+          description: "생성된 라이브 코딩 방 ID"
+      required:
+        - roomId
 
     DeleteLiveCodingReqDTO:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: 라이브 코딩 방 ID
+        roomId:
+          type: string
+          format: uuid
+          description: "삭제할 라이브 코딩 방 ID (UUID 형식)"
+      required:
+        - roomId
 
     DeleteLiveCodingResDTO:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: 라이브 코딩 방 ID
+        roomId:
+          type: string
+          format: uuid
+          description: "삭제된 라이브 코딩 방 ID (UUID 형식)"
+        status:
+          type: string
+          description: "삭제 상태 ('SUCCESS' 또는 'FAILURE')"
+      required:
+        - roomId
+        - status
 
     UpdateLiveCodingReqDTO:
       type: object
       properties:
-        id:
+        roomId:
+          type: string
+          format: uuid
+          description: "업데이트할 라이브 코딩 방 ID (UUID 형식)"
+        participantCount:
           type: integer
           format: int64
-          description: 라이브 코딩 방 ID
-        host_id:
-          type: integer
-          format: int64
-          description: 방장 회원 ID
+          description: "참가자 수 변경"
+      required:
+        - roomId
+        - participantCount
 
     UpdateLiveCodingResDTO:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: 라이브 코딩 방 ID
-        host_id:
-          type: integer
-          format: int64
-          description: 방장 회원 ID
-        updated_at:
+        roomId:
           type: string
-          description: 최종 수정 일시
+          format: uuid
+          description: "업데이트된 라이브 코딩 방 ID (UUID 형식)"
+        participantCount:
+          type: integer
+          format: int64
+          description: "변경된 참가자 수"
+        updatedAt:
+          type: string
+          format: date-time
+          description: "업데이트 시간 (ISO 8601 형식)"
+      required:
+        - roomId
+        - participantCount
+        - updatedAt
+
+    SelectLiveCodingResDTO:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+          description: "라이브 코딩 방 ID (UUID 형식)"
+        hostId:
+          type: integer
+          format: int64
+          description: "방장 ID (userNum)"
+        participantCount:
+          type: integer
+          format: int64
+          description: "참가자 수"
+        createdAt:
+          type: string
+          format: date-time
+          description: "방 생성 시간 (ISO 8601 형식)"
+      required:
+        - roomId
+        - hostId
+        - participantCount
+        - createdAt
+
+    JoinLiveCodingReqDTO:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+          description: "방 ID (UUID 형식)"
+        participantId:
+          type: integer
+          format: int64
+          description: "참가자 ID (userNum)"
+      required:
+        - roomId
+        - participantId
+
+    JoinLiveCodingResDTO:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+          description: "방 ID (UUID 형식)"
+        participantId:
+          type: integer
+          format: int64
+          description: "참가자 ID (userNum)"
+        status:
+          type: string
+          description: "참가 상태 ('SUCCESS' 또는 'FAILURE')"
+      required:
+        - roomId
+        - participantId
+        - status
+
+    LeaveLiveCodingReqDTO:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+          description: "라이브 코딩 방 ID (UUID 형식)"
+        userId:
+          type: integer
+          format: int64
+          description: "사용자 ID (userNum)"
+      required:
+        - roomId
+        - userId
+
+    LeaveLiveCodingResDTO:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "처리 결과 메시지"
+        success:
+          type: boolean
+          description: "나가기 성공 여부"
+      required:
+        - message
+        - success

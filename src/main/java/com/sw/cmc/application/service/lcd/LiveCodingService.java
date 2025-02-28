@@ -2,11 +2,12 @@ package com.sw.cmc.application.service.lcd;
 
 import com.sw.cmc.adapter.out.lcd.persistence.LiveCodingRepository;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
-import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * packageName    : com.sw.cmc.application.service
@@ -19,25 +20,37 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LiveCodingService implements LiveCodingUseCase {
 
-    private final MessageUtil messageUtil;
-    private final ModelMapper modelMapper;
-    private final LiveCodingRepository liveCodingRepository;
+    private final LiveCodingRepository liveCodingRepository;  // LiveCodingRepository 주입
 
-    // 방 생성
+
+
     @Override
     public LiveCodingDomain createLiveCoding(Long hostId) {
-        return null;
+
+        // 방 ID 생성 (UUID)
+        UUID roomId = UUID.randomUUID();
+
+        String createdAt = String.valueOf(LocalDateTime.now());
+
+        // 초기 참가자 목록 (방장만 포함)
+        List<Long> participants = new ArrayList<>();
+        participants.add(hostId);
+
+        // 참가자 수 초기화 (방장 포함)
+        Integer participantCount = 1;
+
+        // LiveCodingDomain 객체 생성
+        LiveCodingDomain liveCodingDomain = new LiveCodingDomain(
+                roomId,  // 생성된 방 ID
+                hostId,  // 방장 ID
+                createdAt,  // 방 생성 시간
+                participantCount,  // 참가자 수
+                participants  // 참가자 목록
+        );
+
+        // Redis에 방 정보 저장
+        liveCodingRepository.saveLiveCoding(liveCodingDomain);  // Repository 사용
+
+        return liveCodingDomain;  // 생성된 LiveCodingDomain 반환
     }
-
-//    // 예시: 참가자 수 증가
-//    @Override
-//    public LiveCodingDomain increaseParticipant(Long roomId) {
-//        // 추후 구현
-//        return null;
-//    }
-
-
-
-
-
 }
