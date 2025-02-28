@@ -1,6 +1,7 @@
 package com.sw.cmc.domain.comment;
 
 import com.sw.cmc.common.advice.CmcException;
+import lombok.Getter;
 
 /**
  * packageName    : com.sw.cmc.domain.comment
@@ -9,6 +10,7 @@ import com.sw.cmc.common.advice.CmcException;
  * date           : 2025. 2. 22.
  * description    : comment target enum
  */
+@Getter
 public enum CommentTarget {
     REVIEW(0),
     BATTLE(1);
@@ -17,10 +19,6 @@ public enum CommentTarget {
 
     CommentTarget(int code) {
         this.code = code;
-    }
-
-    public int getCode() {
-        return code;
     }
 
     public static CommentTarget fromCode(int code) {
@@ -39,5 +37,27 @@ public enum CommentTarget {
             }
         }
         return false;
+    }
+
+    /**
+     * methodName : isReview
+     * author : IM HYUN WOO
+     * description : review 코드 여부
+     *
+     * @return boolean
+     */
+    public boolean isReview() {
+        return this == REVIEW;
+    }
+
+    /**
+     * methodName : isBattle
+     * author : IM HYUN WOO
+     * description : battle 코드 여부
+     *
+     * @return boolean
+     */
+    public boolean isBattle() {
+        return this == BATTLE;
     }
 }

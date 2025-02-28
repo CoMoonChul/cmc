@@ -60,7 +60,6 @@ public class CommentControllerImpl implements CommentControllerApi {
         CommentDomain commentDomain = CommentDomain.builder()
                 .commentId(updateCommentReqDTO.getCommentId())
                 .content(updateCommentReqDTO.getContent())
-                .userNum(updateCommentReqDTO.getUserNum())
                 .targetId(updateCommentReqDTO.getTargetId())
                 .commentTarget(updateCommentReqDTO.getCommentTarget())
                 .build();

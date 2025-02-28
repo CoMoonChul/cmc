@@ -152,10 +152,6 @@ components:
         content:
           type: string
           description: 내용
-        user_num:
-          type: integer
-          format: int64
-          description: 회원 번호
         target_id:
           type: integer
           format: int64
