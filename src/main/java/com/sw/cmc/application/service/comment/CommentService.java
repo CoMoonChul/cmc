@@ -1,12 +1,15 @@
 package com.sw.cmc.application.service.comment;
 
 
+import com.sw.cmc.adapter.out.battle.persistence.BattleRepository;
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
+import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.comment.CommentUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.comment.CommentDomain;
 import com.sw.cmc.domain.comment.CommentListDomain;
+import com.sw.cmc.domain.comment.CommentTarget;
 import com.sw.cmc.entity.Comment;
 import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
@@ -38,6 +41,8 @@ public class CommentService implements CommentUseCase {
     private final EntityManager entityManager;
     private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
+    private final ReviewRepository reviewRepository;
+    private final BattleRepository battleRepository;
     private final UserUtil userUtil;
 
     @Override
@@ -66,6 +71,14 @@ public class CommentService implements CommentUseCase {
     @Transactional
     public CommentDomain createComment(CommentDomain commentDomain) throws Exception {
         commentDomain.validateCreateComment();
+
+        CommentTarget target = CommentTarget.fromCode(commentDomain.getCommentTarget());
+        if (target.isReview() && !reviewRepository.existsById(commentDomain.getTargetId())) {
+            throw new CmcException("COMMENT004");
+        } else if (target.isBattle() && !battleRepository.existsById(commentDomain.getTargetId())) {
+            throw new CmcException("COMMENT006");
+        }
+
         User savingUser = new User();
         savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
         Comment saving = modelMapper.map(commentDomain, Comment.class);
@@ -93,9 +106,20 @@ public class CommentService implements CommentUseCase {
     @Transactional
     public CommentDomain updateComment(CommentDomain commentDomain) throws Exception {
         commentDomain.validateUpdateComment();
-        commentDomain.validateAuthenticatedUser(userUtil.getAuthenticatedUserNum());
         Comment found = commentRepository.findById(commentDomain.getCommentId())
                 .orElseThrow(() -> new CmcException("COMMENT001"));
+
+        CommentTarget target = CommentTarget.fromCode(commentDomain.getCommentTarget());
+        if (target.isReview() && !reviewRepository.existsById(commentDomain.getTargetId())) {
+            throw new CmcException("COMMENT004");
+        } else if (target.isBattle() && !battleRepository.existsById(commentDomain.getTargetId())) {
+            throw new CmcException("COMMENT006");
+        }
+
+        if (!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
+            throw new CmcException("COMMENT005");
+        }
+
         found.setContent(commentDomain.getContent());
         found.setTargetId(commentDomain.getTargetId());
         found.setCommentTarget(commentDomain.getCommentTarget());

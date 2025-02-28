@@ -87,7 +87,7 @@ public class CmcControllerAdvice {
      * @return response entity
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(CmcException e) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("COM001", messageUtil.getFormattedMessage("COM001")));
     }
 }

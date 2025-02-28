@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Objects;
-
 /**
  * packageName    : com.sw.cmc.domain.comment
  * fileName       : CommentDomain
@@ -78,20 +76,6 @@ public class CommentDomain {
     public void validateCommentTarget() throws CmcException {
         if (!CommentTarget.isValidCode(commentTarget)) {
             throw new CmcException("COMMENT003");
-        }
-    }
-
-    /**
-     * methodName : validateAuthenticatedUser
-     * author : IM HYUN WOO
-     * description : 본인이 생성한 리소스에 대한 요청인지 검증
-     *
-     * @param user num
-     * @throws CmcException the cmc exception
-     */
-    public void validateAuthenticatedUser(Long userNum) throws CmcException {
-        if (!Objects.equals(this.userNum, userNum)) {
-            throw new CmcException("COMMENT005");
         }
     }
 }
