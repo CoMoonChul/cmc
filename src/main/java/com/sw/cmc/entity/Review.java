@@ -47,8 +47,5 @@ public class Review {
     @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
     private User user;
 
-    // Editor 엔티티와의 관계 설정
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "code_edit_num", referencedColumnName = "codeEditNum", nullable = false)
-    private Editor editor;
+    private String code_content;
 }

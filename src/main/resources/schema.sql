@@ -53,11 +53,10 @@ CREATE TABLE IF NOT EXISTS review (
     user_num BIGINT NOT NULL,
     title VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
-    code_edit_num BIGINT NOT NULL,
+    code_content MEDIUMTEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_review_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE,
-    CONSTRAINT fk_review_code_edit FOREIGN KEY (code_edit_num) REFERENCES code_editor(code_edit_num) ON DELETE CASCADE
+    CONSTRAINT fk_review_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS review_like (
@@ -80,14 +79,12 @@ CREATE TABLE IF NOT EXISTS battle (
     user_num BIGINT NOT NULL,
     title VARCHAR(80) NOT NULL,
     content VARCHAR(1500) NOT NULL,
-    code_1 BIGINT NOT NULL,
-    code_2 BIGINT NOT NULL,
+    code_content_left MEDIUMTEXT NOT NULL,
+    code_content_right MEDIUMTEXT NOT NULL,
     end_time VARCHAR(15),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_battle_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE,
-    CONSTRAINT fk_battle_code_1 FOREIGN KEY (code_1) REFERENCES code_editor(code_edit_num) ON DELETE CASCADE,
-    CONSTRAINT fk_battle_code_2 FOREIGN KEY (code_2) REFERENCES code_editor(code_edit_num) ON DELETE CASCADE
+    CONSTRAINT fk_battle_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS battle_view (

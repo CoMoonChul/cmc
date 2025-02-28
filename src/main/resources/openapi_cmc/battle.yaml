@@ -33,3 +33,25 @@ paths:
                 $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/CreateBattleResDTO"
         "400":
           description: "배틀 생성 실패"
+
+  /deleteBattle:
+    post:
+      tags:
+        - battle-controller
+      summary: "배틀 삭제"
+      operationId: "deleteBattle"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/DeleteBattleReqDTO"
+      responses:
+        "200":
+          description: "배틀 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/DeleteBattleResDTO"
+        "400":
+          description: "배틀 삭제 실패"

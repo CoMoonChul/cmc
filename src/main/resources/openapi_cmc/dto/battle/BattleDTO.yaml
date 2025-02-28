@@ -41,3 +41,19 @@ components:
         end_time:
           type: string
           description: 내용
+
+    DeleteBattleReqDTO:
+      type: object
+      properties:
+        battle_id:
+          type: integer
+          format: int64
+          description: 배틀 ID
+
+    DeleteBattleResDTO:
+      type: object
+      properties:
+        battle_id:
+          type: integer
+          format: int64
+          description: 배틀 ID
