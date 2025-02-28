@@ -75,4 +75,13 @@ public class BattleService implements BattleUseCase {
                 .updatedAt(saved.getUpdatedAt())
                 .build();
     }
+
+    @Override
+    public BattleDomain deleteBattle(BattleDomain battleDomain) throws Exception {
+        Battle found = battleRepository.findById(battleDomain.getBattleId())
+                .orElseThrow(() -> new CmcException("BATTLE007"));
+
+        battleRepository.deleteById(found.getBattleId());
+        return battleDomain;
+    }
 }

@@ -28,13 +28,9 @@ public class Battle {
 
     private String endTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "code_1", referencedColumnName = "codeEditNum", nullable = false)
-    private Editor editorOne;
+    private String code_content_left;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "code_2", referencedColumnName = "codeEditNum", nullable = false)
-    private Editor editorTwo;
+    private String code_content_right;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
