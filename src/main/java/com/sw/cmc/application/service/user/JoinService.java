@@ -1,7 +1,5 @@
 package com.sw.cmc.application.service.user;
 
-import com.sw.cmc.adapter.in.user.dto.CheckJoinResDTO;
-import com.sw.cmc.adapter.in.user.dto.JoinResDTO;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
 import com.sw.cmc.adapter.out.user.persistence.JoinRepository;
