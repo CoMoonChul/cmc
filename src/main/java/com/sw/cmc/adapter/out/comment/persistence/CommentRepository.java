@@ -33,4 +33,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByTargetIdAndCommentTarget(@Param("targetId") Long targetId,
                                                        @Param("commentTarget") Integer commentTarget,
                                                        Pageable pageable);
+
+    /**
+     * methodName : existsByTargetIdAndCommentTarget
+     * author : IM HYUN WOO
+     * description : 특정 타겟의 댓글 존재 여부
+     *
+     * @param target  id
+     * @param comment target
+     * @return boolean
+     */
+    boolean existsByTargetIdAndCommentTarget(Long targetId, Integer commentTarget);
 }
