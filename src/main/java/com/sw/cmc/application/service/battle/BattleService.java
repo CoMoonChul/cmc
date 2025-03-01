@@ -1,6 +1,7 @@
 package com.sw.cmc.application.service.battle;
 
 import com.sw.cmc.adapter.out.battle.persistence.BattleRepository;
+import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
 import com.sw.cmc.application.port.in.battle.BattleUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
@@ -26,12 +27,13 @@ import java.util.Objects;
 public class BattleService implements BattleUseCase {
 
     private final BattleRepository battleRepository;
+    private final CommentRepository commentRepository;
     private final ModelMapper modelMapper;
     private final UserUtil userUtil;
 
     @Override
     public BattleDomain selectBattle(Long id) throws Exception {
-        Battle found = battleRepository.findById(id).orElseThrow(() -> new CmcException("BATTLE001"));
+        Battle found = battleRepository.findByBattleId(id).orElseThrow(() -> new CmcException("BATTLE001"));
         return BattleDomain.builder()
                 .battleId(found.getBattleId())
                 .title(found.getTitle())
@@ -81,8 +83,14 @@ public class BattleService implements BattleUseCase {
         Battle found = battleRepository.findById(battleDomain.getBattleId())
                 .orElseThrow(() -> new CmcException("BATTLE001"));
 
+        // 작성자에 의한 요청이 아닌 경우
         if (!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
             throw new CmcException("BATTLE007");
+        }
+
+        // 댓글이 존재할 경우 수정 불가
+        if (commentRepository.existsByTargetIdAndCommentTarget(found.getBattleId(), 1)) {
+            throw new CmcException("BATTLE008");
         }
 
         found.setContent(battleDomain.getContent());
