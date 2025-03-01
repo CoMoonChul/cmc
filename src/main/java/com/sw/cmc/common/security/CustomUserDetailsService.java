@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user =  loginRepository.findByUserId(userId).orElseThrow(() -> new CmcException("USER001"));
+        final User user =  loginRepository.findByUserId(userId).orElseThrow(() -> new CmcException("USER001"));
 
         return new CustomUserDetails(user.getUserId(), user.getPassword(), user.getUserNum(), new ArrayList<>());
     }

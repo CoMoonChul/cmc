@@ -8,9 +8,11 @@ import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * packageName    : com.sw.cmc.application.service.user
@@ -25,9 +27,8 @@ public class UserService implements UserUseCase {
 
     private final UserUtil userUtil;
     private final MessageUtil messageUtil;
-    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public UserDomain getMyInfo() throws Exception {
@@ -42,7 +43,20 @@ public class UserService implements UserUseCase {
     }
 
     @Override
+    @Transactional
     public String withdraw(UserDomain userDomain) throws Exception {
-        return null;
+        // 회원 조회
+        final User user = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
+                .orElseThrow(() -> new CmcException("USER001"));
+
+        // 사용자 인증
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUserId(), userDomain.getPassword())
+        );
+
+        // 회원 삭제
+        userRepository.deleteByUserNum(userUtil.getAuthenticatedUserNum());
+
+        return messageUtil.getFormattedMessage("USER014");
     }
 }
