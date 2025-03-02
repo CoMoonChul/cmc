@@ -82,7 +82,7 @@ paths:
           description: 잘못된 요청입니다.
 
   /selectEditor:
-    post:
+    get:
       tags:
         - editor-controller
       summary: 코드 에디터 단건 조회
@@ -91,7 +91,7 @@ paths:
       parameters:
         - name: id
           in: query
-          description: 댓글 id
+          description: 에디터 ID
           required: true
           schema:
             type: integer
