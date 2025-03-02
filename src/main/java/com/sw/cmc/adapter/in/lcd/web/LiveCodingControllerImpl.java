@@ -88,6 +88,23 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
         return ResponseEntity.ok(response);  // 200 OK 응답 반환
     }
 
+    @Override
+    public ResponseEntity<UpdateLiveCodingResDTO> updateLiveCoding(UpdateLiveCodingReqDTO updateLiveCodingReqDTO) throws Exception {
+        // 라이브 코딩 방 업데이트 실행
+        LiveCodingDomain liveCodingDomain = liveCodingUseCase.updateLiveCoding(
+                updateLiveCodingReqDTO.getRoomId(),
+                updateLiveCodingReqDTO.getUserNum(),
+                updateLiveCodingReqDTO.getAction().name()
+        );
+
+        // 응답 DTO 생성
+        UpdateLiveCodingResDTO response = new UpdateLiveCodingResDTO();
+        response.setRoomId(liveCodingDomain.getRoomId());
+        response.setParticipantCount(liveCodingDomain.getParticipantCount());
+
+        return ResponseEntity.ok(response);  // 200 OK 응답 반환
+    }
+
 
 }
 

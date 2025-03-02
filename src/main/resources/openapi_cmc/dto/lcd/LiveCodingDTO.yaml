@@ -47,13 +47,18 @@ components:
           type: string
           format: uuid
           description: "업데이트할 라이브 코딩 방 ID (UUID 형식)"
-        participantCount:
+        userNum:
           type: integer
           format: int64
-          description: "참가자 수 변경"
+          description: "사용자 ID"
+        action:
+          type: string
+          enum: [ "JOIN", "LEAVE" ]
+          description: "참여(JOIN) 또는 나가기(LEAVE) 동작"
       required:
         - roomId
-        - participantCount
+        - userNum
+        - action
 
     UpdateLiveCodingResDTO:
       type: object
@@ -64,16 +69,11 @@ components:
           description: "업데이트된 라이브 코딩 방 ID (UUID 형식)"
         participantCount:
           type: integer
-          format: int64
+          format: int32
           description: "변경된 참가자 수"
-        updatedAt:
-          type: string
-          format: date-time
-          description: "업데이트 시간 (ISO 8601 형식)"
       required:
         - roomId
         - participantCount
-        - updatedAt
 
     SelectLiveCodingResDTO:
       type: object
