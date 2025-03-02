@@ -57,16 +57,20 @@ public interface LiveCodingUseCase {
      */
     LiveCodingDomain selectLiveCoding(UUID roomId) throws Exception;
 
-//    // 라이브 코딩 방 정보 업데이트
-//    LiveCodingDomain updateLiveCoding(Long roomId, Long participantCount) throws Exception;
-//
+    /**
+     * methodName : updateLiveCoding
+     * author : KO YOUNG SUNG
+     * description : 라이브코딩 방 업데이트
+     *
+     * @param roomId - 방 id
+     * @param userNum - 유저 id
+     * @param action - JOIN / LEAVE
+     * @return live coding domain
+     * @throws Exception the exception
+     */
+    LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, String action) throws Exception;
 
-//
-//    // 라이브 코딩 방 참가
-//    LiveCodingDomain joinLiveCoding(Long roomId, Long participantId) throws Exception;
-//
-//    // 라이브 코딩 방 나가기
-//    LiveCodingDomain leaveLiveCoding(Long roomId, Long userId) throws Exception;
+
 
 }
 

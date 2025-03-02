@@ -23,7 +23,23 @@ public class LiveCodingDomain  {
     private Integer participantCount;  // 참가자 수
     private List<Long> participants;  // 참가자 ID 목록 (userNum 리스트)
 
+    // 참가자 추가 메서드
+    public void joinParticipant(Long userNum) {
+        if (participants.contains(userNum)) {
+            throw new IllegalStateException("이미 방에 참여 중입니다.");
+        }
+        participants.add(userNum);
+        this.participantCount = participants.size();
+    }
 
+    // 참가자 제거 메서드
+    public void leaveParticipant(Long userNum) {
+        if (!participants.contains(userNum)) {
+            throw new IllegalStateException("방에 속하지 않은 사용자입니다.");
+        }
+        participants.remove(userNum);
+        this.participantCount = participants.size();
+    }
 
 
 }

@@ -9,6 +9,7 @@ import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -99,4 +100,27 @@ public class LiveCodingService implements LiveCodingUseCase {
         return liveCodingDomain;
     }
 
+
+    @Override
+    public LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, String action) throws Exception {
+//        // 방 정보 조회
+        LiveCodingDomain liveCodingDomain = liveCodingRepository.findByRoomId(roomId);
+//        if (liveCodingDomain == null) {
+//            throw new NotFoundException("방을 찾을 수 없습니다.");
+//        }
+
+        // 참가 또는 나가기 처리
+        if ("JOIN".equals(action)) {
+            liveCodingDomain.joinParticipant(userNum);
+        } else if ("LEAVE".equals(action)) {
+            liveCodingDomain.leaveParticipant(userNum);
+        } else {
+            throw new BadRequestException("올바르지 않은 action 값입니다.");
+        }
+
+        // Redis에 업데이트된 방 정보 저장
+        liveCodingRepository.saveLiveCoding(liveCodingDomain);
+
+        return liveCodingDomain;
+    }
 }
