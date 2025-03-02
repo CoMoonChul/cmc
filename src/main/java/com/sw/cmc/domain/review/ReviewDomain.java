@@ -39,6 +39,7 @@ public class ReviewDomain {
         validateTitleMaxLength();
         validateContent();
         validateContentMaxLength();
+        validateCodeContentLength();
     }
     /**
      * methodName : validateCreateReview
@@ -64,7 +65,13 @@ public class ReviewDomain {
             throw new CmcException("REVIEW005");
         }
     }
-
+    /**
+     * methodName : validateCreateReview
+     * author : PARK JONG IL
+     * description : 리뷰 내용 미입력 validation
+     *
+     * @throws CmcException the cmc exception
+     */
     public void validateContent() throws CmcException {
         if (StringUtils.length(content) < 1 ) {
             throw new CmcException("REVIEW004");
@@ -80,6 +87,18 @@ public class ReviewDomain {
     public void validateContentMaxLength() throws CmcException {
         if (StringUtils.length(content) > 2000 ) {
             throw new CmcException("REVIEW006");
+        }
+    }
+    /**
+     * methodName : validateReviewCodeContent
+     * author : PARK JONG IL
+     * description : 리뷰 코드 컨텐츠 20000자 이내 validation
+     *
+     * @throws CmcException the cmc exception
+     */
+    public void validateCodeContentLength() throws CmcException {
+        if (StringUtils.length(codeContent) > 20000) {
+            throw new CmcException("REVIEW008");
         }
     }
 }

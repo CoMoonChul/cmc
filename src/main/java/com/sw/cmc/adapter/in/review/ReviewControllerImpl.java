@@ -67,6 +67,7 @@ public class ReviewControllerImpl implements ReviewControllerApi {
                 .reviewId(updateReviewReqDTO.getReviewId())
                 .title(updateReviewReqDTO.getTitle())
                 .content(updateReviewReqDTO.getContent())
+                .codeContent(updateReviewReqDTO.getCodeContent())
                 .build();
         return ResponseEntity.ok(modelMapper.map(reviewUseCase.updateReview(reviewDomain), UpdateReviewResDTO.class));
     }

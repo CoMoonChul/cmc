@@ -1,7 +1,6 @@
 package com.sw.cmc.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "review")
 public class Review {
@@ -34,12 +32,15 @@ public class Review {
     @Column(name = "content", length = 2000, nullable = false)
     private String content;
 
+    @Column(name = "code_content", length = 20000, nullable = false)
+    private String codeContent;
+
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", insertable = false, updatable = false)
     private String createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", insertable = false)
     private String updatedAt;
 
     // User 엔티티와의 관계 설정
@@ -47,5 +48,5 @@ public class Review {
     @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
     private User user;
 
-    private String codeContent;
+//    private String codeContent;
 }
