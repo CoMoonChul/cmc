@@ -51,6 +51,7 @@ public class ReviewService implements ReviewUseCase {
                 .content(found.getContent())
                 .createdAt(found.getCreatedAt())
                 .updatedAt(found.getUpdatedAt())
+                .codeContent(found.getCodeContent())
                 .build();
     }
 
@@ -138,16 +139,7 @@ public class ReviewService implements ReviewUseCase {
 //        entityManager.refresh(saved);
 
         // 저장
-//        return convertEntityToDomain(saved);
-        return ReviewDomain.builder()
-                .reviewId(saved.getReviewId())
-                .userNum(saved.getUser().getUserNum())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .codeContent(saved.getCodeContent())
-                .createdAt(saved.getCreatedAt())
-                .updatedAt(saved.getUpdatedAt())
-                .build();
+        return convertEntityToDomain(saved);
     }
     // builder 대신 공통으로 활용하는 생성자
     private ReviewDomain convertEntityToDomain(Review review) {
