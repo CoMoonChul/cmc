@@ -59,4 +59,22 @@ public class UserService implements UserUseCase {
 
         return messageUtil.getFormattedMessage("USER014");
     }
+
+    @Override
+    @Transactional
+    public String updateInfo(UserDomain userDomain) throws Exception {
+        // 회원 조회
+        final User user = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
+                .orElseThrow(() -> new CmcException("USER001"));
+
+        // 사용자 인증
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUserId(), userDomain.getPassword())
+        );
+
+        // 회원 삭제
+        userRepository.deleteByUserNum(userUtil.getAuthenticatedUserNum());
+
+        return messageUtil.getFormattedMessage("USER018");
+    }
 }

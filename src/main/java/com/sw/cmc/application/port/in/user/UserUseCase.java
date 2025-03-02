@@ -13,4 +13,6 @@ public interface UserUseCase {
     UserDomain getMyInfo() throws Exception;
 
     String withdraw(UserDomain userDomain) throws Exception;
+
+    String updateInfo(UserDomain userDomain) throws Exception;
 }
