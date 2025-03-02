@@ -36,4 +36,16 @@ public class UserControllerImpl implements UserControllerApi {
 
         return ResponseEntity.ok(new WithdrawResDTO().resultMessage(userUseCase.withdraw(userDomain)));
     }
+
+    @Override
+    public ResponseEntity<UpdateInfoResDTO> updateInfo(UpdateInfoReqDTO updateInfoReqDTO) throws Exception {
+
+        UserDomain userDomain = UserDomain.builder()
+                .password(updateInfoReqDTO.getPassword())
+                .username(updateInfoReqDTO.getUsername())
+                .email(updateInfoReqDTO.getEmail())
+                .build();
+
+        return ResponseEntity.ok(new UpdateInfoResDTO().resultMessage(userUseCase.updateInfo(userDomain)));
+    }
 }

@@ -34,6 +34,10 @@ components:
     # API_USER_0010 회원 정보 변경
     UpdateInfoReqDTO:
       type: object
+      required:
+        - password
+        - username
+        - email
       properties:
         password:
           type: string
