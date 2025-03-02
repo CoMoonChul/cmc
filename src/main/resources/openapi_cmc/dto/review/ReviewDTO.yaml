@@ -26,25 +26,6 @@ components:
         updated_at:
           type: string
           description: 최종 수정 일시
-#        like_count:
-#          type: integer
-#          description: 좋아요 수
-#        reply_count:
-#          type: integer
-#          description: 답변 수
-#        is_liked:
-#          type: boolean
-#          description: 현재 사용자의 좋아요 여부
-#        has_replied:
-#          type: boolean
-#          description: 현재 사용자의 답변 여부
-#        images:
-#          type: array
-#          description: 리뷰 이미지 URL 목록
-#          items:
-#            type: string
-#            format: uri
-#          maxItems: 10
 
     # 단일 리뷰 조회 응답 DTO
     SelectReviewResDTO:
@@ -111,9 +92,6 @@ components:
             code_content:
               type: string
               description: 코드 내용
-            user_num:
-              type: integer
-              format: int64
 
 
     # 리뷰 삭제 요청 DTO
@@ -139,10 +117,6 @@ components:
     # 리뷰 수정 요청 DTO
     UpdateReviewReqDTO:
       type: object
-      required:
-        - review_id
-        - title
-        - content
       properties:
         review_id:
           type: integer
@@ -164,3 +138,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/Review'
         - type: object
+      properties:
+        code_content:
+          type: string
+          description: 코드 내용

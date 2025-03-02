@@ -41,20 +41,13 @@ public interface ReviewUseCase {
             String order,
             String keyword
     ) throws Exception;
-//
-//    void toggleReviewLike(Long reviewId) throws Exception;
-//
-//    boolean checkReviewLike(Long reviewId) throws Exception;
-//
-//    long getReviewLikeCount(Long reviewId) throws Exception;
-//
-//    long getReviewCommentCount(Long reviewId) throws Exception;
+
     /**
      * methodName : createReview
      * author : Park Jong Il
      * description : 리뷰 생성
      *
-     * @param reviewDomain : title, content
+     * @param reviewDomain : title, content, codeContent
      * @throws Exception the exception
      */
     ReviewDomain createReview(ReviewDomain reviewDomain) throws Exception;
@@ -70,9 +63,9 @@ public interface ReviewUseCase {
     /**
      * methodName : updateReview
      * author : Park Jong Il
-     * description : 리뷰 삭제
+     * description : 리뷰 수정
      *
-     * @param reviewDomain : reviewId, title, content
+     * @param reviewDomain : reviewId, title, content, codeContent
      * @throws Exception the exception
      */
     ReviewDomain updateReview(ReviewDomain reviewDomain) throws Exception;

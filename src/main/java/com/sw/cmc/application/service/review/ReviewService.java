@@ -1,5 +1,6 @@
 package com.sw.cmc.application.service.review;
 
+import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
@@ -35,6 +36,7 @@ public class ReviewService implements ReviewUseCase {
     private final EntityManager entityManager;
     private final ModelMapper modelMapper;
     private final ReviewRepository reviewRepository;
+    private final CommentRepository commentRepository;
     private final UserUtil userUtil;
 
     @Override
@@ -115,21 +117,37 @@ public class ReviewService implements ReviewUseCase {
     @Transactional
     public ReviewDomain updateReview(ReviewDomain reviewDomain) throws Exception {
         reviewDomain.validateCreateAndUpdateReview();
+
         Review found = reviewRepository.findById(reviewDomain.getReviewId())
-                .orElseThrow(() ->new CmcException("REVIEW001"));
+                .orElseThrow(() -> new CmcException("REVIEW001"));
 
         if(!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
             throw new CmcException("REVIEW002");
+        }
+        // 댓글이 존재할 경우 수정 불가
+        if (commentRepository.existsByTargetIdAndCommentTarget(found.getReviewId(), 0)) {
+            throw new CmcException("REVIEW007");
         }
 
         // 수정 작업 (제목, 게시글, 수정일자 갱신)
         found.setTitle(reviewDomain.getTitle());
         found.setContent(reviewDomain.getContent());
+        found.setCodeContent(reviewDomain.getCodeContent());
 
         Review saved = reviewRepository.save(found);
-        entityManager.refresh(saved);
+//        entityManager.refresh(saved);
+
         // 저장
-        return convertEntityToDomain(saved);
+//        return convertEntityToDomain(saved);
+        return ReviewDomain.builder()
+                .reviewId(saved.getReviewId())
+                .userNum(saved.getUser().getUserNum())
+                .title(saved.getTitle())
+                .content(saved.getContent())
+                .codeContent(saved.getCodeContent())
+                .createdAt(saved.getCreatedAt())
+                .updatedAt(saved.getUpdatedAt())
+                .build();
     }
     // builder 대신 공통으로 활용하는 생성자
     private ReviewDomain convertEntityToDomain(Review review) {
