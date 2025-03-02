@@ -47,6 +47,10 @@ public class JoinService implements JoinUseCase {
         if (joinRepository.existsByUsername(userDomain.getUsername())) {
             throw new CmcException("USER009");
         }
+        // 이메일 중복 검사
+        if (joinRepository.existsByEmail(userDomain.getEmail())) {
+            throw new CmcException("USER019");
+        }
 
         // 비밀번호 암호화 저장
         UserDomain encryptedUserDomain = userDomain.toBuilder()
