@@ -32,7 +32,7 @@ components:
       description: 회원 탈퇴 응답
 
     # API_USER_0010 회원 정보 변경
-    UpdateInfoReqDTO:
+    UpdateReqDTO:
       type: object
       required:
         - password
@@ -50,7 +50,7 @@ components:
           description: 회원 이메일
       description: 회원 정보 변경 요청
 
-    UpdateInfoResDTO:
+    UpdateResDTO:
       type: object
       properties:
         resultMessage:

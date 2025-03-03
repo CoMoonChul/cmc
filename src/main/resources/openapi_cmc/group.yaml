@@ -1,0 +1,102 @@
+openapi: 3.0.0
+info:
+  title: Group api
+  description: Cmc Group api
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: group-controller
+    description: Group api controller
+
+paths:
+  # group-controller
+  /group/create:
+    post:
+      tags:
+        - group-controller
+      summary: "API_GROUP_0001 그룹 생성"
+      description: "그룹 생성 API"
+      operationId: "create"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/group/GroupDTO.yaml#/components/schemas/CreateReqDTO"
+      responses:
+        "200":
+          description: "그룹 생성 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/group/GroupDTO.yaml#/components/schemas/CreateResDTO"
+
+  /group/getGroupMemberList:
+    get:
+      tags:
+        - group-controller
+      summary: "API_GROUP_0002 그룹 멤버 리스트 조회"
+      description: "그룹 멤버 리스트 조회 API"
+      operationId: "getGroupMemberList"
+      parameters:
+        - name: groupId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: 그룹 ID
+      responses:
+        "200":
+          description: "그룹 멤버 리스트 조회 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/group/GroupDTO.yaml#/components/schemas/GetGroupMemberListResDTO"
+
+  /group/update:
+    post:
+      tags:
+        - group-controller
+      summary: "API_GROUP_0003 그룹 정보 변경"
+      description: "그룹 정보 변경 API"
+      operationId: "update"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/group/GroupDTO.yaml#/components/schemas/UpdateReqDTO"
+      responses:
+        "200":
+          description: "그룹 정보 변경 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/group/GroupDTO.yaml#/components/schemas/UpdateResDTO"
+
+  /group/delete:
+    post:
+      tags:
+        - group-controller
+      summary: "API_GROUP_0004 그룹 삭제"
+      description: "그룹 삭제 API"
+      operationId: "delete"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/group/GroupDTO.yaml#/components/schemas/DeleteReqDTO"
+      responses:
+        "200":
+          description: "그룹 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/group/GroupDTO.yaml#/components/schemas/DeleteResDTO"
+
+                ######## 여기 밑에 1.그룹초대 / 2.그룹나가기
