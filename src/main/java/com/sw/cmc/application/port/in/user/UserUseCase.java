@@ -14,5 +14,5 @@ public interface UserUseCase {
 
     String withdraw(UserDomain userDomain) throws Exception;
 
-    String updateInfo(UserDomain userDomain) throws Exception;
+    String update(UserDomain userDomain) throws Exception;
 }

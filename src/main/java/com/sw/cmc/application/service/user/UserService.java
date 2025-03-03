@@ -68,7 +68,7 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional
-    public String updateInfo(UserDomain userDomain) throws Exception {
+    public String update(UserDomain userDomain) throws Exception {
         // 유효성 검사
         validatePassword(userDomain.getPassword());
         validateUsername(userDomain.getUsername());
@@ -89,9 +89,9 @@ public class UserService implements UserUseCase {
         final User user = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
                 .orElseThrow(() -> new CmcException("USER001"));
 
-       user.setPassword(passwordEncoder.encode(userDomain.getPassword()));
-       user.setUsername(userDomain.getUsername());
-       user.setEmail(userDomain.getEmail());
+        user.setPassword(passwordEncoder.encode(userDomain.getPassword()));
+        user.setUsername(userDomain.getUsername());
+        user.setEmail(userDomain.getEmail());
 
         // 회원 정보 저장
         userRepository.save(user);

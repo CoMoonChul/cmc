@@ -178,7 +178,7 @@ paths:
 
   # user-controller
   /user/getMyInfo:
-    post:
+    get:
       tags:
         - user-controller
       summary: "API_USER_0008 내 정보 조회"
@@ -207,29 +207,29 @@ paths:
               $ref: "./dto/user/UserDTO.yaml#/components/schemas/WithdrawReqDTO"
       responses:
         "200":
-          description: "로그인 성공"
+          description: "회원 탈퇴 성공"
           content:
             application/json:
               schema:
                 $ref: "./dto/user/UserDTO.yaml#/components/schemas/WithdrawResDTO"
 
-  /user/updateInfo:
+  /user/update:
     post:
       tags:
         - user-controller
       summary: "API_USER_0010 회원 정보 변경"
       description: 회원 정보 변경 API
-      operationId: "updateInfo"
+      operationId: "update"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "./dto/user/UserDTO.yaml#/components/schemas/UpdateInfoReqDTO"
+              $ref: "./dto/user/UserDTO.yaml#/components/schemas/UpdateReqDTO"
       responses:
         "200":
-          description: "로그인 성공"
+          description: "회원 정보 변경 성공"
           content:
             application/json:
               schema:
-                $ref: "./dto/user/UserDTO.yaml#/components/schemas/UpdateInfoResDTO"
+                $ref: "./dto/user/UserDTO.yaml#/components/schemas/UpdateResDTO"
