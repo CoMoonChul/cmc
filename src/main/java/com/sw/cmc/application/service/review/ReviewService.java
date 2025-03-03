@@ -1,13 +1,19 @@
 package com.sw.cmc.application.service.review;
 
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
+import com.sw.cmc.adapter.out.like.persistence.ReviewLikeRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
+import com.sw.cmc.adapter.out.view.persistence.ReviewViewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
+import com.sw.cmc.application.service.view.ViewService;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
+import com.sw.cmc.domain.view.ReviewViewDomain;
 import com.sw.cmc.entity.Review;
+import com.sw.cmc.entity.ReviewLike;
+import com.sw.cmc.entity.ReviewView;
 import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -37,12 +43,21 @@ public class ReviewService implements ReviewUseCase {
     private final ModelMapper modelMapper;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
+    private final ReviewViewRepository reviewViewRepository;
     private final UserUtil userUtil;
+    private final ReviewLikeRepository reviewLikeRepository;
 
     @Override
+    @Transactional
     public ReviewDomain selectReview(Long reviewId) throws Exception {
         Review found = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CmcException("REVIEW001"));
+        // 조회수 조회 및 업데이트
+        ReviewView reviewView = reviewViewRepository.findById(reviewId)
+                .orElseThrow(() -> new CmcException("REVIEW001"));
+        // 좋아요 조회
+        Long reviewLike = reviewLikeRepository.countById_ReviewId(reviewId);
+
 
         return ReviewDomain.builder()
                 .reviewId(found.getReviewId())
@@ -52,6 +67,8 @@ public class ReviewService implements ReviewUseCase {
                 .createdAt(found.getCreatedAt())
                 .updatedAt(found.getUpdatedAt())
                 .codeContent(found.getCodeContent())
+                .viewCount(reviewView.getViewCount())
+                .likeCount(reviewLike)
                 .build();
     }
 

@@ -7,6 +7,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * packageName    : com.sw.cmc.entity
  * fileName       : Review
@@ -48,5 +51,13 @@ public class Review {
     @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
     private User user;
 
-//    private String codeContent;
+    // ReviewView 엔티티와의 관계 설정
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id", referencedColumnName = "reviewId", nullable = false)
+    private ReviewView reviewView;
+
+    // ReviewLike 엔티티와의 관계 설정
+    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ReviewLike> reviewLikes = new ArrayList<>();
+
 }

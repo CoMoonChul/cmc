@@ -29,6 +29,15 @@ components:
         code_content:
           type: string
           description: 코드 내용
+        review_view:
+          type: integer
+          format: int64
+          description: 리뷰 조회수
+        like_count;:
+          type: integer
+          format: int64
+          description: 리뷰 좋아요갯수
+
 
     # 단일 리뷰 조회 응답 DTO
     SelectReviewResDTO:
