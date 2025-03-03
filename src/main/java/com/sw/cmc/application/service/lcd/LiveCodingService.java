@@ -3,13 +3,13 @@ package com.sw.cmc.application.service.lcd;
 import com.sw.cmc.adapter.out.lcd.persistence.LiveCodingRepository;
 import com.sw.cmc.application.port.in.lcd.DeleteLcdCase;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
+import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,7 +35,11 @@ public class LiveCodingService implements LiveCodingUseCase {
 
 
     @Override
-    public LiveCodingDomain createLiveCoding(Long hostId)  {
+    public LiveCodingDomain createLiveCoding(Long hostId)   {
+
+        if (liveCodingRepository.existsByHostId(hostId)) {
+            throw new CmcException("LCD003");
+        }
 
         // 방 ID 생성 (UUID)
         UUID roomId = UUID.randomUUID();
@@ -92,22 +96,20 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     @Override
-    public LiveCodingDomain selectLiveCoding(UUID roomId) throws Exception {
-            LiveCodingDomain liveCodingDomain = liveCodingRepository.findByRoomId(roomId);
+    public LiveCodingDomain selectLiveCoding(UUID roomId) throws CmcException {
+        LiveCodingDomain liveCodingDomain = liveCodingRepository.findByRoomId(roomId);
         if (liveCodingDomain == null) {
-            throw new Exception("라이브 코딩 방이 존재하지 않습니다.");
+            throw new CmcException("LCD001");
         }
         return liveCodingDomain;
     }
 
-
     @Override
-    public LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, String action) throws Exception {
-//        // 방 정보 조회
+    public LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, String action) throws CmcException {
         LiveCodingDomain liveCodingDomain = liveCodingRepository.findByRoomId(roomId);
-//        if (liveCodingDomain == null) {
-//            throw new NotFoundException("방을 찾을 수 없습니다.");
-//        }
+        if (liveCodingDomain == null) {
+            throw new CmcException("LCD001");
+        }
 
         // 참가 또는 나가기 처리
         if ("JOIN".equals(action)) {
@@ -115,7 +117,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         } else if ("LEAVE".equals(action)) {
             liveCodingDomain.leaveParticipant(userNum);
         } else {
-            throw new BadRequestException("올바르지 않은 action 값입니다.");
+            throw new CmcException("LCD002");
         }
 
         // Redis에 업데이트된 방 정보 저장
