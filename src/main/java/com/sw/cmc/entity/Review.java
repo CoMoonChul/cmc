@@ -55,9 +55,4 @@ public class Review {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", referencedColumnName = "reviewId", nullable = false)
     private ReviewView reviewView;
-
-    // ReviewLike 엔티티와의 관계 설정
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ReviewLike> reviewLikes = new ArrayList<>();
-
 }
