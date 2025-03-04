@@ -1,6 +1,7 @@
 package com.sw.cmc.application.port.in.battle;
 
 import com.sw.cmc.domain.battle.BattleDomain;
+import com.sw.cmc.domain.battle.BattleVoteDomain;
 
 /**
  * packageName    : com.sw.cmc.application.port.in.battle
@@ -43,6 +44,28 @@ public interface BattleUseCase {
      * @throws Exception the exception
      */
     BattleDomain updateBattle(BattleDomain battleDomain) throws Exception;
+
+    /**
+     * methodName : voteBattle
+     * author : IM HYUN WOO
+     * description : 배틀 투표
+     *
+     * @param battle vote domain
+     * @return battle vote domain
+     * @throws Exception the exception
+     */
+    BattleVoteDomain updateVoteBattle(BattleVoteDomain battleVoteDomain) throws Exception;
+
+    /**
+     * methodName : deleteVoteBattle
+     * author : IM HYUN WOO
+     * description : 배틀 투표 삭제
+     *
+     * @param battle vote domain
+     * @return battle vote domain
+     * @throws Exception the exception
+     */
+    BattleVoteDomain deleteVoteBattle(BattleVoteDomain battleVoteDomain) throws Exception;
 
     /**
      * methodName : deleteBattle

@@ -3,6 +3,7 @@ package com.sw.cmc.adapter.in.battle.web;
 import com.sw.cmc.adapter.in.battle.dto.*;
 import com.sw.cmc.application.port.in.battle.BattleUseCase;
 import com.sw.cmc.domain.battle.BattleDomain;
+import com.sw.cmc.domain.battle.BattleVoteDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,23 @@ public class BattleControllerImpl implements BattleControllerApi {
                 .endTime(updateBattleReqDTO.getEndTime())
                 .build();
         return ResponseEntity.ok(modelMapper.map(battleUseCase.updateBattle(battleDomain), UpdateBattleResDTO.class));
+    }
+
+    @Override
+    public ResponseEntity<UpdateVoteBattleResDTO> updateVoteBattle(UpdateVoteBattleReqDTO updateVoteBattleReqDTO) throws Exception {
+        BattleVoteDomain battleVoteDomain = BattleVoteDomain.builder()
+                .battleId(updateVoteBattleReqDTO.getBattleId())
+                .voteValue(updateVoteBattleReqDTO.getVoteValue())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(battleUseCase.updateVoteBattle(battleVoteDomain), UpdateVoteBattleResDTO.class));
+    }
+
+    @Override
+    public ResponseEntity<DeleteVoteBattleResDTO> deleteVoteBattle(DeleteVoteBattleReqDTO deleteVoteBattleReqDTO) throws Exception {
+        BattleVoteDomain battleVoteDomain = BattleVoteDomain.builder()
+                .battleId(deleteVoteBattleReqDTO.getBattleId())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(battleUseCase.deleteVoteBattle(battleVoteDomain), DeleteVoteBattleResDTO.class));
     }
 
     @Override

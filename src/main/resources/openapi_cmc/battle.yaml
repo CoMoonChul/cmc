@@ -81,6 +81,50 @@ paths:
         "400":
           description: "배틀 수정 실패"
 
+  /updateVoteBattle:
+    post:
+      tags:
+        - battle-controller
+      summary: "배틀 투표(기투표시 변경된 투표로 업데이트)"
+      operationId: "updateVoteBattle"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/UpdateVoteBattleReqDTO"
+      responses:
+        "200":
+          description: "배틀 투표 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/UpdateVoteBattleResDTO"
+        "400":
+          description: "배틀 투표 실패"
+
+  /deleteVoteBattle:
+    post:
+      tags:
+        - battle-controller
+      summary: "투표 삭제"
+      operationId: "deleteVoteBattle"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/DeleteVoteBattleReqDTO"
+      responses:
+        "200":
+          description: "투표 삭제 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/DeleteVoteBattleResDTO"
+        "400":
+          description: "투표 삭제 실패"
+
   /deleteBattle:
     post:
       tags:
