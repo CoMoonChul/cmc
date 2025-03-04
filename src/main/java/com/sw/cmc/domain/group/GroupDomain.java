@@ -25,6 +25,8 @@ public class GroupDomain {
     private long groupId;
     private String groupName;
 
+    private String username;
+
     private long groupMemberId;
     private long userNum;
     private String groupRole;

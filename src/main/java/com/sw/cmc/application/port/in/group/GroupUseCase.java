@@ -13,4 +13,10 @@ public interface GroupUseCase {
     String create(GroupDomain groupDomain) throws Exception;
 
     GroupDomain getGroupMemberList(GroupDomain groupDomain) throws Exception;
+
+    String delete(GroupDomain groupDomain) throws Exception;
+
+    String invite(GroupDomain groupDomain) throws Exception;
+
+    String expel(GroupDomain groupDomain) throws Exception;
 }

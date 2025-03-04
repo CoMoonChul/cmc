@@ -57,26 +57,26 @@ paths:
               schema:
                 $ref: "./dto/group/GroupDTO.yaml#/components/schemas/GetGroupMemberListResDTO"
 
-  /group/update:
+  /group/invite:
     post:
       tags:
         - group-controller
-      summary: "API_GROUP_0003 그룹 정보 변경"
-      description: "그룹 정보 변경 API"
-      operationId: "update"
+      summary: "API_GROUP_0003 그룹 멤버 초대하기"
+      description: "그룹 멤버 초대하기 API"
+      operationId: "invite"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "./dto/group/GroupDTO.yaml#/components/schemas/UpdateReqDTO"
+              $ref: "./dto/group/GroupDTO.yaml#/components/schemas/InviteReqDTO"
       responses:
         "200":
-          description: "그룹 정보 변경 성공"
+          description: "그룹 멤버 초대하기 성공"
           content:
             application/json:
               schema:
-                $ref: "./dto/group/GroupDTO.yaml#/components/schemas/UpdateResDTO"
+                $ref: "./dto/group/GroupDTO.yaml#/components/schemas/InviteResDTO"
 
   /group/delete:
     post:
@@ -99,4 +99,25 @@ paths:
               schema:
                 $ref: "./dto/group/GroupDTO.yaml#/components/schemas/DeleteResDTO"
 
-                ######## 여기 밑에 1.그룹초대 / 2.그룹나가기
+  ######## 여기 밑에 1.그룹가입하기 / 2.그룹나가기
+
+  /group/expel:
+    post:
+      tags:
+        - group-controller
+      summary: "API_GROUP_0005 그룹 멤버 내보내기"
+      description: "그룹 멤버 내보내기 API"
+      operationId: "expel"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/group/GroupDTO.yaml#/components/schemas/ExpelReqDTO"
+      responses:
+        "200":
+          description: "그룹 멤버 내보내기 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/group/GroupDTO.yaml#/components/schemas/ExpelResDTO"
