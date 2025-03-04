@@ -38,15 +38,13 @@ public class ReviewDomain {
      */
     public void validateCreateAndUpdateReview() throws CmcException {
         validateTitle();
-        validateTitleMaxLength();
         validateContent();
-        validateContentMaxLength();
         validateCodeContentLength();
     }
     /**
      * methodName : validateCreateReview
      * author : PARK JONG IL
-     * description : 리뷰 제목 0자 이상 validation
+     * description : 리뷰 제목 0자 이상 / 50자 이내 validation
      *
      * @throws CmcException the cmc exception
      */
@@ -54,15 +52,6 @@ public class ReviewDomain {
         if (StringUtils.length(title) < 1 ) {
             throw new CmcException("REVIEW003");
         }
-    }
-    /**
-     * methodName : validateCreateReview
-     * author : PARK JONG IL
-     * description : 리뷰 제목 50자 이내 validation
-     *
-     * @throws CmcException the cmc exception
-     */
-    public void validateTitleMaxLength() throws CmcException {
         if (StringUtils.length(title) > 30) {
             throw new CmcException("REVIEW005");
         }
@@ -70,7 +59,7 @@ public class ReviewDomain {
     /**
      * methodName : validateCreateReview
      * author : PARK JONG IL
-     * description : 리뷰 내용 미입력 validation
+     * description : 리뷰 내용 미입력 / 2000자 이내 validation
      *
      * @throws CmcException the cmc exception
      */
@@ -78,15 +67,6 @@ public class ReviewDomain {
         if (StringUtils.length(content) < 1 ) {
             throw new CmcException("REVIEW004");
         }
-    }
-    /**
-     * methodName : validateCreateReview
-     * author : PARK JONG IL
-     * description : 리뷰 내용 2000자 이내 validation
-     *
-     * @throws CmcException the cmc exception
-     */
-    public void validateContentMaxLength() throws CmcException {
         if (StringUtils.length(content) > 2000 ) {
             throw new CmcException("REVIEW006");
         }
