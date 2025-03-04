@@ -27,6 +27,8 @@ public class ReviewDomain {
     private String updatedAt;
     private String codeContent;
 
+    private Long viewCount; // 조회수
+    private Long likeCount; // 좋아요 수
     /**
      * methodName : validateCreateReview
      * author : PARK JONG IL

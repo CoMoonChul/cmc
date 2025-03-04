@@ -28,4 +28,5 @@ public class ReviewLike {
     @MapsId("userNum")
     @JoinColumn(name = "userNum", referencedColumnName = "userNum", nullable = false)
     private User user;
+
 }

@@ -14,4 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ReviewLikeRepository extends JpaRepository<ReviewLike, ReviewLikeId> {
+    Long countById_ReviewId(Long reviewId);
 }

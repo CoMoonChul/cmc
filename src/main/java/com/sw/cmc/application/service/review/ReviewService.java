@@ -1,13 +1,16 @@
 package com.sw.cmc.application.service.review;
 
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
+import com.sw.cmc.adapter.out.like.persistence.ReviewLikeRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
+import com.sw.cmc.adapter.out.view.persistence.ReviewViewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
 import com.sw.cmc.entity.Review;
+import com.sw.cmc.entity.ReviewView;
 import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -37,22 +40,24 @@ public class ReviewService implements ReviewUseCase {
     private final ModelMapper modelMapper;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
+    private final ReviewViewRepository reviewViewRepository;
     private final UserUtil userUtil;
+    private final ReviewLikeRepository reviewLikeRepository;
 
     @Override
+    @Transactional
     public ReviewDomain selectReview(Long reviewId) throws Exception {
         Review found = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CmcException("REVIEW001"));
+        // 조회수 조회 및 업데이트
+        ReviewView reviewView = reviewViewRepository.findById(reviewId)
+                .orElseThrow(() -> new CmcException("REVIEW001"));
 
-        return ReviewDomain.builder()
-                .reviewId(found.getReviewId())
-                .userNum(found.getUser().getUserNum())
-                .title(found.getTitle())
-                .content(found.getContent())
-                .createdAt(found.getCreatedAt())
-                .updatedAt(found.getUpdatedAt())
-                .codeContent(found.getCodeContent())
-                .build();
+        // 좋아요 조회
+        Long reviewLike = reviewLikeRepository.countById_ReviewId(reviewId);
+        reviewLike = Objects.requireNonNullElse(reviewLike, 0L); // null이면 0으로 설정 (조회수 기본값 0 설정 보류)
+
+        return convertEntityToDomain(found);
     }
 
     @Override
@@ -98,7 +103,15 @@ public class ReviewService implements ReviewUseCase {
 
         Review saved = reviewRepository.save(saving);
         entityManager.refresh(saved);
-        return convertEntityToDomain(saved);
+        return ReviewDomain.builder()
+                .reviewId(saved.getReviewId())
+                .userNum(saved.getUser().getUserNum())
+                .title(saved.getTitle())
+                .content(saved.getContent())
+                .codeContent(saved.getCodeContent())
+                .createdAt(saved.getCreatedAt())
+                .updatedAt(saved.getUpdatedAt())
+                .build();
     }
     @Override
     @Transactional
@@ -139,10 +152,26 @@ public class ReviewService implements ReviewUseCase {
 //        entityManager.refresh(saved);
 
         // 저장
-        return convertEntityToDomain(saved);
+        return ReviewDomain.builder()
+                .reviewId(saved.getReviewId())
+                .userNum(saved.getUser().getUserNum())
+                .title(saved.getTitle())
+                .content(saved.getContent())
+                .codeContent(saved.getCodeContent())
+                .createdAt(saved.getCreatedAt())
+                .updatedAt(saved.getUpdatedAt())
+                .build();
     }
     // builder 대신 공통으로 활용하는 생성자
     private ReviewDomain convertEntityToDomain(Review review) {
+        // 조회수 조회 및 업데이트
+        ReviewView reviewView = reviewViewRepository.findById(review.getReviewId())
+                .orElseThrow(() -> new CmcException("REVIEW001"));
+
+        // 좋아요 조회
+        Long reviewLike = reviewLikeRepository.countById_ReviewId(review.getReviewId());
+        reviewLike = Objects.requireNonNullElse(reviewLike, 0L); // null이면 0으로 설정 (조회수 기본값 0 설정 보류)
+
         return ReviewDomain.builder()
                 .reviewId(review.getReviewId())
                 .userNum(review.getUser().getUserNum())
@@ -151,6 +180,8 @@ public class ReviewService implements ReviewUseCase {
                 .codeContent(review.getCodeContent())
                 .createdAt(review.getCreatedAt())
                 .updatedAt(review.getUpdatedAt())
+                .viewCount(reviewView.getViewCount())
+                .likeCount(reviewLike)
                 .build();
     }
 }
