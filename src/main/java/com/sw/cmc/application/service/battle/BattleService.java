@@ -2,12 +2,15 @@ package com.sw.cmc.application.service.battle;
 
 import com.sw.cmc.adapter.out.battle.persistence.BattleRepository;
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
+import com.sw.cmc.adapter.out.vote.persistence.VoteRepository;
 import com.sw.cmc.application.port.in.battle.BattleUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.battle.BattleDomain;
+import com.sw.cmc.domain.battle.BattleVoteDomain;
 import com.sw.cmc.entity.Battle;
 import com.sw.cmc.entity.User;
+import com.sw.cmc.entity.Vote;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -28,6 +31,7 @@ public class BattleService implements BattleUseCase {
 
     private final BattleRepository battleRepository;
     private final CommentRepository commentRepository;
+    private final VoteRepository voteRepository;
     private final ModelMapper modelMapper;
     private final UserUtil userUtil;
 
@@ -111,6 +115,45 @@ public class BattleService implements BattleUseCase {
                 .createdAt(saved.getCreatedAt())
                 .updatedAt(saved.getUpdatedAt())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public BattleVoteDomain updateVoteBattle(BattleVoteDomain battleVoteDomain) throws Exception {
+        battleVoteDomain.validateUpdateBattleVote();
+        Vote vote = voteRepository.findByUser_UserNumAndBattleId(userUtil.getAuthenticatedUserNum(), battleVoteDomain.getBattleId())
+            .map(found -> {
+                found.setVoteValue(battleVoteDomain.getVoteValue());
+                return found;
+            })
+            .orElseGet(() -> {
+                User savingUser = new User();
+                savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
+                Vote saving = new Vote();
+                saving.setUser(savingUser);
+                saving.setBattleId(battleVoteDomain.getBattleId());
+                saving.setVoteValue(battleVoteDomain.getVoteValue());
+                return saving;
+            });
+
+        Vote saved = voteRepository.save(vote);
+        return BattleVoteDomain.builder()
+                .battleId(saved.getBattleId())
+                .voteValue(saved.getVoteValue())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BattleVoteDomain deleteVoteBattle(BattleVoteDomain battleVoteDomain) throws Exception {
+        Vote found = voteRepository.findById(battleVoteDomain.getBattleId())
+                .orElseThrow(() -> new CmcException("BATTLE001"));
+        if (!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
+            throw new CmcException("BATTLE007");
+        }
+
+        voteRepository.deleteById(found.getBattleId());
+        return battleVoteDomain;
     }
 
     @Override

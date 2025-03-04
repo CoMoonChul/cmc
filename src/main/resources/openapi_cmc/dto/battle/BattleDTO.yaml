@@ -12,16 +12,16 @@ components:
           description: 제목
         content:
           type: string
-          description: 제목
+          description: 내용
         endTime:
           type: string
-          description: 제목
+          description: 종료 일자
         codeContentLeft:
           type: string
-          description: 제목
+          description: 왼쪽 코드 내용
         codeContentRight:
           type: string
-          description: 제목
+          description: 오른쪽 코드 내용
         user_num:
           type: integer
           format: int64
@@ -44,10 +44,10 @@ components:
           description: 내용
         code_content_left:
           type: string
-          description: 좌측 코드 내용
+          description: 왼쪽 코드 내용
         code_content_right:
           type: string
-          description: 우측 코드 내용
+          description: 오른쪽 코드 내용
         end_time:
           type: string
           description: 종료 일자
@@ -67,13 +67,13 @@ components:
           description: 내용
         code_content_left:
           type: string
-          description: 내용
+          description: 왼쪽 코드 내용
         code_content_right:
           type: string
-          description: 내용
+          description: 오른쪽 코드 내용
         end_time:
           type: string
-          description: 내용
+          description: 종료 일자
 
     UpdateBattleReqDTO:
       type: object
@@ -113,13 +113,55 @@ components:
           description: 내용
         code_content_left:
           type: string
-          description: 내용
+          description: 왼쪽 코드 내용
         code_content_right:
           type: string
-          description: 내용
+          description: 오른쪽 코드 내용
         end_time:
           type: string
-          description: 내용
+          description: 종료 일자
+
+    UpdateVoteBattleReqDTO:
+      type: object
+      properties:
+        battle_id:
+          type: integer
+          format: int64
+          description: 배틀 ID
+        vote_value:
+          type: integer
+          format: int32
+          description: 투표값
+          example: 0(왼쪽) or 1(오른쪽)
+
+    UpdateVoteBattleResDTO:
+      type: object
+      properties:
+        battle_id:
+          type: integer
+          format: int64
+          description: 배틀 ID
+        vote_value:
+          type: integer
+          format: int32
+          description: 투표값
+          example: 0(왼쪽) or 1(오른쪽)
+
+    DeleteVoteBattleReqDTO:
+      type: object
+      properties:
+        battle_id:
+          type: integer
+          format: int64
+          description: 배틀 ID
+
+    DeleteVoteBattleResDTO:
+      type: object
+      properties:
+        battle_id:
+          type: integer
+          format: int64
+          description: 배틀 ID
 
     DeleteBattleReqDTO:
       type: object
