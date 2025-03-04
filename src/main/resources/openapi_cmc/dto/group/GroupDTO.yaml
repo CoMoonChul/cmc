@@ -32,39 +32,55 @@ components:
                 type: integer
                 format: int64
                 description: 그룹 멤버 회원 번호
+              username:
+                type: string
+                description: 회원명
+              email:
+                type: string
+                description: 회원 이메일
               groupRole:
                 type: string
                 description: 그룹 멤버 권한
+              groupMemberId:
+                type: integer
+                format: int64
+                description: 그룹 멤버 ID
       description: 그룹 멤버 조회 응답
 
-    # API_GROUP_0003 그룹 정보 변경
-    UpdateReqDTO:
+    # API_GROUP_0003 그룹 멤버 초대하기
+    InviteReqDTO:
       type: object
       required:
-        - groupName
+        - username
+        - groupId
       properties:
-        groupName:
+        username:
           type: string
-          description: 그룹명
-      description: 그룹 정보 변경 요청
+          description: 회원명
+        groupId:
+          type: integer
+          format: int64
+          description: 그룹 ID
+      description: 그룹 멤버 초대하기 요청
 
-    UpdateResDTO:
+    InviteResDTO:
       type: object
       properties:
         resultMessage:
           type: string
-          description: 그룹 정보 변경 결과 메시지
-      description: 그룹 정보 변경 응답
+          description: 그룹 멤버 초대하기 결과 메시지
+      description: 그룹 멤버 초대하기 응답
 
     # API_GROUP_0004 그룹 삭제
     DeleteReqDTO:
       type: object
       required:
-        - groupName
+        - groupId
       properties:
-        groupName:
-          type: string
-          description: 그룹명
+        groupId:
+          type: integer
+          format: int64
+          description: 그룹 ID
       description: 그룹 삭제 요청
 
     DeleteResDTO:
@@ -74,3 +90,28 @@ components:
           type: string
           description: 그룹 삭제 결과 메시지
       description: 그룹 삭제 응답
+
+    # API_GROUP_0005 그룹 멤버 내보내기
+    ExpelReqDTO:
+      type: object
+      required:
+        - userNum
+        - groupId
+      properties:
+        userNum:
+          type: integer
+          format: int64
+          description: 그룹 멤버 회원 번호
+        groupId:
+          type: integer
+          format: int64
+          description: 그룹 ID
+      description: 그룹 멤버 내보내기 요청
+
+    ExpelResDTO:
+      type: object
+      properties:
+        resultMessage:
+          type: string
+          description: 그룹 멤버 내보내기 결과 메시지
+      description: 그룹 멤버 내보내기 응답
