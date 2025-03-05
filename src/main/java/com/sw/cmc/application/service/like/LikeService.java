@@ -1,7 +1,6 @@
 package com.sw.cmc.application.service.like;
 
 import com.sw.cmc.adapter.out.like.persistence.ReviewLikeRepository;
-import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.application.port.in.like.LikeUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 public class LikeService implements LikeUseCase {
 
     private final ReviewLikeRepository reviewLikeRepository;
-    private final ReviewRepository reviewRepository;
     private final UserUtil userUtil;
 
     @Override

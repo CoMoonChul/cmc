@@ -119,19 +119,6 @@ CREATE TABLE IF NOT EXISTS notification (
     CONSTRAINT fk_noti_create_user FOREIGN KEY (create_user) REFERENCES user(user_num)
 );
 
-CREATE TABLE IF NOT EXISTS tag (
-    tag_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    tag_name VARCHAR(30)
-);
-
-CREATE TABLE IF NOT EXISTS review_tag_relation (
-    relation_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    review_id BIGINT,
-    tag_id BIGINT,
-    CONSTRAINT fk_review_tag_review FOREIGN KEY (review_id) REFERENCES review(review_id) ON DELETE CASCADE,
-    CONSTRAINT fk_review_tag_tag FOREIGN KEY (tag_id) REFERENCES tag(tag_id) ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS vote (
     vote_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     battle_id BIGINT NOT NULL,

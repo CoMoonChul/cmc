@@ -14,5 +14,13 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ReviewLikeRepository extends JpaRepository<ReviewLike, ReviewLikeId> {
+    /**
+     * methodName : countById_ReviewId
+     * author : IM HYUN WOO
+     * description : reviewId 기반 좋아요 수
+     *
+     * @param review id
+     * @return long
+     */
     Long countById_ReviewId(Long reviewId);
 }
