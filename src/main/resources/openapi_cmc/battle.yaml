@@ -37,6 +37,45 @@ paths:
         '400':
           description: Invalid status value
 
+  /selectBattleList:
+    get:
+      tags:
+        - battle-controller
+      summary: 배틀 리스트 조회
+      description: 배틀 리스트 조회
+      operationId: selectBattleList
+      parameters:
+        - name: condition
+          in: query
+          description: 조회 조건(0:최신순, 1:투표순, 2:로그인회원작성, 3:로그인회원투표참여)
+          required: true
+          schema:
+            default: 0
+            type: integer
+        - name: page
+          in: query
+          description: 페이지 번호
+          required: true
+          schema:
+            default: 0
+            type: integer
+        - name: size
+          in: query
+          description: 페이지 사이즈
+          required: true
+          schema:
+            default: 10
+            type: integer
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/SelectBattleListResDTO"
+        '400':
+          description: Invalid status value
+
   /createBattle:
     post:
       tags:

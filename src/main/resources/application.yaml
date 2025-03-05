@@ -108,6 +108,9 @@ security:
     # ReView
     - /selectReview
     - /selectReviewList
+    # Battle
+    - /selectBattle
+    - /selectBattleList
 
 openai:
   model: ${AI_MODEL}

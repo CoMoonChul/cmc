@@ -41,9 +41,6 @@ public class CommentControllerImpl implements CommentControllerApi {
                 .targetId(createCommentReqDTO.getTargetId())
                 .commentTarget(createCommentReqDTO.getCommentTarget())
                 .build();
-
-
-
         return ResponseEntity.ok(modelMapper.map(commentUseCase.createComment(commentDomain), CreateCommentResDTO.class));
     }
 

@@ -29,6 +29,11 @@ public class BattleControllerImpl implements BattleControllerApi {
     }
 
     @Override
+    public ResponseEntity<SelectBattleListResDTO> selectBattleList(Integer condition, Integer page, Integer size) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(battleUseCase.selectBattleList(condition, page, size), SelectBattleListResDTO.class));
+    }
+
+    @Override
     public ResponseEntity<CreateBattleResDTO> createBattle(CreateBattleReqDTO createBattleReqDTO) throws Exception {
         BattleDomain battleDomain = BattleDomain.builder()
                 .title(createBattleReqDTO.getTitle())

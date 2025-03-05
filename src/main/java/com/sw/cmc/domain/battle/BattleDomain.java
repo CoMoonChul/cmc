@@ -26,6 +26,8 @@ public class BattleDomain {
     private String endTime;
     private String codeContentLeft;
     private String codeContentRight;
+    private Integer leftVote;
+    private Integer rightVote;
     private Long userNum;
     private String createdAt;
     private String updatedAt;

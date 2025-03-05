@@ -1,6 +1,7 @@
 package com.sw.cmc.application.port.in.battle;
 
 import com.sw.cmc.domain.battle.BattleDomain;
+import com.sw.cmc.domain.battle.BattleListDomain;
 import com.sw.cmc.domain.battle.BattleVoteDomain;
 
 /**
@@ -22,6 +23,19 @@ public interface BattleUseCase {
      * @throws Exception the exception
      */
     BattleDomain selectBattle(Long id) throws Exception;
+
+    /**
+     * methodName : selectBattleList
+     * author : IM HYUN WOO
+     * description : 배틀 리스트 조회
+     *
+     * @param condition
+     * @param page
+     * @param size
+     * @return battle domain
+     * @throws Exception the exception
+     */
+    BattleListDomain selectBattleList(Integer condition, Integer page, Integer size) throws Exception;
 
     /**
      * methodName : createBattle
