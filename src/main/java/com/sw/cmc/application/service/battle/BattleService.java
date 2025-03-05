@@ -6,6 +6,7 @@ import com.sw.cmc.adapter.out.vote.persistence.VoteRepository;
 import com.sw.cmc.application.port.in.battle.BattleUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
+import com.sw.cmc.domain.battle.BattleDetailVo;
 import com.sw.cmc.domain.battle.BattleDomain;
 import com.sw.cmc.domain.battle.BattleListDomain;
 import com.sw.cmc.domain.battle.BattleVoteDomain;
@@ -44,17 +45,21 @@ public class BattleService implements BattleUseCase {
 
     @Override
     public BattleDomain selectBattle(Long id) throws Exception {
-        Battle found = battleRepository.findByBattleId(id).orElseThrow(() -> new CmcException("BATTLE001"));
+        BattleDetailVo found = battleRepository.findBattleDetail(id);
+
         return BattleDomain.builder()
-                .battleId(found.getBattleId())
-                .title(found.getTitle())
-                .content(found.getContent())
-                .endTime(found.getEndTime())
-                .codeContentLeft(found.getCodeContentLeft())
-                .codeContentRight(found.getCodeContentRight())
-                .userNum(found.getUser().getUserNum())
-                .createdAt(found.getCreatedAt())
-                .updatedAt(found.getUpdatedAt())
+                .battleId(found.getBattle().getBattleId())
+                .title(found.getBattle().getTitle())
+                .content(found.getBattle().getContent())
+                .endTime(found.getBattle().getEndTime())
+                .codeContentLeft(found.getBattle().getCodeContentLeft())
+                .codeContentRight(found.getBattle().getCodeContentRight())
+                .username(found.getUsername())
+                .createdAt(found.getBattle().getCreatedAt())
+                .updatedAt(found.getBattle().getUpdatedAt())
+                .leftVote(found.getLeftVote())
+                .rightVote(found.getRightVote())
+                .viewCount(found.getViewCount())
                 .build();
     }
 
@@ -116,8 +121,8 @@ public class BattleService implements BattleUseCase {
                 .endTime(battle.getEndTime())
                 .codeContentLeft(battle.getCodeContentLeft())
                 .codeContentRight(battle.getCodeContentRight())
-                .leftVote(leftVoteCount.intValue())
-                .rightVote(rightVoteCount.intValue())
+                .leftVote(leftVoteCount)
+                .rightVote(rightVoteCount)
                 .createdAt(battle.getCreatedAt())
                 .updatedAt(battle.getUpdatedAt())
                 .build();

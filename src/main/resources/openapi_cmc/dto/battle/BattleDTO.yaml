@@ -22,10 +22,17 @@ components:
         codeContentRight:
           type: string
           description: 오른쪽 코드 내용
-        user_num:
+        leftVote:
           type: integer
           format: int64
-          description: 회원 번호
+          description: 왼쪽 코드 득표수
+        rightVote:
+          type: integer
+          format: int64
+          description: 오른쪽 코드 득표수
+        username:
+          type: string
+          description: 회원명
         created_at:
           type: string
           description: 생성 일시
@@ -67,11 +74,11 @@ components:
           description: 종료 일자
         leftVote:
           type: integer
-          format: int32
+          format: int64
           description: 왼쪽 코드 득표수
         rightVote:
           type: integer
-          format: int32
+          format: int64
           description: 오른쪽 코드 득표수
         created_at:
           type: string
