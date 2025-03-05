@@ -3,6 +3,8 @@ package com.sw.cmc.domain.notice;
 import com.sw.cmc.entity.NotificationTemplate;
 import lombok.*;
 
+import java.util.Map;
+
 /**
  * packageName    : com.sw.cmc.domain.notice
  * fileName       : NoticeDomain
@@ -30,6 +32,8 @@ public class NoticeDomain {
     private String notiType;
     private String reasonNoti;
     private int deleteCount;
+    private Long notiTemplateId;
+    private Map<String, String> templateParams;
 
 
 

@@ -1,6 +1,7 @@
 package com.sw.cmc.application.service.notice;
 
 import com.sw.cmc.adapter.out.notice.persistence.NoticeRepository;
+import com.sw.cmc.adapter.out.notice.persistence.NoticeTemplateRepository;
 import com.sw.cmc.application.port.in.notice.NoticeUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
@@ -25,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * packageName    : com.sw.cmc.application.service.notice
@@ -42,6 +45,7 @@ public class NoticeService implements NoticeUseCase {
     private final NoticeRepository noticeRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final UserUtil userUtil;
+    private final NoticeTemplateRepository noticeTemplateRepository;
 
 
     @Override
@@ -86,16 +90,29 @@ public class NoticeService implements NoticeUseCase {
     @Override
     @Transactional
     public NoticeDomain saveNotification(NoticeDomain noticeDomain) throws Exception {
+        // 1. NotificationTemplate 조회 (DB에서 가져오기)
+        NotificationTemplate template = noticeTemplateRepository.findById(noticeDomain.getNotiTemplateId())
+                .orElseThrow(() -> new CmcException("NOTI001"));
+        String notiTemplate = template.getNotiContent();
+        String reasonNoti = replacePlaceholders(notiTemplate, noticeDomain.getTemplateParams());
 
-        Notification notification = modelMapper.map(noticeDomain, Notification.class);
+        NoticeDomain notiResult = NoticeDomain.builder()
+                .userNum(noticeDomain.getUserNum())
+                .sendAt(noticeDomain.getSendAt())
+                .linkUrl(noticeDomain.getLinkUrl())
+                .notiTemplate(template)
+                .createUser(noticeDomain.getCreateUser())
+                .sendState(noticeDomain.getSendState())
+                .reasonNoti(reasonNoti)
+                .build();
+
+
+        Notification notification = modelMapper.map(notiResult, Notification.class);
 
         Notification saved = noticeRepository.save(notification);
         entityManager.refresh(saved);
 
-        return NoticeDomain.builder()
-                .notiId(saved.getNotiId())
-                .linkUrl(saved.getLinkUrl())
-                .build();
+        return notiResult;
     }
 
 
@@ -133,6 +150,25 @@ public class NoticeService implements NoticeUseCase {
                 .text(template + (StringUtils.equals(type, "01") ? "반가워" : "오랜만이야"))
                 .build();
         eventPublisher.publishEvent(sendNotiEmailEvent);
+    }
+
+    private String replacePlaceholders(String template, Map<String, String> values) {
+        // 정규 표현식을 사용하여 {}로 감싸진 부분을 찾음
+        Pattern pattern = Pattern.compile("\\{(.*?)\\}");
+        Matcher matcher = pattern.matcher(template);
+
+        StringBuffer result = new StringBuffer();
+        while (matcher.find()) {
+            String placeholder = matcher.group(1); // {} 내부의 텍스트를 추출
+            String replacement = values.get(placeholder); // 대체할 값 찾기
+            if (replacement == null) {
+                ///
+            }
+            matcher.appendReplacement(result, com.github.jknack.handlebars.internal.lang3.StringUtils.defaultString(String.valueOf(replacement), placeholder));
+        }
+        matcher.appendTail(result);
+
+        return result.toString();
     }
 
 

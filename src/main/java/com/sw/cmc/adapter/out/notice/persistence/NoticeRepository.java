@@ -29,7 +29,6 @@ public interface NoticeRepository extends JpaRepository<Notification, Long> {
     Page<Notification> findByUserNum(@Param("userNum") Long userNum, Pageable pageable);
 
     @Modifying
-    @Transactional
     @Query("DELETE FROM Notification n WHERE n.userNum = :userNum")
     int deleteByUserNum(@Param("userNum") Long userNum);
 

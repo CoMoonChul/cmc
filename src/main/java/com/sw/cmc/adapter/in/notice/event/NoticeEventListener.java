@@ -32,49 +32,21 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class NoticeEventListener {
     private final NoticeUseCase noticeUseCase;
-    private final NoticeTemplateRepository noticeTemplateRepository;
-    private final MessageUtil messageUtil;
-
     @EventListener
-    @Transactional
     public void handleNotification(SendNotiInAppEvent event) throws Exception {
-        // 1. NotificationTemplate 조회 (DB에서 가져오기)
-        NotificationTemplate template = noticeTemplateRepository.findById(event.getNotiTemplateId())
-                .orElseThrow(() -> new CmcException("NOTI001"));
-
-        String notiTemplate = template.getNotiContent();
-        String reasonNoti = replacePlaceholders(notiTemplate, event.getTemplateParams());
-
         NoticeDomain noticeDomain = NoticeDomain.builder()
                 .userNum(event.getUserNum())
                 .sendAt(event.getSendAt())
                 .linkUrl(event.getLinkUrl())
-                .notiTemplate(template)
+                .notiTemplateId(event.getNotiTemplateId())
                 .createUser(event.getCreateUser())
                 .createdAt(LocalDateTime.now().toString()) // 현재 시간 설정
                 .sendState(event.getSendState())
-                .reasonNoti(reasonNoti)
+                .templateParams(event.getTemplateParams())
                 .build();
 
         noticeUseCase.saveNotification(noticeDomain);
     }
 
-    private String replacePlaceholders(String template, Map<String, String> values) {
-        // 정규 표현식을 사용하여 {}로 감싸진 부분을 찾음
-        Pattern pattern = Pattern.compile("\\{(.*?)\\}");
-        Matcher matcher = pattern.matcher(template);
 
-        StringBuffer result = new StringBuffer();
-        while (matcher.find()) {
-            String placeholder = matcher.group(1); // {} 내부의 텍스트를 추출
-            String replacement = values.get(placeholder); // 대체할 값 찾기
-            if (replacement == null) {
-                ///
-            }
-            matcher.appendReplacement(result, StringUtils.defaultString(String.valueOf(replacement), placeholder));
-        }
-        matcher.appendTail(result);
-
-        return result.toString();
-    }
 }
