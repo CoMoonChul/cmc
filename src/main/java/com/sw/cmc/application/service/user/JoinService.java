@@ -1,5 +1,6 @@
 package com.sw.cmc.application.service.user;
 
+import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
 import com.sw.cmc.adapter.out.user.persistence.JoinRepository;
@@ -29,6 +30,8 @@ public class JoinService implements JoinUseCase {
     private final ModelMapper modelMapper;
     private final JoinRepository joinRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final UserUtil userUtil;
 
     @Override
     @Transactional
@@ -67,6 +70,7 @@ public class JoinService implements JoinUseCase {
 
     @Override
     public String checkUserId(String userId) throws Exception {
+        userUtil.getAuthenticatedUserNum();
         validateUserId(userId);
         return messageUtil.getFormattedMessage(joinRepository.existsByUserId(userId) ? "USER007" : "USER008");
     }

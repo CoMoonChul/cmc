@@ -10,6 +10,7 @@ import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -40,9 +41,9 @@ public class UserUtil {
     public Long getAuthenticatedUserNum() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Optional.ofNullable(authentication)
-                .filter(Authentication::isAuthenticated)
-                .orElseThrow(() -> new CmcException(messageUtil.getFormattedMessage("USER012")));
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
 
         Object principal = authentication.getPrincipal();
 
