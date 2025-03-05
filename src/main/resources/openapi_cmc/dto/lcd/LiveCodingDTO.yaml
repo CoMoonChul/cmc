@@ -98,12 +98,20 @@ components:
             type: integer
             format: int64
             description: "참가자 ID (userNum)"
+        link:
+          type: string
+          description: "초대 링크"
+        sourceCode:
+          type: string
+          description: "소스코드"
       required:
         - roomId
         - hostId
         - createdAt
         - participantCount
         - participants
+        - link
+        - sourceCode
 
 
     InviteLiveCodingReqDTO:
