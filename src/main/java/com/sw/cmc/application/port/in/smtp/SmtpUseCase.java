@@ -1,6 +1,4 @@
 package com.sw.cmc.application.port.in.smtp;
-
-import com.sw.cmc.domain.smtp.SendEmailDomain;
 import com.sw.cmc.domain.smtp.SendEmailHtmlDomain;
 
 /**
@@ -11,10 +9,5 @@ import com.sw.cmc.domain.smtp.SendEmailHtmlDomain;
  * description    : smtp usecase
  */
 public interface SmtpUseCase {
-    void handleSendNotiEmail(SendEmailDomain sendEmailDomain) throws Exception;
-
     void sendHtmlEmail(SendEmailHtmlDomain sendEmailHtmlDomain) throws Exception;
-
-
-
 }

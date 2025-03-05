@@ -11,14 +11,17 @@ import com.sw.cmc.domain.group.GroupDomain;
 import com.sw.cmc.entity.Group;
 import com.sw.cmc.entity.GroupMember;
 import com.sw.cmc.entity.User;
-import com.sw.cmc.event.notice.SendNotiEmailEvent;
+import com.sw.cmc.event.notice.SendNotiEmailHtmlEvent;
+import com.sw.cmc.event.notice.SendNotiInAppEvent;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static com.sw.cmc.domain.group.GroupDomain.validateGroupName;
 
@@ -124,6 +127,8 @@ public class GroupService implements GroupUseCase {
 
         // 이메일 전송
         sendEmail(invitee.getEmail(), inviter.getUsername(), group.getGroupName(), invitee.getUsername());
+        // 인앱 알림
+        sendNotice("groupNm", group.getGroupName());
 
         return messageUtil.getFormattedMessage("USER025");
     }
@@ -153,16 +158,37 @@ public class GroupService implements GroupUseCase {
     public void sendEmail(String email, String username, String groupName, String targetName) throws Exception {
         String template = "코문철 멤버 초대장";
 
-        SendNotiEmailEvent sendNotiEmailEvent = SendNotiEmailEvent.builder()
-                .rsvrEmail(email)
-                .subject(template)
-                .text(
+        SendNotiEmailHtmlEvent sendNotiEmailHtmlEvent = SendNotiEmailHtmlEvent.builder()
+                .title(template)
+                .message(
                         targetName + "님, 안녕하세요.\n\n" +
                         username + "님이 코문철 " + groupName + "그룹의 멤버로 초대했습니다.\n\n" +
                         "지금 바로 로그인을 진행해 주세요."
                 )
+                .link("")
+                .to(email)
+                .subject(template)
                 .build();
 
-        eventPublisher.publishEvent(sendNotiEmailEvent);
+        eventPublisher.publishEvent(sendNotiEmailHtmlEvent);
+    }
+
+    public void sendNotice(String paramKey, String paramVal) {
+        // 인앱 알림 (notice 테이블에 저장)
+        Long userNum = userUtil.getAuthenticatedUserNum();
+        Map<String, String> templateParams = Map.of(
+                paramKey, paramVal
+        ); // 템플릿 내용
+
+        SendNotiInAppEvent sendNotiInAppEvent = SendNotiInAppEvent.builder()
+                .notiTemplateId(3L)
+                .sendAt(LocalDateTime.now().toString())
+                .linkUrl("")
+                .createUser(userNum)
+                .sendState("Y")
+                .templateParams(templateParams)
+                .build();
+
+        eventPublisher.publishEvent(sendNotiInAppEvent);
     }
 }

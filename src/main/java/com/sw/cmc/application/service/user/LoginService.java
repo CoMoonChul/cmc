@@ -11,7 +11,7 @@ import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.TokenDomain;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
-import com.sw.cmc.event.notice.SendNotiEmailEvent;
+import com.sw.cmc.event.notice.SendNotiEmailHtmlEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -188,16 +188,18 @@ public class LoginService implements LoginUseCase {
     public void sendEmail(String email, String username, String userId, String password) throws Exception {
         String template = "코문철 계정 찾기";
 
-        SendNotiEmailEvent sendNotiEmailEvent = SendNotiEmailEvent.builder()
-                .rsvrEmail(email)
-                .subject(template)
-                .text(
+        SendNotiEmailHtmlEvent sendNotiEmailHtmlEvent = SendNotiEmailHtmlEvent.builder()
+                .title(template)
+                .message(
                         username + "님, 안녕하세요.\n\n" +
                         username + "님의 아이디와 새로운 비밀번호는 " + userId + " / " + password + " 입니다.\n\n" +
                         "지금 바로 로그인을 진행해 주세요."
-                    )
+                )
+                .link("")
+                .to(email)
+                .subject(template)
                 .build();
 
-        eventPublisher.publishEvent(sendNotiEmailEvent);
+        eventPublisher.publishEvent(sendNotiEmailHtmlEvent);
     }
 }

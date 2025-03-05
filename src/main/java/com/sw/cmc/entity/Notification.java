@@ -23,7 +23,7 @@ public class Notification {
     private Long notiId;
 
     @Column(nullable = false)
-    private String userNum;
+    private Long userNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "noti_template_id", referencedColumnName = "notiTemplateId", nullable = false)
