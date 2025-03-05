@@ -105,6 +105,9 @@ security:
     # View
     - /updateReviewView
     - /updateBattleView
+    # ReView
+    - /selectReview
+    - /selectReviewList
 
 openai:
   model: ${AI_MODEL}
