@@ -23,9 +23,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * author : IM HYUN WOO
      * description : targetId와 commentId를 조회 조건으로 하여 user 테이블과 조인
      *
-     * @param target   id
-     * @param comment  target
-     * @param pageable
+     * @param targetId Long
+     * @param commentTarget Integer
+     * @param pageable Pageable
      * @return page
      */
     @Query("SELECT c FROM Comment c JOIN FETCH c.user " +
@@ -39,8 +39,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * author : IM HYUN WOO
      * description : 특정 타겟의 댓글 존재 여부
      *
-     * @param target  id
-     * @param comment target
+     * @param targetId Long
+     * @param commentTarget Integer
      * @return boolean
      */
     boolean existsByTargetIdAndCommentTarget(Long targetId, Integer commentTarget);

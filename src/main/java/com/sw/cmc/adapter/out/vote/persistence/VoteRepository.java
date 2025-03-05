@@ -21,8 +21,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
      * author : IM HYUN WOO
      * description : usernum과 battleId를 이용한 조회
      *
-     * @param user   num
-     * @param battle id
+     * @param userNum Long
+     * @param battleId Long
      * @return optional
      */
     Optional<Vote> findByUser_UserNumAndBattleId(Long userNum, Long battleId);

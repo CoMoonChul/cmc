@@ -19,7 +19,7 @@ public interface ReviewLikeRepository extends JpaRepository<ReviewLike, ReviewLi
      * author : IM HYUN WOO
      * description : reviewId 기반 좋아요 수
      *
-     * @param review id
+     * @param reviewId Long
      * @return long
      */
     Long countById_ReviewId(Long reviewId);

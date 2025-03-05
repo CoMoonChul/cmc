@@ -1,5 +1,6 @@
 package com.sw.cmc.adapter.out.battle.persistence;
 
+import com.sw.cmc.domain.battle.BattleDetailVo;
 import com.sw.cmc.entity.Battle;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
@@ -7,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 /**
  * packageName    : com.sw.cmc.adapter.out.battle.persistence
@@ -20,25 +19,22 @@ import java.util.Optional;
 @Repository
 public interface BattleRepository extends JpaRepository<Battle, Long>  {
 
-
-    /**
-     * methodName : findByBattleId
-     * author : IM HYUN WOO
-     * description : battleId를 이용해 유저와 조인하여 조회
-     *
-     * @param a long
-     * @return optional
-     */
-    @Query("SELECT b FROM Battle b JOIN FETCH b.user " +
+    @Query("SELECT new com.sw.cmc.domain.battle.BattleDetailVo( " +
+            "b, u.username, " +
+            "(SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 0), " +
+            "(SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 1), " +
+            "(SELECT bv.viewCount FROM BattleView bv WHERE bv.battleId = b.battleId) ) " +
+            "FROM Battle b " +
+            "LEFT JOIN b.user u " +
             "WHERE b.battleId = :battleId")
-    Optional<Battle> findByBattleId(Long battleId);
+    BattleDetailVo findBattleDetail(@Param("battleId") Long battleId);
 
     /**
      * methodName : findAllWithVoteCounts
      * author : IM HYUN WOO
      * description : 최신순 조회
      *
-     * @param pageable
+     * @param pageable Pageable
      * @return page
      */
     @Query("""
@@ -74,8 +70,8 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
      * author : IM HYUN WOO
      * description : 내가 투표한 배틀 조회
      *
-     * @param user num
-     * @param Pageable
+     * @param userNum Long
+     * @param pageable Pageable
      * @return list
      */
     @Query("""
@@ -94,8 +90,8 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
      * author : IM HYUN WOO
      * description : 본인이 작성한 배틀
      *
-     * @param user     num
-     * @param pageable
+     * @param userNum Long
+     * @param pageable Pageable
      * @return page
      */
     @Query("""
@@ -108,15 +104,4 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
         GROUP BY b.battleId
     """)
     Page<Object[]> findMyBattles(Long userNum, Pageable pageable);
-
-    @Query("""
-        SELECT b,
-               COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-               COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount
-        FROM Battle b
-        LEFT JOIN Vote v ON b.battleId = v.battleId
-        WHERE b.battleId = :battleId
-        GROUP BY b
-    """)
-    Object[] findBattleWithVoteCounts(@Param("battleId") Long battleId);
 }

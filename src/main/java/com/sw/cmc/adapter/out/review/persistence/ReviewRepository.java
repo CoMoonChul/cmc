@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * packageName    : com.sw.cmc.adapter.out.review.persistence
  * fileName       : ReviewRepository
@@ -17,7 +15,7 @@ import java.util.List;
  */
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-//    List<Review> findAllByUserNum(String userNum);
+
     /**
      * 제목 또는 내용에 특정 키워드가 포함된 리뷰 검색
      * @param titleKeyword 검색할 제목 키워드
