@@ -10,11 +10,13 @@ import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +33,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisRepository redisRepository;
+    private final StringRedisTemplate redisTemplate;
 
     private static final String REDIS_LIVE_CODING_PREFIX = "live_coding:";  // Redis에 저장할 키 접두사
 
@@ -178,6 +181,11 @@ public class LiveCodingService implements LiveCodingUseCase {
 
         redisRepository.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
         redisRepository.save(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), liveCodingDomain.getRoomId().toString());
+
+
+
+        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 3, TimeUnit.HOURS);
+        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 3, TimeUnit.HOURS);
     }
 
 }
