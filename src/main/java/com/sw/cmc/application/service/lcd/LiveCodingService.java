@@ -35,7 +35,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
 
     @Override
-    public LiveCodingDomain createLiveCoding(Long hostId)   {
+    public LiveCodingDomain createLiveCoding(Long hostId) throws Exception {
 
         if (liveCodingRepository.existsByHostId(hostId)) {
             throw new CmcException("LCD003");
@@ -53,13 +53,19 @@ public class LiveCodingService implements LiveCodingUseCase {
         // 참가자 수 초기화 (방장 포함)
         Integer participantCount = 1;
 
+        String link = this.generateInviteLink(roomId);
+        String sourceCode = "";
+
+
         // LiveCodingDomain 객체 생성
         LiveCodingDomain liveCodingDomain = new LiveCodingDomain(
                 roomId,  // 생성된 방 ID
                 hostId,  // 방장 ID
                 createdAt,  // 방 생성 시간
                 participantCount,  // 참가자 수
-                participants  // 참가자 목록
+                participants,  // 참가자 목록
+                link,   // 링크
+                sourceCode // 코드
         );
 
         // Redis에 방 정보 저장
