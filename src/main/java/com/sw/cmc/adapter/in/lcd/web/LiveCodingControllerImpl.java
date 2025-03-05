@@ -2,7 +2,6 @@ package com.sw.cmc.adapter.in.lcd.web;
 
 import com.sw.cmc.adapter.in.livecoding.dto.*;
 import com.sw.cmc.adapter.in.livecoding.web.LiveCodingControllerApi;
-import com.sw.cmc.application.port.in.lcd.DeleteLcdCase;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
@@ -36,13 +35,13 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
     @Override
     public ResponseEntity<DeleteLiveCodingResDTO> deleteLiveCoding(DeleteLiveCodingReqDTO deleteLiveCodingReqDTO) throws Exception {
         // 유스케이스에서 방 삭제 처리
-        DeleteLcdCase deletionStatus = liveCodingUseCase.deleteLiveCoding(deleteLiveCodingReqDTO.getRoomId());
+        boolean deleted = liveCodingUseCase.deleteLiveCoding(deleteLiveCodingReqDTO.getRoomId());
 
         // 응답 DTO 생성
         DeleteLiveCodingResDTO response = new DeleteLiveCodingResDTO();
 
 
-        if (deletionStatus == DeleteLcdCase.SUCCESS) {
+        if (deleted) {
             response.setStatus("SUCCESS");
             return ResponseEntity.ok(response);
         } else {

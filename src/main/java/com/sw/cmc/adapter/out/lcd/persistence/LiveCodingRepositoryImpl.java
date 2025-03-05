@@ -46,7 +46,7 @@ public class LiveCodingRepositoryImpl implements LiveCodingRepository {
     }
 
     @Override
-    public boolean deleteLiveCoding(UUID roomId) {
+    public void deleteLiveCoding(UUID roomId) {
         String key = REDIS_LIVE_CODING_PREFIX + roomId;  // 방 정보 저장 키
         Map<String, String> liveCodingMap = redisService.selectHash(key);  // 방 정보 조회
         if (liveCodingMap == null || liveCodingMap.isEmpty()) {
@@ -55,8 +55,7 @@ public class LiveCodingRepositoryImpl implements LiveCodingRepository {
 
         String hostIdKey = REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingMap.get("hostId");
         redisService.delete(hostIdKey);  // 호스트 ID 기반 매핑 삭제
-
-        return redisService.delete(key);  // Redis에서 해당 key 삭제
+        redisService.delete(key);  // Redis에서 해당 key 삭제
     }
 
     @Override

@@ -30,7 +30,7 @@ public interface LiveCodingRepository {
      * @param roomId - 방 id
      * @return boolean
      */
-    boolean deleteLiveCoding(UUID roomId);
+    void deleteLiveCoding(UUID roomId);
 
     /**
      * methodName : findByRoomId
