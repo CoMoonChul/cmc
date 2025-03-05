@@ -1,21 +1,23 @@
 package com.sw.cmc.application.service.lcd;
 
-import com.sw.cmc.adapter.out.lcd.persistence.LiveCodingRepository;
-import com.sw.cmc.application.port.in.lcd.DeleteLcdCase;
+import com.sw.cmc.adapter.out.lcd.persistence.RedisRepository;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
+import com.sw.cmc.domain.lcd.LiveCodingAction;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * packageName    : com.sw.cmc.application.service
@@ -28,8 +30,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LiveCodingService implements LiveCodingUseCase {
 
-    private final LiveCodingRepository liveCodingRepository;  // LiveCodingRepository 주입
+
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisRepository redisRepository;
+    private final StringRedisTemplate redisTemplate;
+
+    private static final String REDIS_LIVE_CODING_PREFIX = "live_coding:";  // Redis에 저장할 키 접두사
+
+
 
     private static final long INVITE_EXPIRATION = 10 * 60 * 1000; // 10분
 
@@ -37,25 +45,16 @@ public class LiveCodingService implements LiveCodingUseCase {
     @Override
     public LiveCodingDomain createLiveCoding(Long hostId) throws Exception {
 
-        if (liveCodingRepository.existsByHostId(hostId)) {
+        if (this.existsByHostId(hostId)) {
             throw new CmcException("LCD003");
         }
 
-        // 방 ID 생성 (UUID)
         UUID roomId = UUID.randomUUID();
-
         LocalDateTime createdAt = LocalDateTime.now();
-
-        // 초기 참가자 목록 (방장만 포함)
         List<Long> participants = new ArrayList<>();
         participants.add(hostId);
-
-        // 참가자 수 초기화 (방장 포함)
         Integer participantCount = 1;
-
         String link = this.generateInviteLink(roomId);
-        String sourceCode = "";
-
 
         // LiveCodingDomain 객체 생성
         LiveCodingDomain liveCodingDomain = new LiveCodingDomain(
@@ -64,24 +63,26 @@ public class LiveCodingService implements LiveCodingUseCase {
                 createdAt,  // 방 생성 시간
                 participantCount,  // 참가자 수
                 participants,  // 참가자 목록
-                link,   // 링크
-                sourceCode // 코드
+                link   // 링크
         );
 
         // Redis에 방 정보 저장
-        liveCodingRepository.saveLiveCoding(liveCodingDomain);  // Repository 사용
+        this.saveLiveCoding(liveCodingDomain);  // Repository 사용
 
         return liveCodingDomain;  // 생성된 LiveCodingDomain 반환
     }
 
     @Override
-    public DeleteLcdCase deleteLiveCoding(UUID roomId) {
-        boolean isDeleted = liveCodingRepository.deleteLiveCoding(roomId);
-        if (isDeleted) {
-            return DeleteLcdCase.SUCCESS;
-        } else {
-            return DeleteLcdCase.FAIL;
+    public boolean deleteLiveCoding(UUID roomId) {
+        String key = REDIS_LIVE_CODING_PREFIX + roomId;  // 방 정보 저장 키
+        Map<String, String> liveCodingMap = redisRepository.selectHash(key);  // 방 정보 조회
+        if (liveCodingMap == null || liveCodingMap.isEmpty()) {
+            throw new CmcException("LCD001");
         }
+
+        String hostIdKey = REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingMap.get("hostId");
+        redisRepository.delete(hostIdKey);  // 호스트 ID 기반 매핑 삭제
+        return redisRepository.delete(key);  // Redis에서 해당 key 삭제
     }
 
     @Override
@@ -103,7 +104,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     @Override
     public LiveCodingDomain selectLiveCoding(UUID roomId) throws CmcException {
-        LiveCodingDomain liveCodingDomain = liveCodingRepository.findByRoomId(roomId);
+        LiveCodingDomain liveCodingDomain = this.findByRoomId(roomId);
         if (liveCodingDomain == null) {
             throw new CmcException("LCD001");
         }
@@ -111,24 +112,80 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     @Override
-    public LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, String action) throws CmcException {
-        LiveCodingDomain liveCodingDomain = liveCodingRepository.findByRoomId(roomId);
+    public LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, int action) throws CmcException {
+        LiveCodingDomain liveCodingDomain = this.findByRoomId(roomId);
         if (liveCodingDomain == null) {
             throw new CmcException("LCD001");
         }
 
-        // 참가 또는 나가기 처리
-        if ("JOIN".equals(action)) {
+        if (action == LiveCodingAction.JOIN.getAction()) {
             liveCodingDomain.joinParticipant(userNum);
-        } else if ("LEAVE".equals(action)) {
+        } else if (action == LiveCodingAction.LEAVE.getAction()) {
             liveCodingDomain.leaveParticipant(userNum);
         } else {
             throw new CmcException("LCD002");
         }
 
         // Redis에 업데이트된 방 정보 저장
-        liveCodingRepository.saveLiveCoding(liveCodingDomain);
+        this.saveLiveCoding(liveCodingDomain);
 
         return liveCodingDomain;
     }
+
+    @Override
+    public UUID findRoomIdByHostId(Long hostId) {
+        String roomIdStr = redisRepository.select(REDIS_LIVE_CODING_PREFIX + "host:" + hostId);
+        return roomIdStr != null ? UUID.fromString(roomIdStr) : null;
+    }
+
+    @Override
+    public boolean existsByHostId(Long hostId) {
+        return findRoomIdByHostId(hostId) != null;
+    }
+
+    @Override
+    public LiveCodingDomain findByRoomId(UUID roomId) {
+        String key = REDIS_LIVE_CODING_PREFIX + roomId;
+        Map<String, String> liveCodingMap = redisRepository.selectHash(key);  // 수정된 부분: Map<String, String>으로 처리
+
+        if (liveCodingMap == null || liveCodingMap.isEmpty()) {
+            return null;  // 방이 없으면 null 반환
+        }
+
+        UUID retrievedRoomId = UUID.fromString(liveCodingMap.get("roomId"));
+        Long hostId = Long.valueOf(liveCodingMap.get("hostId"));
+
+        String createdAtStr = liveCodingMap.get("createdAt");
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        LocalDateTime createdAt = LocalDateTime.parse(createdAtStr, formatter);
+
+        Integer participantCount = Integer.valueOf(liveCodingMap.get("participantCount"));
+        List<Long> participants = Arrays.stream(liveCodingMap.get("participants").split(","))
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        String link = liveCodingMap.get("link");
+
+        return new LiveCodingDomain(retrievedRoomId, hostId, createdAt, participantCount, participants, link);
+    }
+
+
+    @Override
+    public void saveLiveCoding(LiveCodingDomain liveCodingDomain) {
+        Map<String, String> liveCodingMap = new HashMap<>();
+        liveCodingMap.put("roomId", liveCodingDomain.getRoomId().toString());
+        liveCodingMap.put("hostId", liveCodingDomain.getHostId().toString());
+        liveCodingMap.put("createdAt", String.valueOf(liveCodingDomain.getCreatedAt()));
+        liveCodingMap.put("participantCount", liveCodingDomain.getParticipantCount().toString());
+        liveCodingMap.put("participants", String.join(",", liveCodingDomain.getParticipants().stream().map(String::valueOf).toArray(String[]::new)));
+        liveCodingMap.put("link", liveCodingDomain.getLink());
+
+        redisRepository.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
+        redisRepository.save(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), liveCodingDomain.getRoomId().toString());
+
+
+
+        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 3, TimeUnit.HOURS);
+        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 3, TimeUnit.HOURS);
+    }
+
 }
