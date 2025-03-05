@@ -1,5 +1,6 @@
 package com.sw.cmc.domain.lcd;
 
+import com.sw.cmc.common.advice.CmcException;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class LiveCodingDomain  {
     // 참가자 추가 메서드
     public void joinParticipant(Long userNum) {
         if (participants.contains(userNum)) {
-            throw new IllegalStateException("이미 방에 참여 중입니다.");
+            throw new CmcException("LCD005");
         }
         participants.add(userNum);
         this.participantCount = participants.size();
@@ -36,7 +37,7 @@ public class LiveCodingDomain  {
     // 참가자 제거 메서드
     public void leaveParticipant(Long userNum) {
         if (!participants.contains(userNum)) {
-            throw new IllegalStateException("방에 속하지 않은 사용자입니다.");
+            throw new CmcException("LCD006");
         }
         participants.remove(userNum);
         this.participantCount = participants.size();

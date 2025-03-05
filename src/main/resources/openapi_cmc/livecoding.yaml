@@ -125,25 +125,3 @@ paths:
                 $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/InviteLiveCodingResDTO"
         "400":
           description: "잘못된 요청 (roomId 없음)"
-
-  /leaveLiveCoding:
-    post:
-      tags:
-        - live-coding-controller
-      summary: "라이브 코딩 방에서 나가기"
-      operationId: "leaveLiveCoding"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/LeaveLiveCodingReqDTO"
-      responses:
-        "200":
-          description: "라이브 코딩 방에서 나가기 성공"
-          content:
-            application/json:
-              schema:
-                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/LeaveLiveCodingResDTO"
-        "400":
-          description: "라이브 코딩 방에서 나가기 실패"

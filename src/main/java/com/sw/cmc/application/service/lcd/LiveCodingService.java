@@ -6,6 +6,7 @@ import com.sw.cmc.application.service.redis.RedisService;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
+import com.sw.cmc.domain.lcd.LiveCodingAction;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -117,16 +118,15 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     @Override
-    public LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, String action) throws CmcException {
+    public LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, int action) throws CmcException {
         LiveCodingDomain liveCodingDomain = liveCodingRepository.findByRoomId(roomId);
         if (liveCodingDomain == null) {
             throw new CmcException("LCD001");
         }
 
-        // 참가 또는 나가기 처리
-        if ("JOIN".equals(action)) {
+        if (action == LiveCodingAction.JOIN.getAction()) {
             liveCodingDomain.joinParticipant(userNum);
-        } else if ("LEAVE".equals(action)) {
+        } else if (action == LiveCodingAction.LEAVE.getAction()) {
             liveCodingDomain.leaveParticipant(userNum);
         } else {
             throw new CmcException("LCD002");

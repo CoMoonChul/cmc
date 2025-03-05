@@ -52,9 +52,9 @@ components:
           format: int64
           description: "사용자 ID"
         action:
-          type: string
-          enum: [ "JOIN", "LEAVE" ]
-          description: "참여(JOIN) 또는 나가기(LEAVE) 동작"
+          type: integer
+          format: int32
+          description: "참여 또는 동작"
       required:
         - roomId
         - userNum
@@ -127,31 +127,3 @@ components:
           description: "JWT가 포함된 초대 링크"
       required:
         - inviteLink
-
-    LeaveLiveCodingReqDTO:
-      type: object
-      properties:
-        roomId:
-          type: string
-          format: uuid
-          description: "라이브 코딩 방 ID (UUID 형식)"
-        userId:
-          type: integer
-          format: int64
-          description: "사용자 ID (userNum)"
-      required:
-        - roomId
-        - userId
-
-    LeaveLiveCodingResDTO:
-      type: object
-      properties:
-        message:
-          type: string
-          description: "처리 결과 메시지"
-        success:
-          type: boolean
-          description: "나가기 성공 여부"
-      required:
-        - message
-        - success
