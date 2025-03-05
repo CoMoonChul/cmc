@@ -31,9 +31,9 @@ public interface LiveCodingUseCase {
      * description : 라이브코딩방 삭제
      *
      * @param roomId - 방 id
-     * @return DeleteLcdCase - "SUCCESS" or "FAIL"
+     * @return boolean 성공 true 실패 false
      */
-    DeleteLcdCase deleteLiveCoding(UUID roomId) throws Exception;  // 방 삭제 (상태 메시지 반환)
+    boolean deleteLiveCoding(UUID roomId) throws Exception;  // 방 삭제 (상태 메시지 반환)
 
     /**
      * methodName : generateInviteLink

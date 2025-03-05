@@ -1,8 +1,8 @@
 package com.sw.cmc.application.service.lcd;
 
 import com.sw.cmc.adapter.out.lcd.persistence.LiveCodingRepository;
-import com.sw.cmc.application.port.in.lcd.DeleteLcdCase;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
+import com.sw.cmc.application.service.redis.RedisService;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -30,6 +31,11 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     private final LiveCodingRepository liveCodingRepository;  // LiveCodingRepository 주입
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisService redisService;
+
+    private static final String REDIS_LIVE_CODING_PREFIX = "live_coding:";  // Redis에 저장할 키 접두사
+
+
 
     private static final long INVITE_EXPIRATION = 10 * 60 * 1000; // 10분
 
@@ -72,13 +78,16 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     @Override
-    public DeleteLcdCase deleteLiveCoding(UUID roomId) {
-        boolean isDeleted = liveCodingRepository.deleteLiveCoding(roomId);
-        if (isDeleted) {
-            return DeleteLcdCase.SUCCESS;
-        } else {
-            return DeleteLcdCase.FAIL;
+    public boolean deleteLiveCoding(UUID roomId) {
+        String key = REDIS_LIVE_CODING_PREFIX + roomId;  // 방 정보 저장 키
+        Map<String, String> liveCodingMap = redisService.selectHash(key);  // 방 정보 조회
+        if (liveCodingMap == null || liveCodingMap.isEmpty()) {
+            throw new CmcException("LCD001");
         }
+
+        String hostIdKey = REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingMap.get("hostId");
+        redisService.delete(hostIdKey);  // 호스트 ID 기반 매핑 삭제
+        return redisService.delete(key);  // Redis에서 해당 key 삭제
     }
 
     @Override
