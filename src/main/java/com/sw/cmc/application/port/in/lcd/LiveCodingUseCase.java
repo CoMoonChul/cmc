@@ -64,11 +64,11 @@ public interface LiveCodingUseCase {
      *
      * @param roomId - 방 id
      * @param userNum - 유저 id
-     * @param action - JOIN / LEAVE
+     * @param action - JOIN(0) / LEAVE(1)
      * @return live coding domain
      * @throws Exception the exception
      */
-    LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, String action) throws Exception;
+    LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, int action) throws Exception;
 
 
 

@@ -89,7 +89,7 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
         LiveCodingDomain liveCodingDomain = liveCodingUseCase.updateLiveCoding(
                 updateLiveCodingReqDTO.getRoomId(),
                 updateLiveCodingReqDTO.getUserNum(),
-                updateLiveCodingReqDTO.getAction().name()
+                updateLiveCodingReqDTO.getAction()
         );
 
         // 응답 DTO 생성
