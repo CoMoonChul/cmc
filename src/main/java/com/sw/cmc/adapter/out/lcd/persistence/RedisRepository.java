@@ -1,4 +1,4 @@
-package com.sw.cmc.application.service.redis;
+package com.sw.cmc.adapter.out.lcd.persistence;
 
 import com.sw.cmc.application.port.in.redis.RedisUseCase;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
-public class RedisService implements RedisUseCase {
+public class RedisRepository implements RedisUseCase {
 
     private final StringRedisTemplate redisTemplate;
 
