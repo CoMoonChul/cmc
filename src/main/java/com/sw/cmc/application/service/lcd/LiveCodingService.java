@@ -54,8 +54,6 @@ public class LiveCodingService implements LiveCodingUseCase {
         Integer participantCount = 1;
 
         String link = this.generateInviteLink(roomId);
-        String sourceCode = "";
-
 
         // LiveCodingDomain 객체 생성
         LiveCodingDomain liveCodingDomain = new LiveCodingDomain(
@@ -64,8 +62,7 @@ public class LiveCodingService implements LiveCodingUseCase {
                 createdAt,  // 방 생성 시간
                 participantCount,  // 참가자 수
                 participants,  // 참가자 목록
-                link,   // 링크
-                sourceCode // 코드
+                link   // 링크
         );
 
         // Redis에 방 정보 저장

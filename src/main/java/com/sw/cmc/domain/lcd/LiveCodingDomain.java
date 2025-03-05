@@ -22,8 +22,7 @@ public class LiveCodingDomain  {
     private LocalDateTime createdAt;  // 생성 일시
     private Integer participantCount;  // 참가자 수
     private List<Long> participants;  // 참가자 ID 목록 (userNum 리스트)
-    private String link;    // 링크 
-    private String sourceCode;  // 소스코드
+    private String link;    // 링크
 
     // 참가자 추가 메서드
     public void joinParticipant(Long userNum) {

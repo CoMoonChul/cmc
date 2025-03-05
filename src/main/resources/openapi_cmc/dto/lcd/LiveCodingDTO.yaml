@@ -101,9 +101,6 @@ components:
         link:
           type: string
           description: "초대 링크"
-        sourceCode:
-          type: string
-          description: "소스코드"
       required:
         - roomId
         - hostId
@@ -111,8 +108,6 @@ components:
         - participantCount
         - participants
         - link
-        - sourceCode
-
 
     InviteLiveCodingReqDTO:
       type: object

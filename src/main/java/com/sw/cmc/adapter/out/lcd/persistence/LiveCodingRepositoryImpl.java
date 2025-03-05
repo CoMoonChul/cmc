@@ -37,7 +37,6 @@ public class LiveCodingRepositoryImpl implements LiveCodingRepository {
         liveCodingMap.put("participantCount", liveCodingDomain.getParticipantCount().toString());
         liveCodingMap.put("participants", String.join(",", liveCodingDomain.getParticipants().stream().map(String::valueOf).toArray(String[]::new)));
         liveCodingMap.put("link", liveCodingDomain.getLink());
-        liveCodingMap.put("sourceCode", liveCodingDomain.getSourceCode());
 
         // Redis에 방 정보 저장
         redisService.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
@@ -81,9 +80,8 @@ public class LiveCodingRepositoryImpl implements LiveCodingRepository {
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
         String link = liveCodingMap.get("link");
-        String sourceCode = liveCodingMap.get("sourceCode");
 
-        return new LiveCodingDomain(retrievedRoomId, hostId, createdAt, participantCount, participants, link, sourceCode);
+        return new LiveCodingDomain(retrievedRoomId, hostId, createdAt, participantCount, participants, link);
     }
 
     @Override
