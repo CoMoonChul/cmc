@@ -44,6 +44,13 @@ paths:
       description: 리뷰 리스트 조회
       operationId: selectReviewList
       parameters:
+        - name: condition
+          in: query
+          description: 조회 조건(0:최신순, 1:인기순, 2:로그인회원작성, 3:로그인회원답변, 4:로그인회원좋아요)
+          required: true
+          schema:
+            default: 0
+            type: integer
         - name: pageNumber
           in: query
           description: 페이지 번호 (0부터 시작)
@@ -58,42 +65,6 @@ paths:
           schema:
             type: integer
             default: 10
-        - name: sort
-          in: query
-          description:
-            정렬 기준 (createdAt, likes)
-          required: false
-          schema:
-            type: string
-            enum: [createdAt, updatedAt, title]
-            default: "createdAt"
-        - name: order
-          in: query
-          description: 정렬 순서 (오름/ 내림)
-          required: false
-          schema:
-            type: string
-            enum: [ asc, desc ]
-            default: "desc"
-        - name: keyword
-          in: query
-          description: 검색 키워드
-          required: false
-          schema:
-            type: string
-#        - name: filterType
-#          in: query
-#          description: 사용자 관련 필터 타입 (작성/답변/좋아요한 리뷰)
-#          required: false
-#          schema:
-#            type: string
-#            enum: [ written, replied, liked ]
-#        - name: userNum
-#          in: query
-#          description: 사용자 식별자
-#          required: false
-#          schema:
-#            type: integer
       responses:
         '200':
           description: 리뷰 리스트 조회 성공

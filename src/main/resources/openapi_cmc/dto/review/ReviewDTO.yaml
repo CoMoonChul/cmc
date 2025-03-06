@@ -80,22 +80,29 @@ components:
     SelectReviewListResDTO:
       type: object
       properties:
+        pageNumber:
+          type: integer
+          description: 페이지 번호
+        pageSize:
+          type: integer
+          description: 페이지 크기
+        totalElements:
+          type: integer
+          description: 전체 리뷰 개수
+        totalPages:
+          type: integer
+          description: 전체 페이지 개수
         reviewList:
           type: array
           items:
-              $ref: '#/components/schemas/Review'
-        pageable:
-          type: object
-          properties:
-            pageNumber:
-              type: integer
-              description: 현재 페이지 번호
-            pageSize:
-              type: integer
-              description: 페이지 크기
-            sort:
-              type: string
-              description: 정렬기준
+              $ref: '#/components/schemas/SelectReviewItemResDTO'
+
+    SelectReviewItemResDTO:
+      type: object
+      properties:
+        title:
+          type: string
+
     # 리뷰 생성 요청 DTO
     CreateReviewReqDTO:
       type: object
