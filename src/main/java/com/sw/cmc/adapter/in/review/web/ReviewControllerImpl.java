@@ -1,7 +1,7 @@
-package com.sw.cmc.adapter.in.review;
+package com.sw.cmc.adapter.in.review.web;
 
-import com.sw.cmc.adapter.in.review.dto.*;
-import com.sw.cmc.adapter.in.review.web.ReviewControllerApi;
+import com.sw.cmc.adapter.in.review.web.dto.*;
+import com.sw.cmc.adapter.in.review.web.web.ReviewControllerApi;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
