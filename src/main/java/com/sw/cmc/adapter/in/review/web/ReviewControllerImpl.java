@@ -3,6 +3,7 @@ package com.sw.cmc.adapter.in.review.web;
 import com.sw.cmc.adapter.in.review.dto.*;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.domain.review.ReviewDomain;
+import com.sw.cmc.domain.review.ReviewListDomain;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,8 @@ public class ReviewControllerImpl implements ReviewControllerApi {
 
     @Override
     public ResponseEntity<SelectReviewListResDTO> selectReviewList(Integer condition, Integer pageNumber, Integer pageSize) throws Exception {
-//        ReviewListDomain result = reviewUseCase.selectReviewList(page, size, sort, order, keyword);
-//        return ResponseEntity.ok(modelMapper.map(result, SelectReviewListResDTO.class));
-        return null;
+        ReviewListDomain result = reviewUseCase.selectReviewList(condition, pageNumber, pageSize);
+        return ResponseEntity.ok(modelMapper.map(result, SelectReviewListResDTO.class));
     }
 
     @Override

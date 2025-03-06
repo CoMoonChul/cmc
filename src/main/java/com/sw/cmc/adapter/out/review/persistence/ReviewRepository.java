@@ -1,6 +1,7 @@
 package com.sw.cmc.adapter.out.review.persistence;
 
 import com.sw.cmc.domain.review.ReviewDetailVo;
+import com.sw.cmc.domain.review.ReviewListVo;
 import com.sw.cmc.entity.Review;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
@@ -20,16 +21,6 @@ import java.util.Optional;
  */
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-
-    /**
-     * 제목 또는 내용에 특정 키워드가 포함된 리뷰 검색
-     * @param titleKeyword 검색할 제목 키워드
-     * @param contentKeyword 검색할 내용 키워드
-     * @param pageable 페이징 정보
-     * @return 검색된 리뷰 목록 (페이징)
-     */
-    Page<Review> findByTitleContainingOrContentContaining(String titleKeyword, String contentKeyword, Pageable pageable);
-
     /**
      * methodName : findReviewDetail
      * author : IM HYUN WOO
@@ -46,4 +37,99 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "LEFT JOIN r.user u " +
             "WHERE r.reviewId = :reviewId")
     Optional<ReviewDetailVo> findReviewDetail(@Param("reviewId") Long reviewId);
+
+
+    /**
+     * methodName : findAllReviews
+     * author : IM HYUN WOO
+     * description : 리뷰 전체 조회
+     *
+     * @param pageable Pageable
+     * @return page
+     */
+    @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
+            "r, u.username, " +
+            "(SELECT COUNT(*) FROM ReviewLike rl WHERE rl.id.reviewId = r.reviewId), " +
+            "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) )" +
+            "FROM Review r " +
+            "LEFT JOIN r.user u")
+    Page<ReviewListVo> findAllReviews(Pageable pageable);
+
+
+    /**
+     * methodName : findAllOrderByLikeCountDesc
+     * author : IM HYUN WOO
+     * description : 좋아요 많은순
+     *
+     * @param pageable Pageable
+     * @return page
+     */
+    @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
+            "r, " +
+            "(SELECT u.username FROM User u WHERE u.userNum = r.user.userNum), " +
+            "COUNT(rl.id.reviewId), " +
+            "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) )" +
+            "FROM Review r " +
+            "LEFT JOIN ReviewLike rl ON rl.id.reviewId = r.reviewId " +
+            "GROUP BY r.reviewId " +
+            "ORDER BY COUNT(rl.id.reviewId) DESC")
+    Page<ReviewListVo> findAllOrderByLikeCountDesc(Pageable pageable);
+
+    /**
+     * methodName : findMyReviews
+     * author : IM HYUN WOO
+     * description : 본인이 작성한 리뷰
+     *
+     * @param userNum Long
+     * @param pageable Pageable
+     * @return page
+     */
+    @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
+            "r," +
+            "(SELECT u.username FROM User u WHERE r.user.userNum = u.userNum), " +
+            "(SELECT COUNT(*) FROM ReviewLike rl WHERE rl.id.reviewId = r.reviewId), " +
+            "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) )" +
+            "FROM Review r " +
+            "WHERE r.user.userNum = :userNum")
+    Page<ReviewListVo> findMyReviews(Long userNum, Pageable pageable);
+
+    /**
+     * methodName : findMyCommentingReviews
+     * author : IM HYUN WOO
+     * description : 본인이 댓글단 리뷰
+     *
+     * @param userNum Long
+     * @param pageable Pageable
+     * @return page
+     */
+    @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
+            "r, u.username, " +
+            "(SELECT COUNT(*) FROM ReviewLike rl WHERE rl.id.reviewId = r.reviewId), " +
+            "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) )" +
+            "FROM Review r " +
+            "JOIN Comment c ON c.targetId = r.reviewId AND c.commentTarget = 0 " +
+            "LEFT JOIN r.user u " +
+            "WHERE c.user.userNum = :userNum")
+    Page<ReviewListVo> findMyCommentingReviews(Long userNum, Pageable pageable);
+
+    /**
+     * methodName : findMyLikeReviews
+     * author : IM HYUN WOO
+     * description : 본인이 좋아요한 리뷰
+     *
+     * @param userNum Long
+     * @param pageable Pageable
+     * @return page
+     */
+    @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
+            "r, " +
+            "u.username, " +
+            "(SELECT COUNT(*) FROM ReviewLike rl WHERE rl.id.reviewId = r.reviewId), " +
+            "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) ) " +
+            "FROM Review r " +
+            "JOIN ReviewLike rl ON rl.id.reviewId = r.reviewId " +
+            "JOIN r.user u " +
+            "WHERE rl.user.userNum = :userNum " +
+            "GROUP BY r")
+    Page<ReviewListVo> findMyLikeReviews(Long userNum, Pageable pageable);
 }
