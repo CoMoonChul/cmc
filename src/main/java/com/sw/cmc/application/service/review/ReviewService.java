@@ -7,6 +7,7 @@ import com.sw.cmc.adapter.out.view.persistence.ReviewViewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
+import com.sw.cmc.domain.review.ReviewDetailVo;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
 import com.sw.cmc.entity.Review;
@@ -15,7 +16,6 @@ import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +37,6 @@ import java.util.Objects;
 public class ReviewService implements ReviewUseCase {
 
     private final EntityManager entityManager;
-    private final ModelMapper modelMapper;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
     private final ReviewViewRepository reviewViewRepository;
@@ -47,17 +46,19 @@ public class ReviewService implements ReviewUseCase {
     @Override
     @Transactional
     public ReviewDomain selectReview(Long reviewId) throws Exception {
-        Review found = reviewRepository.findById(reviewId)
+        ReviewDetailVo found = reviewRepository.findReviewDetail(reviewId)
                 .orElseThrow(() -> new CmcException("REVIEW001"));
-        // 조회수 조회 및 업데이트
-        ReviewView reviewView = reviewViewRepository.findById(reviewId)
-                .orElseThrow(() -> new CmcException("REVIEW001"));
-
-        // 좋아요 조회
-        Long reviewLike = reviewLikeRepository.countById_ReviewId(reviewId);
-        reviewLike = Objects.requireNonNullElse(reviewLike, 0L); // null이면 0으로 설정 (조회수 기본값 0 설정 보류)
-
-        return convertEntityToDomain(found);
+        return ReviewDomain.builder()
+                .reviewId(found.getReview().getReviewId())
+                .username(found.getUsername())
+                .title(found.getReview().getTitle())
+                .content(found.getReview().getContent())
+                .codeContent(found.getReview().getCodeContent())
+                .viewCount(found.getViewCount())
+                .likeCount(found.getLikeCount())
+                .createdAt(found.getReview().getCreatedAt())
+                .updatedAt(found.getReview().getUpdatedAt())
+                .build();
     }
 
     @Override

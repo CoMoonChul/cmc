@@ -46,7 +46,6 @@ public class BattleService implements BattleUseCase {
     @Override
     public BattleDomain selectBattle(Long id) throws Exception {
         BattleDetailVo found = battleRepository.findBattleDetail(id);
-
         return BattleDomain.builder()
                 .battleId(found.getBattle().getBattleId())
                 .title(found.getBattle().getTitle())

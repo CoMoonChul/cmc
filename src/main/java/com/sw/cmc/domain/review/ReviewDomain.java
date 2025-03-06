@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 public class ReviewDomain {
     private Long reviewId;
     private Long userNum;
+    private String username;
     private String title;
     private String content;
     private String createdAt;
