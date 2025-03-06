@@ -100,6 +100,17 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
         return ResponseEntity.ok(response);  // 200 OK 응답 반환
     }
 
+    @Override
+    public ResponseEntity<ExistLiveCodingResDTO> existLiveCoding(Long hostId) throws Exception {
+        // 라이브 코딩 방 존재 여부 확인
+        boolean exists = liveCodingUseCase.existsByHostId(hostId);
+
+        // 응답 DTO 생성
+        ExistLiveCodingResDTO response = new ExistLiveCodingResDTO();
+        response.setExists(exists);
+
+        return ResponseEntity.ok(response);  // 200 OK 응답 반환
+    }
 
 }
 

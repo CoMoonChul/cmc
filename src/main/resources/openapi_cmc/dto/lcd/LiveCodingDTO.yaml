@@ -127,3 +127,13 @@ components:
           description: "JWT가 포함된 초대 링크"
       required:
         - inviteLink
+
+    ExistLiveCodingResDTO:
+      type: object
+      properties:
+        exists:
+          type: boolean
+          description: "방이 존재하는지 여부"
+          example: true
+      required:
+        - exists
