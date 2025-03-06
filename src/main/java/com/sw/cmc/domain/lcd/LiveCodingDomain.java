@@ -25,13 +25,19 @@ public class LiveCodingDomain  {
     private List<Long> participants;  // 참가자 ID 목록 (userNum 리스트)
     private String link;    // 링크
 
+    // 최대 참가 인원
+    private static final int MAX_PARTICIPANT_COUNT = 3;
+
     // 참가자 추가 메서드
     public void joinParticipant(Long userNum) {
         if (participants.contains(userNum)) {
             throw new CmcException("LCD005");
         }
+        if (participants.size() >= MAX_PARTICIPANT_COUNT) {
+            throw new CmcException("LCD007");
+        }
         participants.add(userNum);
-        this.participantCount = participants.size();
+        this.participantCount = participants.size(); // 추가 후 업데이트
     }
 
     // 참가자 제거 메서드

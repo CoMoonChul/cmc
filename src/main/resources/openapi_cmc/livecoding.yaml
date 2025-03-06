@@ -125,3 +125,28 @@ paths:
                 $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/InviteLiveCodingResDTO"
         "400":
           description: "잘못된 요청 (roomId 없음)"
+
+  /existLiveCoding:
+    get:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 방 생성여부 조회"
+      operationId: "existLiveCoding"
+      description: "hostId 기준으로 방 생성됬는지 확인."
+      parameters:
+        - name: hostId
+          in: query
+          description: "host ID"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "초대 링크 생성 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/ExistLiveCodingResDTO"
+        "400":
+          description: "잘못된 요청"
