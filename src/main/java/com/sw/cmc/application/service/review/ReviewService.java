@@ -10,12 +10,14 @@ import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.review.ReviewDetailVo;
 import com.sw.cmc.domain.review.ReviewDomain;
 import com.sw.cmc.domain.review.ReviewListDomain;
+import com.sw.cmc.domain.review.ReviewListVo;
 import com.sw.cmc.entity.Review;
 import com.sw.cmc.entity.ReviewView;
 import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +43,7 @@ public class ReviewService implements ReviewUseCase {
     private final CommentRepository commentRepository;
     private final ReviewViewRepository reviewViewRepository;
     private final UserUtil userUtil;
+    private final ModelMapper modelMapper;
     private final ReviewLikeRepository reviewLikeRepository;
 
     @Override
@@ -62,30 +65,53 @@ public class ReviewService implements ReviewUseCase {
     }
 
     @Override
-    public ReviewListDomain selectReviewList(Integer page, Integer size, String sort, String order, String keyword) throws Exception {
-        // 기본값 설정 제거 (review.yaml에서 설정된 기본값을 사용)
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(order), sort));
+    public ReviewListDomain selectReviewList(Integer condition, Integer page, Integer size) throws Exception {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<ReviewListVo> res = switch (condition) {
+            // 최신순
+            case 0 -> reviewRepository.findAllReviews(pageable);
+            // 좋아요 많은순
+            case 1 -> reviewRepository.findAllOrderByLikeCountDesc(pageable);
+            // 본인 작성
+            case 2 -> {
+                if (userUtil.getAuthenticatedUserNum() == null) {
+                    throw new CmcException("REVIEW010");
+                }
+                yield reviewRepository.findMyReviews(userUtil.getAuthenticatedUserNum(), pageable);
+            }
+            // 본인 댓글
+            case 3 -> {
+                if (userUtil.getAuthenticatedUserNum() == null) {
+                    throw new CmcException("REVIEW010");
+                }
+                yield reviewRepository.findMyCommentingReviews(userUtil.getAuthenticatedUserNum(), pageable);
+            }
+            // 본인 좋아요
+            case 4 -> {
+                if (userUtil.getAuthenticatedUserNum() == null) {
+                    throw new CmcException("REVIEW010");
+                }
+                yield reviewRepository.findMyLikeReviews(userUtil.getAuthenticatedUserNum(), pageable);
+            }
+            default -> throw new CmcException("REVIEW009");
+        };
 
-        // 리뷰 목록 조회 (검색어 포함)
-        Page<Review> reviews;
-        if (keyword != null && !keyword.isEmpty()) {
-            reviews = reviewRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
-        } else {
-            reviews = reviewRepository.findAll(pageable);
-        }
-
-        // 결과를 ReviewDomain 객체로 변환
-        List<ReviewDomain> reviewList = reviews.getContent().stream()
-                .map(this::convertEntityToDomain)
-                .toList();
-
-        // ReviewListDomain 객체 반환
+        List<ReviewDomain> list = res.getContent().stream()
+                .map(s -> ReviewDomain.builder()
+                        .reviewId(s.getReview().getReviewId())
+                        .title(s.getReview().getTitle())
+                        .content(s.getReview().getContent())
+                        .createdAt(s.getReview().getCreatedAt())
+                        .username(s.getUsername())
+                        .likeCount(s.getLikeCount())
+                        .viewCount(s.getViewCount())
+                        .build()).toList();
         return ReviewListDomain.builder()
-                .pageable(PageRequest.of(reviews.getPageable().getPageNumber(),
-                                reviews.getPageable().getPageSize(),
-                                Sort.by(Sort.Direction.fromString(order), sort))
-                )
-                .reviewList(reviewList)
+                .pageNumber(res.getPageable().getPageNumber())
+                .pageSize(res.getPageable().getPageSize())
+                .totalElements(res.getTotalElements())
+                .totalPages(res.getTotalPages())
+                .reviewList(list)
                 .build();
     }
 

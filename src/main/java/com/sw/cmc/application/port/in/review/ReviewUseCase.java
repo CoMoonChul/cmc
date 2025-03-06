@@ -26,21 +26,13 @@ public interface ReviewUseCase {
      * author : Park Jong Il
      * description : 리뷰 리스트 조회
      *
-     * @param page : 페이지
-     * @param size : 페이지 사이즈
-     * @param sort : 정렬
-     * @param order : 내림차순, 오름차순 정렬
-     * @param keyword : 검색어
+     * @param condition Integer
+     * @param pageNumber Integer
+     * @param pageSize Integer
      * @return review list domain
      * @throws Exception the exception
      */
-    ReviewListDomain selectReviewList(
-            Integer page,
-            Integer size,
-            String sort,
-            String order,
-            String keyword
-    ) throws Exception;
+    ReviewListDomain selectReviewList(Integer condition, Integer pageNumber, Integer pageSize)throws Exception;
 
     /**
      * methodName : createReview

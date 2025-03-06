@@ -100,8 +100,30 @@ components:
     SelectReviewItemResDTO:
       type: object
       properties:
+        review_id:
+          type: integer
+          format: int64
+          description: 리뷰 ID
         title:
           type: string
+          description: 리뷰 제목
+        view_count:
+          type: integer
+          format: int64
+          description: 리뷰 조회수
+        like_count:
+          type: integer
+          format: int64
+          description: 리뷰 좋아요 갯수
+        content:
+          type: string
+          description: 리뷰 내용
+        username:
+          type: string
+          description: 회원명
+        created_at:
+          type: string
+          description: 생성 일시
 
     # 리뷰 생성 요청 DTO
     CreateReviewReqDTO:
