@@ -43,6 +43,10 @@ components:
           type: integer
           format: int64
           description: 배틀 조회수
+        voteValue:
+          type: integer
+          format: int32
+          description: 투표내역 존재 시 투표값 반환
         createdAt:
           type: string
           description: 생성 일시

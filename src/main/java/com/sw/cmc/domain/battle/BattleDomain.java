@@ -32,9 +32,10 @@ public class BattleDomain {
     private Long rightVote;
     private Long userNum;
     private String username;
+    private Long viewCount;
+    private Integer voteValue;
     private String createdAt;
     private String updatedAt;
-    private Long viewCount;
 
     /**
      * methodName : validateCreateBattle

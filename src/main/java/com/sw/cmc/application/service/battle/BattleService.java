@@ -45,8 +45,8 @@ public class BattleService implements BattleUseCase {
 
     @Override
     public BattleDomain selectBattle(Long id) {
-        BattleDetailVo found = battleRepository.findBattleDetail(id);
-        return BattleDomain.builder()
+        BattleDetailVo found = battleRepository.findBattleDetail(id).orElseThrow(() -> new CmcException("BATTLE001"));
+        BattleDomain.BattleDomainBuilder builder = BattleDomain.builder()
                 .battleId(found.getBattle().getBattleId())
                 .title(found.getBattle().getTitle())
                 .content(found.getBattle().getContent())
@@ -60,8 +60,15 @@ public class BattleService implements BattleUseCase {
                 .updatedAt(found.getBattle().getUpdatedAt())
                 .leftVote(found.getLeftVote())
                 .rightVote(found.getRightVote())
-                .viewCount(found.getViewCount())
-                .build();
+                .viewCount(found.getViewCount());
+
+        Long userNum = userUtil.getAuthenticatedUserNum();
+        if (userNum != null) {
+            voteRepository.findByUser_UserNumAndBattleId(userNum, found.getBattle().getBattleId())
+                    .ifPresent(vote -> builder.voteValue(vote.getVoteValue()));
+        }
+
+        return builder.build();
     }
 
     @Override
@@ -74,14 +81,14 @@ public class BattleService implements BattleUseCase {
             case 1 -> battleRepository.findAllOrderByVoteCountDesc(pageable);
             // 본인 작성
             case 2 -> {
-                if (userUtil.getAuthenticatedUserNum() == null) {
+                if (Objects.isNull(userUtil.getAuthenticatedUserNum())) {
                     throw new CmcException("BATTLE011");
                 }
                 yield battleRepository.findMyBattles(userUtil.getAuthenticatedUserNum(), pageable);
             }
             // 본인 참여
             case 3 -> {
-                if (userUtil.getAuthenticatedUserNum() == null) {
+                if (Objects.isNull(userUtil.getAuthenticatedUserNum())) {
                     throw new CmcException("BATTLE011");
                 }
                 yield battleRepository.findMyVotedBattles(userUtil.getAuthenticatedUserNum(), pageable);
