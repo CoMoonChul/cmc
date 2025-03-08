@@ -81,6 +81,8 @@ CREATE TABLE IF NOT EXISTS battle (
     content VARCHAR(1500) NOT NULL,
     code_content_left MEDIUMTEXT NOT NULL,
     code_content_right MEDIUMTEXT NOT NULL,
+    code_type_left VARCHAR(20) NOT NULL,
+    code_type_right VARCHAR(20) NOT NULL,
     end_time VARCHAR(15),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

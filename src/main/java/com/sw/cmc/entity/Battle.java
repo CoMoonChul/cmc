@@ -32,6 +32,10 @@ public class Battle {
 
     private String codeContentRight;
 
+    private String codeTypeLeft;
+
+    private String codeTypeRight;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
     private User user;

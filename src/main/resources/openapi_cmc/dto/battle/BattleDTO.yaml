@@ -22,6 +22,12 @@ components:
         codeContentRight:
           type: string
           description: 오른쪽 코드 내용
+        codeTypeLeft:
+          type: string
+          description: 왼쪽 코드 언어
+        codeTypeRight:
+          type: string
+          description: 오른쪽 코드 언어
         leftVote:
           type: integer
           format: int64

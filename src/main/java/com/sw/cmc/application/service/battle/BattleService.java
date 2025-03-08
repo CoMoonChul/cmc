@@ -44,7 +44,7 @@ public class BattleService implements BattleUseCase {
     private final UserUtil userUtil;
 
     @Override
-    public BattleDomain selectBattle(Long id) throws Exception {
+    public BattleDomain selectBattle(Long id) {
         BattleDetailVo found = battleRepository.findBattleDetail(id);
         return BattleDomain.builder()
                 .battleId(found.getBattle().getBattleId())
@@ -53,6 +53,8 @@ public class BattleService implements BattleUseCase {
                 .endTime(found.getBattle().getEndTime())
                 .codeContentLeft(found.getBattle().getCodeContentLeft())
                 .codeContentRight(found.getBattle().getCodeContentRight())
+                .codeTypeLeft(found.getBattle().getCodeTypeLeft())
+                .codeTypeRight(found.getBattle().getCodeTypeRight())
                 .username(found.getUsername())
                 .createdAt(found.getBattle().getCreatedAt())
                 .updatedAt(found.getBattle().getUpdatedAt())
@@ -63,7 +65,7 @@ public class BattleService implements BattleUseCase {
     }
 
     @Override
-    public BattleListDomain selectBattleList(Integer condition, Integer page, Integer size) throws Exception {
+    public BattleListDomain selectBattleList(Integer condition, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Object[]> res = switch (condition) {
             // 최신순
@@ -129,7 +131,7 @@ public class BattleService implements BattleUseCase {
 
     @Override
     @Transactional
-    public BattleDomain createBattle(BattleDomain battleDomain) throws Exception {
+    public BattleDomain createBattle(BattleDomain battleDomain) {
         battleDomain.validateCreateBattle();
         User savingUser = new User();
         savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
@@ -158,7 +160,7 @@ public class BattleService implements BattleUseCase {
 
     @Override
     @Transactional
-    public BattleDomain updateBattle(BattleDomain battleDomain) throws Exception {
+    public BattleDomain updateBattle(BattleDomain battleDomain) {
         battleDomain.validateUpdateBattle();
         Battle found = battleRepository.findById(battleDomain.getBattleId())
                 .orElseThrow(() -> new CmcException("BATTLE001"));
@@ -195,7 +197,7 @@ public class BattleService implements BattleUseCase {
 
     @Override
     @Transactional
-    public BattleVoteDomain updateVoteBattle(BattleVoteDomain battleVoteDomain) throws Exception {
+    public BattleVoteDomain updateVoteBattle(BattleVoteDomain battleVoteDomain) {
         battleVoteDomain.validateUpdateBattleVote();
         Vote vote = voteRepository.findByUser_UserNumAndBattleId(userUtil.getAuthenticatedUserNum(), battleVoteDomain.getBattleId())
             .map(found -> {
@@ -220,7 +222,7 @@ public class BattleService implements BattleUseCase {
 
     @Override
     @Transactional
-    public BattleVoteDomain deleteVoteBattle(BattleVoteDomain battleVoteDomain) throws Exception {
+    public BattleVoteDomain deleteVoteBattle(BattleVoteDomain battleVoteDomain) {
         Vote found = voteRepository.findById(battleVoteDomain.getBattleId())
                 .orElseThrow(() -> new CmcException("BATTLE001"));
         if (!Objects.equals(found.getUser().getUserNum(), userUtil.getAuthenticatedUserNum())) {
@@ -233,7 +235,7 @@ public class BattleService implements BattleUseCase {
 
     @Override
     @Transactional
-    public BattleDomain deleteBattle(BattleDomain battleDomain) throws Exception {
+    public BattleDomain deleteBattle(BattleDomain battleDomain) {
         Battle found = battleRepository.findById(battleDomain.getBattleId())
                 .orElseThrow(() -> new CmcException("BATTLE001"));
 
