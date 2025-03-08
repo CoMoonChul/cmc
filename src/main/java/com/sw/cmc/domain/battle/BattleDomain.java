@@ -26,13 +26,16 @@ public class BattleDomain {
     private String endTime;
     private String codeContentLeft;
     private String codeContentRight;
+    private String codeTypeLeft;
+    private String codeTypeRight;
     private Long leftVote;
     private Long rightVote;
     private Long userNum;
     private String username;
+    private Long viewCount;
+    private Integer voteValue;
     private String createdAt;
     private String updatedAt;
-    private Long viewCount;
 
     /**
      * methodName : validateCreateBattle

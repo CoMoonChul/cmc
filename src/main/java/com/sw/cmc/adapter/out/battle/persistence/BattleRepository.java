@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * packageName    : com.sw.cmc.adapter.out.battle.persistence
  * fileName       : BattleRepository
@@ -27,7 +29,7 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
             "FROM Battle b " +
             "LEFT JOIN b.user u " +
             "WHERE b.battleId = :battleId")
-    BattleDetailVo findBattleDetail(@Param("battleId") Long battleId);
+    Optional<BattleDetailVo> findBattleDetail(@Param("battleId") Long battleId);
 
     /**
      * methodName : findAllWithVoteCounts

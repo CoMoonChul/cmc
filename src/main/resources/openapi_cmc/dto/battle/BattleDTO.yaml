@@ -22,6 +22,12 @@ components:
         codeContentRight:
           type: string
           description: 오른쪽 코드 내용
+        codeTypeLeft:
+          type: string
+          description: 왼쪽 코드 언어
+        codeTypeRight:
+          type: string
+          description: 오른쪽 코드 언어
         leftVote:
           type: integer
           format: int64
@@ -33,10 +39,18 @@ components:
         username:
           type: string
           description: 회원명
-        created_at:
+        viewCount:
+          type: integer
+          format: int64
+          description: 배틀 조회수
+        voteValue:
+          type: integer
+          format: int32
+          description: 투표내역 존재 시 투표값 반환
+        createdAt:
           type: string
           description: 생성 일시
-        updated_at:
+        updatedAt:
           type: string
           description: 최종 수정 일시
 
