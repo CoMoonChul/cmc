@@ -17,9 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.sw.cmc.domain.user.UserDomain.*;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * packageName    : com.sw.cmc.application.service
@@ -47,7 +43,6 @@ public class LoginService implements LoginUseCase {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final ApplicationEventPublisher eventPublisher;
-    private final AuthenticationManager authenticationManager;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Override
@@ -82,14 +77,15 @@ public class LoginService implements LoginUseCase {
     @Override
     @Transactional
     public UserDomain login(final UserDomain userDomain) throws Exception {
-        // 사용자 인증
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userDomain.getUserId(), userDomain.getPassword())
-        );
-
         // 회원 조회
         final User user = loginRepository.findByUserId(userDomain.getUserId())
                 .orElseThrow(() -> new CmcException("USER001"));
+
+        // 비밀번호 검사
+        boolean isMatch = passwordEncoder.matches(userDomain.getPassword(), user.getPassword());
+        if (!isMatch) {
+            throw new CmcException("USER029");
+        }
 
         // 토큰 생성
         final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUserId());

@@ -9,8 +9,6 @@ import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,10 +53,11 @@ public class UserService implements UserUseCase {
         final User user = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
                 .orElseThrow(() -> new CmcException("USER001"));
 
-        // 사용자 인증
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUserId(), userDomain.getPassword())
-        );
+        // 비밀번호 검사
+        boolean isMatch = passwordEncoder.matches(userDomain.getPassword(), user.getPassword());
+        if (!isMatch) {
+            throw new CmcException("USER029");
+        }
 
         // 회원 삭제
         userRepository.deleteByUserNum(userUtil.getAuthenticatedUserNum());
