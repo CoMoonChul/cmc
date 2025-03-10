@@ -104,24 +104,10 @@ public class LoginControllerImpl implements LoginControllerApi {
 
     @PostMapping("/user/refresh")
     public ResponseEntity<RefreshResDTO> refresh(HttpServletRequest request) throws Exception {
-        // HttpOnly 쿠키에서 refreshToken 가져오기
-        String refreshToken = null;
-        if (request.getCookies() != null) {
-            for (var cookie : request.getCookies()) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    refreshToken = cookie.getValue();
-                }
-            }
-        }
-
-        if (refreshToken == null) {
-            return ResponseEntity.status(401).body(new RefreshResDTO().accessToken(null));
-        }
-
-        // 새 AccessToken 발급
+        // 새로운 AccessToken 발급
         String newAccessToken = loginUseCase.refresh(request);
 
-        // ✅ 새 AccessToken을 헤더에 추가
+        // 새로운 AccessToken 헤더에 추가
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken)
                 .body(new RefreshResDTO().accessToken(newAccessToken));

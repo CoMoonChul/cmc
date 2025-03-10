@@ -5,7 +5,6 @@ import com.sw.cmc.application.port.in.group.GroupUseCase;
 import com.sw.cmc.domain.group.GroupDomain;
 import com.sw.cmc.entity.GroupMember;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +22,6 @@ import java.util.List;
 public class GroupControllerImpl implements GroupControllerApi {
 
     private final GroupUseCase groupUseCase;
-    private final ModelMapper modelMapper;
 
     @Override
     public ResponseEntity<CreateResDTO> create(CreateReqDTO createReqDTO) throws Exception {

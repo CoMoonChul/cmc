@@ -14,7 +14,6 @@ import com.sw.cmc.entity.User;
 import com.sw.cmc.event.notice.SendEmailGroupInviteEvent;
 import com.sw.cmc.event.notice.SendNotiInAppEvent;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,6 @@ public class GroupService implements GroupUseCase {
 
     private final UserUtil userUtil;
     private final MessageUtil messageUtil;
-    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final ApplicationEventPublisher eventPublisher;
@@ -88,8 +86,13 @@ public class GroupService implements GroupUseCase {
     @Override
     @Transactional
     public String delete(GroupDomain groupDomain) throws Exception {
-        final Group group = groupRepository.findByGroupId(groupDomain.getGroupId())
+        final GroupMember groupMaster = groupMemberRepository.findByGroup_GroupIdAndUser_UserNum(groupDomain.getGroupId(), userUtil.getAuthenticatedUserNum())
                 .orElseThrow(() -> new CmcException("USER023"));
+
+        // 마스터 권한 확인
+        if (!groupMaster.getGroupRole().equals("MASTER")) {
+            throw new CmcException("USER028");
+        }
 
         groupRepository.deleteByGroupId(groupDomain.getGroupId());
 
@@ -102,10 +105,8 @@ public class GroupService implements GroupUseCase {
         final User invitee = userRepository.findByUsername(groupDomain.getUsername())
                 .orElseThrow(() -> new CmcException("USER001"));
 
-        int memberCount = groupMemberRepository.countByGroup_GroupId(groupDomain.getGroupId());
-
         // 유효성 검사
-        if (memberCount > 4) {
+        if (groupMemberRepository.findByGroup_GroupId(groupDomain.getGroupId()).size() > 4) {
             throw new CmcException("USER026");
         }
 
@@ -135,9 +136,6 @@ public class GroupService implements GroupUseCase {
 
     @Override
     public String expel(GroupDomain groupDomain) throws Exception {
-        final Group group = groupRepository.findByGroupId(groupDomain.getGroupId())
-                .orElseThrow(() -> new CmcException("USER023"));
-
         final GroupMember groupMember = groupMemberRepository.findByGroup_GroupIdAndUser_UserNum(groupDomain.getGroupId(), groupDomain.getUserNum())
                 .orElseThrow(() -> new CmcException("USER023"));
 
