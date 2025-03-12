@@ -20,4 +20,6 @@ public interface LoginUseCase {
     String logout(HttpServletRequest request) throws Exception;
 
     String findAccount(UserDomain userDomain) throws Exception;
+
+    String tempRefresh(String refreshToken) throws Exception;
 }

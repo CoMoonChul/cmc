@@ -140,6 +140,27 @@ paths:
               schema:
                 $ref: "./dto/user/LoginDTO.yaml#/components/schemas/RefreshResDTO"
 
+  /user/tempRefresh:
+    post:
+      tags:
+        - login-controller
+      summary: "API_USER_XXXX AccessToken 재발급(임시)"
+      description: AccessToken 재발급 API(임시)
+      operationId: "tempRefresh"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/user/LoginDTO.yaml#/components/schemas/RefreshReqDTO"
+      responses:
+        "200":
+          description: "AccessToken 재발급 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/user/LoginDTO.yaml#/components/schemas/RefreshResDTO"
+
   /user/logout:
     post:
       tags:

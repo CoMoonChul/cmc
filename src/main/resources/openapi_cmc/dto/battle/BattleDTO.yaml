@@ -123,7 +123,7 @@ components:
     CreateBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -146,7 +146,7 @@ components:
     UpdateBattleReqDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -169,7 +169,7 @@ components:
     UpdateBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -192,11 +192,11 @@ components:
     UpdateVoteBattleReqDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
-        vote_value:
+        voteValue:
           type: integer
           format: int32
           description: 투표값
@@ -205,7 +205,7 @@ components:
     UpdateVoteBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -218,7 +218,7 @@ components:
     DeleteVoteBattleReqDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -226,7 +226,7 @@ components:
     DeleteVoteBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -234,7 +234,7 @@ components:
     DeleteBattleReqDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -242,7 +242,7 @@ components:
     DeleteBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
