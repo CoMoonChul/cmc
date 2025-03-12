@@ -54,6 +54,14 @@ components:
           description: RefreshToken
       description: 로그인 응답
 
+    RefreshReqDTO:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          description: refreshToken
+      description: 임시 사용 dto
+
     # API_USER_0005 AccessToken 재발급
     RefreshResDTO:
       type: object

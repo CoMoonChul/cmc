@@ -97,6 +97,7 @@ security:
     - /user/tempLogin
     - /user/login
     - /user/refresh
+    - /user/tempRefresh
     - /user/findAccount
 
     # Comment

@@ -21,9 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.sw.cmc.domain.user.UserDomain.*;
-
 import java.util.Objects;
+
+import static com.sw.cmc.domain.user.UserDomain.createRandomPassword;
+import static com.sw.cmc.domain.user.UserDomain.validateEmail;
 
 /**
  * packageName    : com.sw.cmc.application.service
@@ -118,6 +119,25 @@ public class LoginService implements LoginUseCase {
 
         // 회원 번호
         Long userNum = jwtTokenProvider.getClaims(refreshToken).get("userNum", Long.class);
+
+        // 회원 조회
+        final User user = loginRepository.findByUserNum(userNum).orElseThrow(() -> new CmcException("USER001"));
+
+        // AccessToken 재발급
+        return userUtil.createAccessToken(user.getUserNum(), user.getUserId());
+    }
+
+    public String tempRefresh(String refreshToken) throws Exception {
+
+        String decrypted = userUtil.decrypt(refreshToken);
+
+        // RefreshToken 유효성 검사
+        if (StringUtils.isEmpty(decrypted) || !jwtTokenProvider.validateToken(decrypted)) {
+            throw new CmcException("USER013");
+        }
+
+        // 회원 번호
+        Long userNum = jwtTokenProvider.getClaims(decrypted).get("userNum", Long.class);
 
         // 회원 조회
         final User user = loginRepository.findByUserNum(userNum).orElseThrow(() -> new CmcException("USER001"));
