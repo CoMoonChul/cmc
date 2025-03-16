@@ -122,6 +122,7 @@ public class BattleService implements BattleUseCase {
 
         Long leftVoteCount = (Long)objects[1];
         Long rightVoteCount = (Long)objects[2];
+        String username = (String)objects[3];
         return BattleDomain.builder()
                 .battleId(battle.getBattleId())
                 .title(battle.getTitle())
@@ -131,6 +132,7 @@ public class BattleService implements BattleUseCase {
                 .codeContentRight(battle.getCodeContentRight())
                 .leftVote(leftVoteCount)
                 .rightVote(rightVoteCount)
+                .username(username)
                 .createdAt(battle.getCreatedAt())
                 .updatedAt(battle.getUpdatedAt())
                 .build();

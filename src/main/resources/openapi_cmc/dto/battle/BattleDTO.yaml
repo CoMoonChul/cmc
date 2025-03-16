@@ -72,6 +72,13 @@ components:
 
     SelectBattleItemResDTO:
       type: object
+      required:
+        - battleId
+        - title
+        - content
+        - leftVote
+        - rightVote
+        - username
       properties:
         battleId:
           type: integer
@@ -94,10 +101,13 @@ components:
           type: integer
           format: int64
           description: 오른쪽 코드 득표수
-        created_at:
+        username:
+          type: string
+          description: 작성자명
+        createdAt:
           type: string
           description: 생성 일시
-        updated_at:
+        updatedAt:
           type: string
           description: 최종 수정 일시
 
