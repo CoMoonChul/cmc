@@ -41,7 +41,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
+    protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
         String roomId = getRoomId(session);
         if (roomId.isEmpty()) {
             session.close(CloseStatus.BAD_DATA);
@@ -63,8 +63,8 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
     private String getRoomId(WebSocketSession session) {
         try {
             String[] pathSegments = Objects.requireNonNull(session.getUri()).getPath().split("/");
-            if (pathSegments.length >= 5) {
-                return pathSegments[4]; // roomId 추출
+            if (pathSegments.length >= 4) {
+                return pathSegments[3]; // roomId 추출 (인덱스 3 사용)
             }
         } catch (Exception e) {
             System.err.println("⚠️ WebSocket 연결 오류: 올바른 roomId를 찾을 수 없음.");
