@@ -61,13 +61,6 @@ public class BattleService implements BattleUseCase {
                 .leftVote(found.getLeftVote())
                 .rightVote(found.getRightVote())
                 .viewCount(found.getViewCount());
-
-        Long userNum = userUtil.getAuthenticatedUserNum();
-        if (userNum != null) {
-            voteRepository.findByUser_UserNumAndBattleId(userNum, found.getBattle().getBattleId())
-                    .ifPresent(vote -> builder.voteValue(vote.getVoteValue()));
-        }
-
         return builder.build();
     }
 
@@ -254,5 +247,19 @@ public class BattleService implements BattleUseCase {
 
         battleRepository.deleteById(found.getBattleId());
         return battleDomain;
+    }
+
+    @Override
+    public BattleDomain selectBattleVoteState(Long id) throws Exception {
+        BattleDetailVo found = battleRepository.findBattleDetail(id).orElseThrow(() -> new CmcException("BATTLE001"));
+        BattleDomain.BattleDomainBuilder builder = BattleDomain.builder()
+                .battleId(found.getBattle().getBattleId());
+
+        Long userNum = userUtil.getAuthenticatedUserNum();
+        if (userNum != null) {
+            voteRepository.findByUser_UserNumAndBattleId(userNum, found.getBattle().getBattleId())
+                    .ifPresent(vote -> builder.voteValue(vote.getVoteValue()));
+        }
+        return builder.build();
     }
 }
