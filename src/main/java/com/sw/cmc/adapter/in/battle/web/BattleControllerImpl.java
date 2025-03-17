@@ -82,4 +82,9 @@ public class BattleControllerImpl implements BattleControllerApi {
                 .build();
         return ResponseEntity.ok(modelMapper.map(battleUseCase.deleteBattle(battleDomain), DeleteBattleResDTO.class));
     }
+
+    @Override
+    public ResponseEntity<SelectBattleVoteStateResDTO> selectBattleVoteState(Long id) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(battleUseCase.selectBattleVoteState(id), SelectBattleVoteStateResDTO.class));
+    }
 }

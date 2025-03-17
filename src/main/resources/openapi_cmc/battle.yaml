@@ -185,3 +185,28 @@ paths:
                 $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/DeleteBattleResDTO"
         "400":
           description: "배틀 삭제 실패"
+
+  /selectBattleVoteState:
+    get:
+      tags:
+        - battle-controller
+      summary: 배틀 투표 상태 조회
+      description: 배틀 투표 상태 조회
+      operationId: selectBattleVoteState
+      parameters:
+        - name: id
+          in: query
+          description: 배틀 id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/battle/BattleDTO.yaml#/components/schemas/SelectBattleVoteStateResDTO"
+        '400':
+          description: Invalid status value
