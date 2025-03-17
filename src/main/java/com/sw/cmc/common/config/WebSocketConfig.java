@@ -26,7 +26,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/ws/livecoding/ws/{roomId}")
+        registry.addHandler(webSocketHandler, "/ws/livecoding/{roomId}")
                 .setAllowedOriginPatterns("*"); // 모든 Origin 허용
     }
 
