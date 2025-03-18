@@ -36,7 +36,6 @@ spring:
             required: true
           ssl:
             trust: smtp.gmail.com
-
   data:
     redis:
       host: localhost
@@ -51,6 +50,9 @@ spring:
           max-idle: 8 # 최대 유휴 커넥션 수
           min-idle: 0 # 최소 유휴 커넥션 수
           max-wait: -1 # 커넥션 풀 대기시간 (무제한 대기)
+  web:
+    resources:
+      add-mappings: false
 
 server:
   port: 8080
@@ -89,6 +91,8 @@ security:
     - /index.html
     - /swagger-ui/**
     - /v3/api-docs/**
+    - /livecoding
+    - /livecodint/**
     # Join
     - /user/join
     - /user/checkUserId
@@ -112,6 +116,10 @@ security:
     # Battle
     - /selectBattle
     - /selectBattleList
+    - /createLiveCoding
+    - /selectLiveCoding
+    - /deleteLiveCoding
+    - /ws/livecoding/**
 
 openai:
   model: ${AI_MODEL}
