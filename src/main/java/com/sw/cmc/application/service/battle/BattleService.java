@@ -181,18 +181,12 @@ public class BattleService implements BattleUseCase {
         found.setEndTime(battleDomain.getEndTime());
         found.setCodeContentLeft(battleDomain.getCodeContentLeft());
         found.setCodeContentRight(battleDomain.getCodeContentRight());
+        found.setCodeTypeLeft(battleDomain.getCodeTypeLeft());
+        found.setCodeTypeRight(battleDomain.getCodeTypeRight());
 
         Battle saved = battleRepository.save(found);
         return BattleDomain.builder()
                 .battleId(saved.getBattleId())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .endTime(saved.getEndTime())
-                .codeContentLeft(saved.getCodeContentLeft())
-                .codeContentRight(saved.getCodeContentRight())
-                .userNum(saved.getUser().getUserNum())
-                .createdAt(saved.getCreatedAt())
-                .updatedAt(saved.getUpdatedAt())
                 .build();
     }
 
