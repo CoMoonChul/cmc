@@ -40,6 +40,8 @@ public class BattleControllerImpl implements BattleControllerApi {
                 .content(createBattleReqDTO.getContent())
                 .codeContentLeft(createBattleReqDTO.getCodeContentLeft())
                 .codeContentRight(createBattleReqDTO.getCodeContentRight())
+                .codeTypeLeft(createBattleReqDTO.getCodeTypeLeft())
+                .codeTypeRight(createBattleReqDTO.getCodeTypeRight())
                 .endTime(createBattleReqDTO.getEndTime())
                 .build();
         return ResponseEntity.ok(modelMapper.map(battleUseCase.createBattle(battleDomain), CreateBattleResDTO.class));

@@ -135,6 +135,15 @@ public class BattleService implements BattleUseCase {
     @Transactional
     public BattleDomain createBattle(BattleDomain battleDomain) {
         battleDomain.validateCreateBattle();
+        Battle saving = convertDomainToEntity(battleDomain);
+        Battle saved = battleRepository.save(saving);
+
+        return BattleDomain.builder()
+                .battleId(saved.getBattleId())
+                .build();
+    }
+
+    private Battle convertDomainToEntity(BattleDomain battleDomain) {
         User savingUser = new User();
         savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
 
@@ -142,22 +151,12 @@ public class BattleService implements BattleUseCase {
         saving.setUser(savingUser);
         saving.setCodeContentLeft(battleDomain.getCodeContentLeft());
         saving.setCodeContentRight(battleDomain.getCodeContentRight());
+        saving.setCodeTypeLeft(battleDomain.getCodeTypeLeft());
+        saving.setCodeTypeRight(battleDomain.getCodeTypeRight());
         saving.setTitle(battleDomain.getTitle());
         saving.setContent(battleDomain.getContent());
         saving.setEndTime(battleDomain.getEndTime());
-        Battle saved = battleRepository.save(saving);
-
-        return BattleDomain.builder()
-                .battleId(saved.getBattleId())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .endTime(saved.getEndTime())
-                .codeContentLeft(saved.getCodeContentLeft())
-                .codeContentRight(saved.getCodeContentRight())
-                .userNum(saved.getUser().getUserNum())
-                .createdAt(saved.getCreatedAt())
-                .updatedAt(saved.getUpdatedAt())
-                .build();
+        return saving;
     }
 
     @Override
