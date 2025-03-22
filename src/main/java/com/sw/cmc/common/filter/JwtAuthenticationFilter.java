@@ -14,9 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -32,12 +34,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
+    private final List<String> whiteList;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String token = getTokenFromRequest(request);
+        String requestURI = request.getRequestURI();
 
         try {
             if (Objects.nonNull(token) && jwtTokenProvider.validateToken(token)) {
@@ -50,6 +55,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication); // 사용자의 정보 저장
                 }
             }
+
+            // 인증 필수 경로인데 토큰 없음
+            if (Objects.isNull(token) && isProtectedPath(requestURI)) {
+                request.setAttribute("exception", new IllegalArgumentException("Missing access token"));
+            }
+
         } catch (ExpiredJwtException e) {
             request.setAttribute("exception", e);
             throw e; // 토큰 만료
@@ -59,6 +70,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isProtectedPath(String requestURI) {
+        return whiteList.stream().noneMatch(white -> pathMatcher.match(white, requestURI));
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {

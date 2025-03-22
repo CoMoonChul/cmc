@@ -116,6 +116,7 @@ security:
     # Battle
     - /selectBattle
     - /selectBattleList
+    - /selectBattleVoteState
     - /createLiveCoding
     - /selectLiveCoding
     - /deleteLiveCoding
