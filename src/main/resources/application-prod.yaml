@@ -17,7 +17,7 @@ spring:
     name: cmc
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
@@ -79,6 +79,44 @@ jwt:
     secret-key: eH0SIMQPTgoK7M1ZpyEbkOqmVXGby7JO
     access-token-expiration-time-in-seconds: 300 # 5분
     refresh-token-expiration-time-in-seconds: 77760000 # 90일
+
+security:
+  authorizationWhitelist:
+    # Swagger
+    - /
+    - /index.html
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    - /livecoding
+    - /livecodint/**
+    # Join
+    - /user/join
+    - /user/checkUserId
+    - /user/checkUsername
+    # Login
+    - /user/tempLogin
+    - /user/login
+    - /user/refresh
+    - /user/tempRefresh
+    - /user/findAccount
+
+    # Comment
+    - /selectComment
+    - /selectCommentList
+    # View
+    - /updateReviewView
+    - /updateBattleView
+    # ReView
+    - /selectReview
+    - /selectReviewList
+    # Battle
+    - /selectBattle
+    - /selectBattleList
+    - /selectBattleVoteState
+    - /createLiveCoding
+    - /selectLiveCoding
+    - /deleteLiveCoding
+    - /ws/livecoding/**
 
 openai:
   model: ${AI_MODEL}
