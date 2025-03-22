@@ -2,6 +2,18 @@ components:
   schemas:
     SelectBattleResDTO:
       type: object
+      required:
+        - battleId
+        - title
+        - content
+        - codeContentLeft
+        - codeContentRight
+        - codeTypeLeft
+        - codeTypeRight
+        - leftVote
+        - rightVote
+        - username
+        - viewCount
       properties:
         battleId:
           type: integer
@@ -43,10 +55,6 @@ components:
           type: integer
           format: int64
           description: 배틀 조회수
-        voteValue:
-          type: integer
-          format: int32
-          description: 투표내역 존재 시 투표값 반환
         createdAt:
           type: string
           description: 생성 일시
@@ -72,6 +80,13 @@ components:
 
     SelectBattleItemResDTO:
       type: object
+      required:
+        - battleId
+        - title
+        - content
+        - leftVote
+        - rightVote
+        - username
       properties:
         battleId:
           type: integer
@@ -94,15 +109,25 @@ components:
           type: integer
           format: int64
           description: 오른쪽 코드 득표수
-        created_at:
+        username:
+          type: string
+          description: 작성자명
+        createdAt:
           type: string
           description: 생성 일시
-        updated_at:
+        updatedAt:
           type: string
           description: 최종 수정 일시
 
     CreateBattleReqDTO:
       type: object
+      required:
+        - title
+        - content
+        - codeContentLeft
+        - codeContentRight
+        - codeTypeLeft
+        - codeTypeRight
       properties:
         title:
           type: string
@@ -110,43 +135,42 @@ components:
         content:
           type: string
           description: 내용
-        code_content_left:
+        codeContentLeft:
           type: string
           description: 왼쪽 코드 내용
-        code_content_right:
+        codeContentRight:
           type: string
           description: 오른쪽 코드 내용
-        end_time:
+        codeTypeLeft:
+          type: string
+          description: 왼쪽 코드 내용
+        codeTypeRight:
+          type: string
+          description: 오른쪽 코드 내용
+        endTime:
           type: string
           description: 종료 일자
 
     CreateBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
-        title:
-          type: string
-          description: 제목
-        content:
-          type: string
-          description: 내용
-        code_content_left:
-          type: string
-          description: 왼쪽 코드 내용
-        code_content_right:
-          type: string
-          description: 오른쪽 코드 내용
-        end_time:
-          type: string
-          description: 종료 일자
 
     UpdateBattleReqDTO:
       type: object
+      required:
+        - battleId
+        - title
+        - content
+        - codeContentLeft
+        - codeContentRight
+        - codeTypeLeft
+        - codeTypeRight
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -156,47 +180,38 @@ components:
         content:
           type: string
           description: 내용
-        code_content_left:
+        codeContentLeft:
           type: string
-          description: 좌측 코드 내용
-        code_content_right:
+          description: 왼쪽 코드 내용
+        codeContentRight:
           type: string
-          description: 우측 코드 내용
-        end_time:
+          description: 오른쪽 코드 내용
+        codeTypeLeft:
+          type: string
+          description: 왼쪽 코드 내용
+        codeTypeRight:
+          type: string
+          description: 오른쪽 코드 내용
+        endTime:
           type: string
           description: 종료 일자
 
     UpdateBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
-        title:
-          type: string
-          description: 제목
-        content:
-          type: string
-          description: 내용
-        code_content_left:
-          type: string
-          description: 왼쪽 코드 내용
-        code_content_right:
-          type: string
-          description: 오른쪽 코드 내용
-        end_time:
-          type: string
-          description: 종료 일자
 
     UpdateVoteBattleReqDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
-        vote_value:
+        voteValue:
           type: integer
           format: int32
           description: 투표값
@@ -205,7 +220,7 @@ components:
     UpdateVoteBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -218,7 +233,7 @@ components:
     DeleteVoteBattleReqDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -226,7 +241,7 @@ components:
     DeleteVoteBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -234,7 +249,7 @@ components:
     DeleteBattleReqDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
@@ -242,7 +257,21 @@ components:
     DeleteBattleResDTO:
       type: object
       properties:
-        battle_id:
+        battleId:
           type: integer
           format: int64
           description: 배틀 ID
+
+    SelectBattleVoteStateResDTO:
+      type: object
+      required:
+        - battleId
+      properties:
+        battleId:
+          type: integer
+          format: int64
+          description: 배틀 ID
+        voteValue:
+          type: integer
+          format: int32
+          description: 투표내역 존재 시 투표값 반환

@@ -40,6 +40,8 @@ public class BattleControllerImpl implements BattleControllerApi {
                 .content(createBattleReqDTO.getContent())
                 .codeContentLeft(createBattleReqDTO.getCodeContentLeft())
                 .codeContentRight(createBattleReqDTO.getCodeContentRight())
+                .codeTypeLeft(createBattleReqDTO.getCodeTypeLeft())
+                .codeTypeRight(createBattleReqDTO.getCodeTypeRight())
                 .endTime(createBattleReqDTO.getEndTime())
                 .build();
         return ResponseEntity.ok(modelMapper.map(battleUseCase.createBattle(battleDomain), CreateBattleResDTO.class));
@@ -53,6 +55,8 @@ public class BattleControllerImpl implements BattleControllerApi {
                 .content(updateBattleReqDTO.getContent())
                 .codeContentLeft(updateBattleReqDTO.getCodeContentLeft())
                 .codeContentRight(updateBattleReqDTO.getCodeContentRight())
+                .codeTypeLeft(updateBattleReqDTO.getCodeTypeLeft())
+                .codeTypeRight(updateBattleReqDTO.getCodeTypeRight())
                 .endTime(updateBattleReqDTO.getEndTime())
                 .build();
         return ResponseEntity.ok(modelMapper.map(battleUseCase.updateBattle(battleDomain), UpdateBattleResDTO.class));
@@ -81,5 +85,10 @@ public class BattleControllerImpl implements BattleControllerApi {
                 .battleId(deleteBattleReqDTO.getBattleId())
                 .build();
         return ResponseEntity.ok(modelMapper.map(battleUseCase.deleteBattle(battleDomain), DeleteBattleResDTO.class));
+    }
+
+    @Override
+    public ResponseEntity<SelectBattleVoteStateResDTO> selectBattleVoteState(Long id) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(battleUseCase.selectBattleVoteState(id), SelectBattleVoteStateResDTO.class));
     }
 }

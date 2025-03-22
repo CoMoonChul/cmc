@@ -18,7 +18,7 @@ public interface BattleUseCase {
      * author : IM HYUN WOO
      * description : 배틀 단건 조회
      *
-     * @param id
+     * @param id Long
      * @return battle domain
      * @throws Exception the exception
      */
@@ -29,9 +29,9 @@ public interface BattleUseCase {
      * author : IM HYUN WOO
      * description : 배틀 리스트 조회
      *
-     * @param condition
-     * @param page
-     * @param size
+     * @param condition Integer
+     * @param page Integer
+     * @param size Integer
      * @return battle domain
      * @throws Exception the exception
      */
@@ -42,7 +42,7 @@ public interface BattleUseCase {
      * author : IM HYUN WOO
      * description : 배틀 생성
      *
-     * @param battle domain
+     * @param battleDomain BattleDomain
      * @return battle domain
      * @throws Exception the exception
      */
@@ -53,7 +53,7 @@ public interface BattleUseCase {
      * author : IM HYUN WOO
      * description : 배틀 수정
      *
-     * @param battle domain
+     * @param battleDomain BattleDomain
      * @return battle domain
      * @throws Exception the exception
      */
@@ -64,7 +64,7 @@ public interface BattleUseCase {
      * author : IM HYUN WOO
      * description : 배틀 투표
      *
-     * @param battle vote domain
+     * @param battleVoteDomain BattleVoteDomain
      * @return battle vote domain
      * @throws Exception the exception
      */
@@ -75,7 +75,7 @@ public interface BattleUseCase {
      * author : IM HYUN WOO
      * description : 배틀 투표 삭제
      *
-     * @param battle vote domain
+     * @param battleVoteDomain BattleVoteDomain
      * @return battle vote domain
      * @throws Exception the exception
      */
@@ -86,9 +86,20 @@ public interface BattleUseCase {
      * author : IM HYUN WOO
      * description : 배틀 삭제
      *
-     * @param battle domain
+     * @param battleDomain BattleDomain
      * @return battle domain
      * @throws Exception the exception
      */
     BattleDomain deleteBattle(BattleDomain battleDomain) throws Exception;
+
+    /**
+     * methodName : selectBattleVoteState
+     * author : IM HYUN WOO
+     * description : 배틀 투표 상태 조회
+     *
+     * @param id Long
+     * @return battle domain
+     * @throws Exception the exception
+     */
+    BattleDomain selectBattleVoteState(Long id) throws Exception;
 }

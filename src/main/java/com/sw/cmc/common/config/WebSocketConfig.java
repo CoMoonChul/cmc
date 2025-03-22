@@ -1,10 +1,10 @@
 package com.sw.cmc.common.config;
 
+import com.sw.cmc.adapter.in.lcd.web.WebSocketControllerImpl;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 /**
  * packageName    : com.sw.cmc.common.config
@@ -15,19 +15,19 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  */
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+@EnableWebSocket // ✅ WebSocket 활성화
+public class WebSocketConfig implements WebSocketConfigurer {
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")  // WebSocket 엔드포인트
-                .setAllowedOriginPatterns("http://localhost:*")  // CORS 허용 (CorsConfig에서 설정한 대로)
-                .withSockJS();  // SockJS로 폴백 처리
+    private final WebSocketControllerImpl webSocketHandler;
+
+    public WebSocketConfig(WebSocketControllerImpl webSocketHandler) {
+        this.webSocketHandler = webSocketHandler;
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic", "/queue");  // 메시지 브로커 설정 (구독할 경로)
-        registry.setApplicationDestinationPrefixes("/app");  // 클라이언트 요청이 이 경로로 시작
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(webSocketHandler, "/ws/livecoding/{roomId}")
+                .setAllowedOriginPatterns("*"); // 모든 Origin 허용
     }
+
 }

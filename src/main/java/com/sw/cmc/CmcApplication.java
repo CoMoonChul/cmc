@@ -4,10 +4,14 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class CmcApplication {
 
 	public static void main(String[] args) {
+
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 		// .env 파일 로드
 		Dotenv dotenv = Dotenv.configure().directory("./").ignoreIfMissing().load();
 		// 시스템 환경 변수에 추가

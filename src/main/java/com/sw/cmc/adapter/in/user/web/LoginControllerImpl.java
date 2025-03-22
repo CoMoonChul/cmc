@@ -34,40 +34,7 @@ public class LoginControllerImpl implements LoginControllerApi {
         UserDomain userDomain = UserDomain.builder()
                 .userId(tempLoginReqDTO.getUserId())
                 .build();
-        System.out.println("!!!!!!!!!!" + userDomain.getUserId());
-
         return ResponseEntity.ok(modelMapper.map(loginUseCase.tempLogin(userDomain), TempLoginResDTO.class));
-    }
-
-    @PostMapping("/user/login2")
-    public ResponseEntity<LoginResDTO> login2(LoginReqDTO loginReqDTO, HttpServletResponse response) throws Exception {
-
-        UserDomain userDomain = UserDomain.builder()
-                .userId(loginReqDTO.getUserId())
-                .password(loginReqDTO.getPassword())
-                .build();
-
-        LoginResDTO loginResDTO = modelMapper.map(loginUseCase.login(userDomain), LoginResDTO.class);
-
-        // RefreshToken을 HttpOnly 쿠키로 설정
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResDTO.getRefreshToken())
-                .httpOnly(true)  // JavaScript에서 접근 불가 (XSS 방어)
-                .secure(false)  // HTTPS에서만 전송 (중간자 공격 방어), 개발 환경에서는 false (HTTPS가 아닐 때)
-                .sameSite("None")  // 개발 "None", 상용 "Strict"
-//                .path("/user/refresh")  // 특정 경로에서만 접근 가능
-                .maxAge(30 * 24 * 60 * 60)  // 30일 유지
-                .build();
-
-        System.out.println("!!!!!!!!!" + refreshTokenCookie.toString());
-
-
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-
-        // AccessToken은 JSON 응답으로 반환 (프론트에서 Authorization 헤더로 사용)
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResDTO.getAccessToken()) // AccessToken은 헤더로 전달
-                .body(loginResDTO);
-
     }
 
     @Override
@@ -85,17 +52,12 @@ public class LoginControllerImpl implements LoginControllerApi {
                 .httpOnly(true)  // JavaScript에서 접근 불가 (XSS 방어)
                 .secure(false)  // HTTPS에서만 전송 (중간자 공격 방어), 개발 환경에서는 false (HTTP일때도 동작하도록)
                 .sameSite("Strict")  // 개발 "None", 상용 "Strict"
-                .path("/user/refresh")  // 특정 경로에서만 접근 가능
-                .maxAge(30 * 24 * 60 * 60)  // 30일 유지(이거 뭔지 모르겠습니다ㅎㅎ;)
+                .path("/") // FE의 모든 경로에서 유지되도록 설정
+                .maxAge(30 * 24 * 60 * 60)
                 .build();
 
-        System.out.println("!!!!!!!!!" + refreshTokenCookie.toString());
-
-        // 쿠키 추가
         HttpServletResponse response = RequestUtil.getResponse();
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-
-        // AccessToken은 JSON 응답으로 반환 (프론트에서 Authorization 헤더로 사용)
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResDTO.getAccessToken()) // AccessToken은 헤더로 전달
                 .body(loginResDTO);
@@ -104,24 +66,21 @@ public class LoginControllerImpl implements LoginControllerApi {
 
     @PostMapping("/user/refresh")
     public ResponseEntity<RefreshResDTO> refresh(HttpServletRequest request) throws Exception {
-        // HttpOnly 쿠키에서 refreshToken 가져오기
-        String refreshToken = null;
-        if (request.getCookies() != null) {
-            for (var cookie : request.getCookies()) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    refreshToken = cookie.getValue();
-                }
-            }
-        }
-
-        if (refreshToken == null) {
-            return ResponseEntity.status(401).body(new RefreshResDTO().accessToken(null));
-        }
-
-        // 새 AccessToken 발급
+        // 새로운 AccessToken 발급
         String newAccessToken = loginUseCase.refresh(request);
 
-        // ✅ 새 AccessToken을 헤더에 추가
+        // 새로운 AccessToken 헤더에 추가
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken)
+                .body(new RefreshResDTO().accessToken(newAccessToken));
+    }
+
+    @Override
+    public ResponseEntity<RefreshResDTO> tempRefresh(RefreshReqDTO refreshReqDTO) throws Exception {
+        // 새로운 AccessToken 발급
+        String newAccessToken = loginUseCase.tempRefresh(refreshReqDTO.getRefreshToken());
+
+        // 새로운 AccessToken 헤더에 추가
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken)
                 .body(new RefreshResDTO().accessToken(newAccessToken));

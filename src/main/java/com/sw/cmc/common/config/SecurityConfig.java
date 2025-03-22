@@ -1,11 +1,9 @@
 package com.sw.cmc.common.config;
 
-import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.filter.JwtAuthenticationFilter;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
-import com.sw.cmc.common.security.SecurityProperties;
 import com.sw.cmc.common.security.CustomUserDetailsService;
-import com.sw.cmc.common.util.MessageUtil;
+import com.sw.cmc.common.security.SecurityProperties;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,8 +23,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * packageName    : com.sw.cmc.common.config
@@ -70,12 +70,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                // CORS 적용
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ CORS 설정 적용
                 // CSRF 보호 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
                 // 세션 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // API 요청 권한 설정
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/ws/livecoding/**").permitAll()
                         .requestMatchers(securityProperties.getAuthorizationWhitelist().toArray(new String[0])).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -108,5 +111,20 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
+
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000")); // WebSocket 허용할 Origin 설정
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 모든 요청에 대해 CORS 설정
+        return source;
+    }
+
 
 }

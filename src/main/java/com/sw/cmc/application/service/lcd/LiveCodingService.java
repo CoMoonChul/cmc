@@ -5,6 +5,7 @@ import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
+import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.lcd.LiveCodingAction;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
@@ -34,6 +35,7 @@ public class LiveCodingService implements LiveCodingUseCase {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisRepository redisRepository;
     private final StringRedisTemplate redisTemplate;
+    private final UserUtil userUtil;
 
     private static final String REDIS_LIVE_CODING_PREFIX = "live_coding:";  // Redis에 저장할 키 접두사
 
@@ -44,6 +46,11 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     @Override
     public LiveCodingDomain createLiveCoding(Long hostId) throws Exception {
+
+        Long currentUser = userUtil.getAuthenticatedUserNum();
+        if (!Objects.equals(currentUser, hostId)) {
+            throw new CmcException("LCD008");
+        }
 
         if (this.existsByHostId(hostId)) {
             throw new CmcException("LCD003");

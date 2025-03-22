@@ -61,13 +61,6 @@ public class BattleService implements BattleUseCase {
                 .leftVote(found.getLeftVote())
                 .rightVote(found.getRightVote())
                 .viewCount(found.getViewCount());
-
-        Long userNum = userUtil.getAuthenticatedUserNum();
-        if (userNum != null) {
-            voteRepository.findByUser_UserNumAndBattleId(userNum, found.getBattle().getBattleId())
-                    .ifPresent(vote -> builder.voteValue(vote.getVoteValue()));
-        }
-
         return builder.build();
     }
 
@@ -122,6 +115,7 @@ public class BattleService implements BattleUseCase {
 
         Long leftVoteCount = (Long)objects[1];
         Long rightVoteCount = (Long)objects[2];
+        String username = (String)objects[3];
         return BattleDomain.builder()
                 .battleId(battle.getBattleId())
                 .title(battle.getTitle())
@@ -131,6 +125,7 @@ public class BattleService implements BattleUseCase {
                 .codeContentRight(battle.getCodeContentRight())
                 .leftVote(leftVoteCount)
                 .rightVote(rightVoteCount)
+                .username(username)
                 .createdAt(battle.getCreatedAt())
                 .updatedAt(battle.getUpdatedAt())
                 .build();
@@ -140,6 +135,15 @@ public class BattleService implements BattleUseCase {
     @Transactional
     public BattleDomain createBattle(BattleDomain battleDomain) {
         battleDomain.validateCreateBattle();
+        Battle saving = convertDomainToEntity(battleDomain);
+        Battle saved = battleRepository.save(saving);
+
+        return BattleDomain.builder()
+                .battleId(saved.getBattleId())
+                .build();
+    }
+
+    private Battle convertDomainToEntity(BattleDomain battleDomain) {
         User savingUser = new User();
         savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
 
@@ -147,22 +151,12 @@ public class BattleService implements BattleUseCase {
         saving.setUser(savingUser);
         saving.setCodeContentLeft(battleDomain.getCodeContentLeft());
         saving.setCodeContentRight(battleDomain.getCodeContentRight());
+        saving.setCodeTypeLeft(battleDomain.getCodeTypeLeft());
+        saving.setCodeTypeRight(battleDomain.getCodeTypeRight());
         saving.setTitle(battleDomain.getTitle());
         saving.setContent(battleDomain.getContent());
         saving.setEndTime(battleDomain.getEndTime());
-        Battle saved = battleRepository.save(saving);
-
-        return BattleDomain.builder()
-                .battleId(saved.getBattleId())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .endTime(saved.getEndTime())
-                .codeContentLeft(saved.getCodeContentLeft())
-                .codeContentRight(saved.getCodeContentRight())
-                .userNum(saved.getUser().getUserNum())
-                .createdAt(saved.getCreatedAt())
-                .updatedAt(saved.getUpdatedAt())
-                .build();
+        return saving;
     }
 
     @Override
@@ -187,18 +181,12 @@ public class BattleService implements BattleUseCase {
         found.setEndTime(battleDomain.getEndTime());
         found.setCodeContentLeft(battleDomain.getCodeContentLeft());
         found.setCodeContentRight(battleDomain.getCodeContentRight());
+        found.setCodeTypeLeft(battleDomain.getCodeTypeLeft());
+        found.setCodeTypeRight(battleDomain.getCodeTypeRight());
 
         Battle saved = battleRepository.save(found);
         return BattleDomain.builder()
                 .battleId(saved.getBattleId())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .endTime(saved.getEndTime())
-                .codeContentLeft(saved.getCodeContentLeft())
-                .codeContentRight(saved.getCodeContentRight())
-                .userNum(saved.getUser().getUserNum())
-                .createdAt(saved.getCreatedAt())
-                .updatedAt(saved.getUpdatedAt())
                 .build();
     }
 
@@ -252,5 +240,19 @@ public class BattleService implements BattleUseCase {
 
         battleRepository.deleteById(found.getBattleId());
         return battleDomain;
+    }
+
+    @Override
+    public BattleDomain selectBattleVoteState(Long id) throws Exception {
+        BattleDetailVo found = battleRepository.findBattleDetail(id).orElseThrow(() -> new CmcException("BATTLE001"));
+        BattleDomain.BattleDomainBuilder builder = BattleDomain.builder()
+                .battleId(found.getBattle().getBattleId());
+
+        Long userNum = userUtil.getAuthenticatedUserNum();
+        if (userNum != null) {
+            voteRepository.findByUser_UserNumAndBattleId(userNum, found.getBattle().getBattleId())
+                    .ifPresent(vote -> builder.voteValue(vote.getVoteValue()));
+        }
+        return builder.build();
     }
 }
