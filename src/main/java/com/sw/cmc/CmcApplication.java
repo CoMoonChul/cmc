@@ -24,6 +24,8 @@ public class CmcApplication {
 		System.setProperty("SMTP_PASSWORD", dotenv.get("SMTP_PASSWORD"));
 		System.setProperty("AI_KEY", dotenv.get("AI_KEY"));
 		System.setProperty("AI_MODEL", dotenv.get("AI_MODEL"));
+		System.setProperty("JWT_SECRET_KEY", dotenv.get("JWT_SECRET_KEY"));
+		System.setProperty("JWT_ENCRYPTION_KEY", dotenv.get("JWT_ENCRYPTION_KEY"));
 		SpringApplication.run(CmcApplication.class, args);
 	}
 
