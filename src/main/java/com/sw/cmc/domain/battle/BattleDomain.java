@@ -62,6 +62,7 @@ public class BattleDomain {
         validateContent();
         validateCodeContentLeft();
         validateCodeContentRight();
+        validateCodeType();
     }
 
     /**

@@ -46,7 +46,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService);
+        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService, securityProperties.getAuthorizationWhitelist());
     }
 
     @Bean
@@ -71,7 +71,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 // CORS 적용
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ CORS 설정 적용
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // CSRF 보호 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
                 // 세션 비활성화

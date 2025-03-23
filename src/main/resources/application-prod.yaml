@@ -61,12 +61,12 @@ server:
 
 springdoc:
   api-docs:
-    enabled: false
+    enabled: true
     version: 'OPENAPI_3_0'
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
-    enabled: false
+    enabled: true
     operations-sorter: alpha
     tags-sorter: alpha
     path: /swagger-ui.html
@@ -76,9 +76,48 @@ springdoc:
 
 jwt:
   token:
-    secret-key: eH0SIMQPTgoK7M1ZpyEbkOqmVXGby7JO
+    secret-key: ${JWT_SECRET_KEY}
+    encryption-key: ${JWT_ENCRYPTION_KEY}
     access-token-expiration-time-in-seconds: 300 # 5분
     refresh-token-expiration-time-in-seconds: 77760000 # 90일
+
+security:
+  authorizationWhitelist:
+    # Swagger
+    - /
+    - /index.html
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    - /livecoding
+    - /livecodint/**
+    # Join
+    - /user/join
+    - /user/checkUserId
+    - /user/checkUsername
+    # Login
+    - /user/tempLogin
+    - /user/login
+    - /user/refresh
+    - /user/tempRefresh
+    - /user/findAccount
+
+    # Comment
+    - /selectComment
+    - /selectCommentList
+    # View
+    - /updateReviewView
+    - /updateBattleView
+    # ReView
+    - /selectReview
+    - /selectReviewList
+    # Battle
+    - /selectBattle
+    - /selectBattleList
+    - /selectBattleVoteState
+    - /createLiveCoding
+    - /selectLiveCoding
+    - /deleteLiveCoding
+    - /ws/livecoding/**
 
 openai:
   model: ${AI_MODEL}

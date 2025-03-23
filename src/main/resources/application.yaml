@@ -79,8 +79,8 @@ springdoc:
 
 jwt:
   token:
-    secret-key: eH0SIMQPTgoK7M1ZpyEbkOqmVXGby7JO
-    encryption-key: xXxbnY58JCu97J9ErD1U8jKUt5kFGw+/Zq1t9j3Dkj4=
+    secret-key: ${JWT_SECRET_KEY}
+    encryption-key: ${JWT_ENCRYPTION_KEY}
     access-token-expiration-time-in-seconds: 300 # 5분
     refresh-token-expiration-time-in-seconds: 77760000 # 90일
 
@@ -116,6 +116,7 @@ security:
     # Battle
     - /selectBattle
     - /selectBattleList
+    - /selectBattleVoteState
     - /createLiveCoding
     - /selectLiveCoding
     - /deleteLiveCoding
