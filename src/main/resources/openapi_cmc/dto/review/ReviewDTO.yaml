@@ -4,11 +4,11 @@ components:
     Review:
       type: object
       properties:
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 리뷰 ID
-        user_num:
+        userNum:
           type: integer
           format: int64
           description: 회원 번호
@@ -20,20 +20,20 @@ components:
           type: string
           description: 리뷰 내용
           maxLength: 2000
-        created_at:
+        createdAt:
           type: string
           description: 생성 일시
-        updated_at:
+        updatedAt:
           type: string
           description: 최종 수정 일시
-        code_content:
+        codeContent:
           type: string
           description: 코드 내용
-        review_view:
+        reviewView:
           type: integer
           format: int64
           description: 리뷰 조회수
-        like_count:
+        likeCount:
           type: integer
           format: int64
           description: 리뷰 좋아요 갯수
@@ -43,7 +43,7 @@ components:
     SelectReviewResDTO:
       type: object
       properties:
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 리뷰 ID
@@ -58,21 +58,21 @@ components:
           type: string
           description: 리뷰 내용
           maxLength: 2000
-        code_content:
+        codeContent:
           type: string
           description: 코드 내용
-        view_count:
+        viewCount:
           type: integer
           format: int64
           description: 리뷰 조회수
-        like_count:
+        likeCount:
           type: integer
           format: int64
           description: 리뷰 좋아요 갯수
-        created_at:
+        createdAt:
           type: string
           description: 생성 일시
-        updated_at:
+        updatedAt:
           type: string
           description: 최종 수정 일시
 
@@ -99,19 +99,24 @@ components:
 
     SelectReviewItemResDTO:
       type: object
+      required:
+        - reviewId
+        - title
+        - content
+        - username
       properties:
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 리뷰 ID
         title:
           type: string
           description: 리뷰 제목
-        view_count:
+        viewCount:
           type: integer
           format: int64
           description: 리뷰 조회수
-        like_count:
+        likeCount:
           type: integer
           format: int64
           description: 리뷰 좋아요 갯수
@@ -121,7 +126,7 @@ components:
         username:
           type: string
           description: 회원명
-        created_at:
+        createdAt:
           type: string
           description: 생성 일시
 
@@ -131,7 +136,7 @@ components:
       required:
         - title
         - content
-        - code_content
+        - codeContent
       properties:
         title:
           type: string
@@ -141,7 +146,7 @@ components:
           type: string
           description: 리뷰 내용
           maxLength: 2000
-        code_content:
+        codeContent:
           type: string
           description: 코드 내용
 
@@ -155,9 +160,9 @@ components:
     DeleteReviewReqDTO:
       type: object
       required:
-        - review_id
+        - reviewId
       properties:
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 삭제할 리뷰 ID
@@ -166,7 +171,7 @@ components:
     DeleteReviewResDTO:
       type: object
       properties:
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 삭제된 리뷰 ID
@@ -177,9 +182,9 @@ components:
       required:
         - title
         - content
-        - code_content
+        - codeContent
       properties:
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 리뷰ID
@@ -191,7 +196,7 @@ components:
           type: string
           description: 수정할 리뷰 내용
           maxLength: 2000
-        code_content:
+        codeContent:
           type: string
           description: 코드 내용
     # 리뷰 수정 응답 DTO
