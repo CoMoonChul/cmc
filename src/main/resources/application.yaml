@@ -120,6 +120,7 @@ security:
     - /createLiveCoding
     - /selectLiveCoding
     - /deleteLiveCoding
+    - /verifyLiveCoding
     - /ws/livecoding/**
 
 openai:

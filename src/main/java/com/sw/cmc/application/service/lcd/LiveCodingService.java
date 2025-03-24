@@ -39,17 +39,12 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     private static final String REDIS_LIVE_CODING_PREFIX = "live_coding:";  // Redis에 저장할 키 접두사
 
-
-
-    private static final long INVITE_EXPIRATION = 10 * 60 * 1000; // 10분
-
-
     @Override
     public LiveCodingDomain createLiveCoding(Long hostId) throws Exception {
 
         Long currentUser = userUtil.getAuthenticatedUserNum();
         if (!Objects.equals(currentUser, hostId)) {
-            throw new CmcException("LCD008");
+//            throw new CmcException("LCD008");
         }
 
         if (this.existsByHostId(hostId)) {
@@ -93,21 +88,18 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     @Override
-    public String generateInviteLink(UUID roomId) throws Exception {
-        // roomId를 클레임에 포함시켜 JWT 생성
+    public String generateInviteLink(UUID roomId)  {
         final Claims claims = Jwts.claims();
         claims.put("roomId", roomId.toString());
-
-        // 만료 시간을 INVITE_EXPIRATION으로 설정
-        // JWT 토큰 생성 시 만료 시간을 포함시켜 토큰을 생성하는 부분만 수정
-        JwtToken jwtToken = jwtTokenProvider.createToken(claims);  // 기본 createToken을 사용
-
-        // AccessToken 만료 시간을 INVITE_EXPIRATION으로 설정
-//        jwtToken.setAccessTokenExpirationTime(INVITE_EXPIRATION);  // 수정된 만료 시간을 적용 (서비스 내에서 처리)
-
-        // 생성된 JWT 토큰을 포함한 초대 링크 반환
-        return  "https://cmc.com/livecoding/join?token=" + jwtToken.getAccessToken();
+        JwtToken jwtToken = jwtTokenProvider.createLcdToken(claims);
+        return "http://localhost:3000/livecoding/join?token=" + jwtToken.getAccessToken();
     }
+
+    @Override
+    public UUID verifyLiveCoding(String token)  {
+        return jwtTokenProvider.validateLcdToken(token);
+    }
+
 
     @Override
     public LiveCodingDomain selectLiveCoding(UUID roomId) throws CmcException {

@@ -150,3 +150,26 @@ paths:
                 $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/ExistLiveCodingResDTO"
         "400":
           description: "잘못된 요청"
+
+
+  /verifyLiveCoding:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코딩 토큰 검증"
+      operationId: "verifyLiveCoding"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/verifyLiveCodingReqDTO"
+      responses:
+        "200":
+          description: "라이브 코딩 토큰 검증 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/verifyLiveCodingResDTO"
+        "400":
+          description: "라이브 코딩 토큰 검증 실패"
