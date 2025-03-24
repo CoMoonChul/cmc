@@ -101,7 +101,7 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
     }
 
     @Override
-    public ResponseEntity<ExistLiveCodingResDTO> existLiveCoding(Long hostId) throws Exception {
+    public ResponseEntity<ExistLiveCodingResDTO> existLiveCoding(Long hostId)  {
         // 라이브 코딩 방 존재 여부 확인
         boolean exists = liveCodingUseCase.existsByHostId(hostId);
 
@@ -110,6 +110,18 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
         response.setExists(exists);
 
         return ResponseEntity.ok(response);  // 200 OK 응답 반환
+    }
+
+    @Override
+    public ResponseEntity<VerifyLiveCodingResDTO> verifyLiveCoding(VerifyLiveCodingReqDTO verifyLiveCodingReqDTO) throws Exception {
+         UUID verifiedRoom = liveCodingUseCase.verifyLiveCoding(
+                 verifyLiveCodingReqDTO.getToken()
+        );
+        VerifyLiveCodingResDTO response = new VerifyLiveCodingResDTO();
+        response.setRoomId(verifiedRoom);
+
+        return ResponseEntity.ok(response);  // 200 OK 응답 반환
+
     }
 
 }

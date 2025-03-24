@@ -137,3 +137,22 @@ components:
           example: true
       required:
         - exists
+
+    verifyLiveCodingReqDTO:
+      type: object
+      properties:
+        token:
+          type: string
+          description: "라이브코딩 인증 토큰 (jwt)"
+      required:
+        - token
+
+    verifyLiveCodingResDTO:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+          description: "인증된 방 ID"
+      required:
+        - roomId
