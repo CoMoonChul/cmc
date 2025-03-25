@@ -52,6 +52,10 @@ components:
         refreshToken:
           type: string
           description: RefreshToken
+        userNum:
+          type: integer
+          format: int64
+          description: 회원번호
       description: 로그인 응답
 
     RefreshReqDTO:
