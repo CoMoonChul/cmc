@@ -104,6 +104,7 @@ public class LoginService implements LoginUseCase {
         return UserDomain.builder()
                 .accessToken(tokenDomain.getAccessToken())
                 .refreshToken(tokenDomain.getRefreshToken())
+                .userNum(user.getUserNum())
                 .build();
     }
 
