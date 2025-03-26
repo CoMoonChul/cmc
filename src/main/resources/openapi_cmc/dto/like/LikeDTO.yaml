@@ -38,6 +38,9 @@ components:
           type: integer
           format: int64
           description: 리뷰 ID
+        type:
+          type: string
+          description: 좋아요 생성/삭제 여부
 
     DeleteReviewLikeReqDTO:
       type: object
