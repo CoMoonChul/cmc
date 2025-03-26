@@ -7,6 +7,7 @@ import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.like.LikeDomain;
 import com.sw.cmc.entity.ReviewLike;
 import com.sw.cmc.entity.ReviewLikeId;
+import com.sw.cmc.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,25 @@ public class LikeService implements LikeUseCase {
     private final UserUtil userUtil;
 
     @Override
+    public LikeDomain selectReviewLikeState(Long id) throws Exception {
+        ReviewLikeId reviewLikeId = new ReviewLikeId();
+        reviewLikeId.setUserNum(userUtil.getAuthenticatedUserNum());
+        reviewLikeId.setReviewId(id);
+        ReviewLike found = reviewLikeRepository.findById(reviewLikeId).orElse(null);
+        if (found == null) {
+            return LikeDomain.builder()
+                    .reviewId(id)
+                    .likeState(false)
+                    .build();
+        } else {
+            return LikeDomain.builder()
+                    .reviewId(id)
+                    .likeState(true)
+                    .build();
+        }
+    }
+
+    @Override
     @Transactional
     public LikeDomain updateReviewLike(LikeDomain likeDomain) throws Exception {
         ReviewLikeId id = new ReviewLikeId();
@@ -36,9 +56,12 @@ public class LikeService implements LikeUseCase {
             throw new CmcException("LIKE001");
         }
 
-        ReviewLike param = new ReviewLike();
-        param.setId(id);
-        ReviewLike saved = reviewLikeRepository.save(param);
+        ReviewLike saving = new ReviewLike();
+        User savingUser = new User();
+        savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
+        saving.setId(id);
+        saving.setUser(savingUser);
+        ReviewLike saved = reviewLikeRepository.save(saving);
         return LikeDomain.builder()
                 .userNum(saved.getId().getUserNum())
                 .reviewId(saved.getId().getReviewId())

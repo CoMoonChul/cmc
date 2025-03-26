@@ -1,5 +1,20 @@
 components:
   schemas:
+    SelectReviewLikeStateResDTO:
+      type: object
+      required:
+        - reviewId
+        - likeState
+      properties:
+        reviewId:
+          type: integer
+          format: int64
+          description: 리뷰 ID
+        likeState:
+          type: boolean
+          format: int32
+          description: 좋아요 상태
+
     UpdateReviewLikeReqDTO:
       type: object
       description: 리뷰 좋아요 생성/수정 요청

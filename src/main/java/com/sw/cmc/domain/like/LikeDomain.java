@@ -20,4 +20,5 @@ public class LikeDomain {
     private Long userNum;
     private Long reviewId;
     private String liked_at;
+    private boolean likeState;
 }
