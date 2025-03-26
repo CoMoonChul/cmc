@@ -5,23 +5,27 @@ components:
       required:
         - reviewId
         - likeState
+        - count
       properties:
         reviewId:
           type: integer
           format: int64
           description: 리뷰 ID
+        count:
+          type: integer
+          format: int64
+          description: 좋아요 수
         likeState:
           type: boolean
-          format: int32
           description: 좋아요 상태
 
     UpdateReviewLikeReqDTO:
       type: object
       description: 리뷰 좋아요 생성/수정 요청
       required:
-        - review_id
+        - reviewId
       properties:
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 리뷰 ID
@@ -30,11 +34,7 @@ components:
       type: object
       description: 리뷰 좋아요 생성/수정 응답
       properties:
-        user_num:
-          type: integer
-          format: int64
-          description: 회원번호
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 리뷰 ID
@@ -43,9 +43,9 @@ components:
       type: object
       description: 리뷰 좋아요 삭제 요청
       required:
-        - review_id
+        - reviewId
       properties:
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 리뷰 ID
@@ -54,11 +54,7 @@ components:
       type: object
       description: 리뷰 좋아요 삭제 응답
       properties:
-        user_num:
-          type: integer
-          format: int64
-          description: 회원번호
-        review_id:
+        reviewId:
           type: integer
           format: int64
           description: 리뷰 ID

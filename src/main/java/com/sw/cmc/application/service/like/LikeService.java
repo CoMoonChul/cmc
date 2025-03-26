@@ -28,6 +28,15 @@ public class LikeService implements LikeUseCase {
 
     @Override
     public LikeDomain selectReviewLikeState(Long id) throws Exception {
+        Long count = reviewLikeRepository.countById_ReviewId(id);
+
+        if (userUtil.getAuthenticatedUserNum() == null) {
+            return LikeDomain.builder()
+                    .reviewId(id)
+                    .count(count)
+                    .build();
+        }
+
         ReviewLikeId reviewLikeId = new ReviewLikeId();
         reviewLikeId.setUserNum(userUtil.getAuthenticatedUserNum());
         reviewLikeId.setReviewId(id);
@@ -35,11 +44,13 @@ public class LikeService implements LikeUseCase {
         if (found == null) {
             return LikeDomain.builder()
                     .reviewId(id)
+                    .count(count)
                     .likeState(false)
                     .build();
         } else {
             return LikeDomain.builder()
                     .reviewId(id)
+                    .count(count)
                     .likeState(true)
                     .build();
         }
