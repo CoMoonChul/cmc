@@ -122,6 +122,8 @@ security:
     - /deleteLiveCoding
     - /verifyLiveCoding
     - /ws/livecoding/**
+    # Like
+    - /selectReviewLikeState
 
 openai:
   model: ${AI_MODEL}
