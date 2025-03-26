@@ -10,6 +10,18 @@ import com.sw.cmc.domain.like.LikeDomain;
  * description    : 좋아요 usecase
  */
 public interface LikeUseCase {
+
+    /**
+     * methodName : selectReviewLikeState
+     * author : IM HYUN WOO
+     * description :
+     *
+     * @param id Long
+     * @return like domain
+     * @throws Exception the exception
+     */
+    LikeDomain selectReviewLikeState(Long id) throws Exception;
+
     /**
      * methodName : updateReviewLike
      * author : IM HYUN WOO
@@ -26,7 +38,7 @@ public interface LikeUseCase {
      * author : IM HYUN WOO
      * description : 리뷰 좋아요 삭제
      *
-     * @param like domain
+     * @param likedomain
      * @return like domain
      * @throws Exception the exception
      */

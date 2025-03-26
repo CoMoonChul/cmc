@@ -12,6 +12,31 @@ tags:
     description: Like api controller
 
 paths:
+  /selectReviewLikeState:
+    get:
+      tags:
+        - like-controller
+      summary: 리뷰 좋아요 상태 조회
+      description: 리뷰 좋아요 상태 조회
+      operationId: selectReviewLikeState
+      parameters:
+        - name: id
+          in: query
+          description: 리뷰 id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/like/LikeDTO.yaml#/components/schemas/SelectReviewLikeStateResDTO"
+        '400':
+          description: Invalid status value
+
   /updateReviewLike:
     post:
       tags:
