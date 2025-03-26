@@ -64,7 +64,11 @@ public class LikeService implements LikeUseCase {
         id.setReviewId(likeDomain.getReviewId());
 
         if (reviewLikeRepository.existsById(id)) {
-            throw new CmcException("LIKE001");
+            reviewLikeRepository.deleteById(id);
+            return LikeDomain.builder()
+                    .reviewId(likeDomain.getReviewId())
+                    .type("delete")
+                    .build();
         }
 
         ReviewLike saving = new ReviewLike();
@@ -74,9 +78,8 @@ public class LikeService implements LikeUseCase {
         saving.setUser(savingUser);
         ReviewLike saved = reviewLikeRepository.save(saving);
         return LikeDomain.builder()
-                .userNum(saved.getId().getUserNum())
                 .reviewId(saved.getId().getReviewId())
-                .liked_at(saved.getLikedAt())
+                .type("create")
                 .build();
     }
 
