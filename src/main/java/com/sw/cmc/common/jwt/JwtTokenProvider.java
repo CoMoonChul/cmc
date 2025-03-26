@@ -56,7 +56,7 @@ public class JwtTokenProvider {
 
     // 라이브 코딩용
     public JwtToken createLcdToken(Claims claims) {
-        long inviteExpirationTimeInSeconds = 10 * 60; // 5분 유효
+        long inviteExpirationTimeInSeconds = 60 * 60; // `1시간 유효`
         final Date now = new Date();
 
         String accessToken = Jwts.builder()

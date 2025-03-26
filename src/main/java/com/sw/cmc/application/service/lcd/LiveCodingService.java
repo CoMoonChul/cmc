@@ -40,7 +40,7 @@ public class LiveCodingService implements LiveCodingUseCase {
     private static final String REDIS_LIVE_CODING_PREFIX = "live_coding:";  // Redis에 저장할 키 접두사
 
     @Override
-    public LiveCodingDomain createLiveCoding(Long hostId) throws Exception {
+    public LiveCodingDomain createLiveCoding(Long hostId) throws CmcException {
 
         Long currentUser = userUtil.getAuthenticatedUserNum();
         if (!Objects.equals(currentUser, hostId)) {
@@ -183,8 +183,8 @@ public class LiveCodingService implements LiveCodingUseCase {
 
 
 
-        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 3, TimeUnit.HOURS);
-        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 3, TimeUnit.HOURS);
+        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 1, TimeUnit.HOURS);
+        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 1, TimeUnit.HOURS);
     }
 
 }
