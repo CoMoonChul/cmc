@@ -7,11 +7,11 @@ import com.sw.cmc.common.filter.JwtAuthenticationFilter;
 import com.sw.cmc.common.jwt.JwtToken;
 import com.sw.cmc.common.jwt.JwtTokenProvider;
 import com.sw.cmc.common.util.MessageUtil;
+import com.sw.cmc.common.util.SmtpUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.TokenDomain;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
-import com.sw.cmc.event.notice.SendEmailJoinEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +45,7 @@ public class LoginService implements LoginUseCase {
     private final JwtTokenProvider jwtTokenProvider;
     private final ApplicationEventPublisher eventPublisher;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final SmtpUtil smtpUtil;
 
     @Override
     @Transactional
@@ -197,19 +198,10 @@ public class LoginService implements LoginUseCase {
         loginRepository.save(user);
 
         // 이메일 전송
-        sendEmail(email, username, userId, password);
+        smtpUtil.sendEmailFindAccount(email, username, userId, password);
 
         return messageUtil.getFormattedMessage("USER017");
     }
 
-    public void sendEmail(String email, String username, String userId, String password) throws Exception {
-        SendEmailJoinEvent sendEmailJoinEvent = SendEmailJoinEvent.builder()
-                .to(email)
-                .userName(username)
-                .userId(userId)
-                .passWord(password)
-                .build();
 
-        eventPublisher.publishEvent(sendEmailJoinEvent);
-    }
 }

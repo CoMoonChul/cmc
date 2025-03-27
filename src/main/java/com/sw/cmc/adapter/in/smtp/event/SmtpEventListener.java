@@ -2,9 +2,7 @@ package com.sw.cmc.adapter.in.smtp.event;
 
 import com.sw.cmc.application.port.in.smtp.SmtpUseCase;
 import com.sw.cmc.domain.smtp.SendEmailHtmlDomain;
-import com.sw.cmc.event.notice.SendEmailGroupInviteEvent;
-import com.sw.cmc.event.notice.SendEmailJoinEvent;
-import com.sw.cmc.event.notice.SendNotiEmailHtmlEvent;
+import com.sw.cmc.event.notice.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -35,16 +33,9 @@ public class SmtpEventListener {
     @EventListener
     public void sendEmailJoinEvent(SendEmailJoinEvent sendEmailJoinEvent) throws Exception {
 
-        String title = "코문철 계정 찾기";
-        String userId = sendEmailJoinEvent.getUserId();
+        String title = "코문철 회원가입";
         String userName = sendEmailJoinEvent.getUserName();
-        String passWord = sendEmailJoinEvent.getPassWord();
-
-        String message =
-                userName + "님, 안녕하세요.\n\n" +
-                        userName + "님의 아이디와 새로운 비밀번호는 " + userId + " / " + passWord + " 입니다.\n\n" +
-                        "지금 바로 로그인을 진행해 주세요.";
-
+        String message = userName + "님, 안녕하세요.\n\n 코문철 사이트 회원가입을 진심으로 축하드립니다.";
 
         SendEmailHtmlDomain sendEmailHtmlDomain = SendEmailHtmlDomain.builder()
                 .title(title)
@@ -79,6 +70,47 @@ public class SmtpEventListener {
                 .build();
 
         smtpUseCase.sendHtmlEmail(sendEmailHtmlDomain);
+    }
 
+    @EventListener
+    public void SendEmailExitEvent(SendEmailExitEvent sendEmailExitEvent) throws Exception {
+
+        String title = "회원 탈퇴";
+        String message = "코문철 사이트에서 탈퇴 하셨습니다. 다음에 만나요!";
+
+        SendEmailHtmlDomain sendEmailHtmlDomain = SendEmailHtmlDomain.builder()
+                .title(title)
+                .message(message)
+                .link("")
+                .to(sendEmailExitEvent.getTo())
+                .subject(title)
+                .build();
+
+        smtpUseCase.sendHtmlEmail(sendEmailHtmlDomain);
+    }
+
+    @EventListener
+    public void SendEmailAccountFindEvent(SendEmailAccountFindEvent sendEmailAccountFindEvent) throws Exception {
+
+        String title = "코문철 계정 찾기";
+        String userId = sendEmailAccountFindEvent.getUserId();
+        String userName = sendEmailAccountFindEvent.getUserName();
+        String passWord = sendEmailAccountFindEvent.getPassWord();
+
+        String message =
+                userName + "님, 안녕하세요.\n\n" +
+                        userName + "님의 아이디와 새로운 비밀번호는 " + userId + " / " + passWord + " 입니다.\n\n" +
+                        "지금 바로 로그인을 진행해 주세요.";
+
+
+        SendEmailHtmlDomain sendEmailHtmlDomain = SendEmailHtmlDomain.builder()
+                .title(title)
+                .message(message)
+                .link("")
+                .to(sendEmailAccountFindEvent.getTo())
+                .subject(title)
+                .build();
+
+        smtpUseCase.sendHtmlEmail(sendEmailHtmlDomain);
     }
 }
