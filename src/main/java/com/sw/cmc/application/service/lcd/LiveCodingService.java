@@ -44,7 +44,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
         Long currentUser = userUtil.getAuthenticatedUserNum();
         if (!Objects.equals(currentUser, hostId)) {
-//            throw new CmcException("LCD008");
+            throw new CmcException("LCD008");
         }
 
         if (this.existsByHostId(hostId)) {

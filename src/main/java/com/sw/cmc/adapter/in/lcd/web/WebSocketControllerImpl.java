@@ -1,5 +1,9 @@
 package com.sw.cmc.adapter.in.lcd.web;
 
+import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
+import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.common.util.UserUtil;
+import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -7,10 +11,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,20 +26,15 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
 
     // 방 별로 WebSocket 세션을 관리하는 ConcurrentHashMap
     private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
+    private final LiveCodingUseCase liveCodingUseCase;
 
-    @Override
-    public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
-        String roomId = getRoomId(session);
-        if (roomId.isEmpty()) {
-            session.close(CloseStatus.BAD_DATA);
-            return;
-        }
+    private final UserUtil userUtil;
 
-        rooms.putIfAbsent(roomId, ConcurrentHashMap.newKeySet());
-        rooms.get(roomId).add(session);
-
-        System.out.println("✅ WebSocket 연결됨: " + roomId + " (세션 수: " + rooms.get(roomId).size() + ")");
+    public WebSocketControllerImpl(LiveCodingUseCase liveCodingUseCase, UserUtil userUtil) {
+        this.liveCodingUseCase = liveCodingUseCase;
+        this.userUtil = userUtil;
     }
+
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
@@ -72,10 +68,46 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         return "";
     }
 
+    // open call back
+    @Override
+    public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
+
+        Long userNum = (Long) session.getAttributes().get("userNum");
+
+        if (userNum != null) {
+            System.out.println("웹소켓 연결된 유저번호: " + userNum);
+        } else {
+            session.close(CloseStatus.NOT_ACCEPTABLE);
+        }
+
+
+
+        String roomId = getRoomId(session);
+//        Long userNum = userUtil.getAuthenticatedUserNum();
+//        System.out.println("userNum :: ");
+//        System.out.println(userNum);
+
+        if (roomId.isEmpty()) {
+            session.close(CloseStatus.BAD_DATA);
+            return;
+        }
+
+        rooms.putIfAbsent(roomId, ConcurrentHashMap.newKeySet());
+        rooms.get(roomId).add(session);
+
+        System.out.println("✅ WebSocket 연결됨: " + roomId + " (세션 수: " + rooms.get(roomId).size() + ")");
+    }
+
+    // close call back
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
+        System.out.println("#22222222222222222222222222");
         String roomId = getRoomId(session);
-        if (roomId.isEmpty()) return;
+        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
+
+        if (roomId.isEmpty()) {
+            return;
+        }
 
         Set<WebSocketSession> sessions = rooms.getOrDefault(roomId, Collections.emptySet());
         sessions.remove(session);
@@ -83,6 +115,11 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         // 방에 더 이상 세션이 없다면 제거
         if (sessions.isEmpty()) {
             rooms.remove(roomId);
+            boolean deleted = liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
+            if (!deleted) {
+                throw new CmcException("LCD004");
+            }
+
         }
 
         System.out.println("❌ WebSocket 연결 종료: " + roomId + " (남은 세션 수: " + rooms.getOrDefault(roomId, Collections.emptySet()).size() + ")");
