@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class ReviewDetailVo {
     private Review review;
     private String username;
+    private Long userNum;
     private Long likeCount;
     private Long viewCount;
 }
