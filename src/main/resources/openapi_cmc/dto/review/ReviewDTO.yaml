@@ -58,6 +58,10 @@ components:
         username:
           type: string
           description: 회원명
+        userNum:
+          type: integer
+          format: int64
+          description: 글쓴이 ID
         title:
           type: string
           description: 리뷰 제목

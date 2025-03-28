@@ -54,6 +54,7 @@ public class ReviewService implements ReviewUseCase {
         return ReviewDomain.builder()
                 .reviewId(found.getReview().getReviewId())
                 .username(found.getUsername())
+                .userNum(found.getUserNum())
                 .title(found.getReview().getTitle())
                 .content(found.getReview().getContent())
                 .codeContent(found.getReview().getCodeContent())
