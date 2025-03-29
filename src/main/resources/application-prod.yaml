@@ -114,10 +114,6 @@ security:
     - /selectBattleList
     - /selectBattleVoteState
 
-    # LiveCoding
-    - /createLiveCoding
-    - /selectLiveCoding
-    - /deleteLiveCoding
 
 openai:
   model: ${AI_MODEL}

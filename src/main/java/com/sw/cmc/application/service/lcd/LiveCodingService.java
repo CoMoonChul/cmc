@@ -44,7 +44,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
         Long currentUser = userUtil.getAuthenticatedUserNum();
         if (!Objects.equals(currentUser, hostId)) {
-//            throw new CmcException("LCD008");
+            throw new CmcException("LCD008");
         }
 
         if (this.existsByHostId(hostId)) {
@@ -70,6 +70,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
         // Redis에 방 정보 저장
         this.saveLiveCoding(liveCodingDomain);  // Repository 사용
+        this.saveLiveCodeSnippet(liveCodingDomain);
 
         return liveCodingDomain;  // 생성된 LiveCodingDomain 반환
     }
@@ -179,11 +180,16 @@ public class LiveCodingService implements LiveCodingUseCase {
         liveCodingMap.put("link", liveCodingDomain.getLink());
 
         redisRepository.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
-        redisRepository.save(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), liveCodingDomain.getRoomId().toString());
-
-
-
         redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 1, TimeUnit.HOURS);
+    }
+
+    private boolean isHost(LiveCodingDomain liveCodingDomain) {
+        Long authenticatedUserNum = userUtil.getAuthenticatedUserNum();
+        return authenticatedUserNum != null && authenticatedUserNum.equals(liveCodingDomain.getHostId());
+    }
+
+    private void saveLiveCodeSnippet(LiveCodingDomain liveCodingDomain) {
+        redisRepository.save(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), liveCodingDomain.getRoomId().toString());
         redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 1, TimeUnit.HOURS);
     }
 
