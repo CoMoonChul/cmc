@@ -70,6 +70,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
         // Redis에 방 정보 저장
         this.saveLiveCoding(liveCodingDomain);  // Repository 사용
+        this.saveLiveCodeSnippet(liveCodingDomain);
 
         return liveCodingDomain;  // 생성된 LiveCodingDomain 반환
     }
@@ -179,12 +180,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         liveCodingMap.put("link", liveCodingDomain.getLink());
 
         redisRepository.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
-        redisRepository.save(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), liveCodingDomain.getRoomId().toString());
-
-
-
         redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 1, TimeUnit.HOURS);
-        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 1, TimeUnit.HOURS);
     }
 
     private boolean isHost(LiveCodingDomain liveCodingDomain) {
@@ -192,7 +188,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         return authenticatedUserNum != null && authenticatedUserNum.equals(liveCodingDomain.getHostId());
     }
 
-    private void saveHostCode(LiveCodingDomain liveCodingDomain) {
+    private void saveLiveCodeSnippet(LiveCodingDomain liveCodingDomain) {
         redisRepository.save(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), liveCodingDomain.getRoomId().toString());
         redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 1, TimeUnit.HOURS);
     }
