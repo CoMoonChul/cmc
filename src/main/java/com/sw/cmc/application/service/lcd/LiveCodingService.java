@@ -187,4 +187,14 @@ public class LiveCodingService implements LiveCodingUseCase {
         redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 1, TimeUnit.HOURS);
     }
 
+    private boolean isHost(LiveCodingDomain liveCodingDomain) {
+        Long authenticatedUserNum = userUtil.getAuthenticatedUserNum();
+        return authenticatedUserNum != null && authenticatedUserNum.equals(liveCodingDomain.getHostId());
+    }
+
+    private void saveHostCode(LiveCodingDomain liveCodingDomain) {
+        redisRepository.save(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), liveCodingDomain.getRoomId().toString());
+        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 1, TimeUnit.HOURS);
+    }
+
 }

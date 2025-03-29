@@ -3,6 +3,7 @@ package com.sw.cmc.adapter.in.lcd.web;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.UserUtil;
+import com.sw.cmc.domain.lcd.LiveCodingAction;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -74,24 +75,23 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
 
         Long userNum = (Long) session.getAttributes().get("userNum");
 
-        if (userNum != null) {
-            System.out.println("웹소켓 연결된 유저번호: " + userNum);
-        } else {
+        if (userNum == null) {
             session.close(CloseStatus.NOT_ACCEPTABLE);
+            throw new CmcException("LCD013");
         }
-
-
 
         String roomId = getRoomId(session);
-//        Long userNum = userUtil.getAuthenticatedUserNum();
-//        System.out.println("userNum :: ");
-//        System.out.println(userNum);
-
         if (roomId.isEmpty()) {
             session.close(CloseStatus.BAD_DATA);
-            return;
+            throw new CmcException("LCD001");
         }
 
+        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
+
+        boolean isHost = userNum.equals(roomInfo.getHostId());
+        if (!isHost) {
+            liveCodingUseCase.updateLiveCoding(roomInfo.getRoomId(), userNum, LiveCodingAction.JOIN.getAction());
+        }
         rooms.putIfAbsent(roomId, ConcurrentHashMap.newKeySet());
         rooms.get(roomId).add(session);
 
