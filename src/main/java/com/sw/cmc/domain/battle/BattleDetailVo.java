@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class BattleDetailVo {
     private Battle battle;
     private String username;
+    private Long userNum;
     private Long leftVote;
     private Long rightVote;
     private Long viewCount;

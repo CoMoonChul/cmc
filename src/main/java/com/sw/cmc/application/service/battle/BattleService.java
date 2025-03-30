@@ -55,6 +55,7 @@ public class BattleService implements BattleUseCase {
                 .codeContentRight(found.getBattle().getCodeContentRight())
                 .codeTypeLeft(found.getBattle().getCodeTypeLeft())
                 .codeTypeRight(found.getBattle().getCodeTypeRight())
+                .userNum(found.getUserNum())
                 .username(found.getUsername())
                 .createdAt(found.getBattle().getCreatedAt())
                 .updatedAt(found.getBattle().getUpdatedAt())

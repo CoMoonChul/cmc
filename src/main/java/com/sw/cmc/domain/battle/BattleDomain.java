@@ -113,7 +113,7 @@ public class BattleDomain {
      * @throws CmcException the cmc exception
      */
     public void validateCodeContentLeft() throws CmcException {
-        if (StringUtils.length(codeContentLeft) > 20000) {
+        if (StringUtils.length(codeContentLeft) > 20000 || StringUtils.length(codeContentLeft) < 1) {
             throw new CmcException("BATTLE005");
         }
     }
@@ -126,7 +126,7 @@ public class BattleDomain {
      * @throws CmcException the cmc exception
      */
     public void validateCodeContentRight() throws CmcException {
-        if (StringUtils.length(codeContentRight) > 20000) {
+        if (StringUtils.length(codeContentRight) > 20000 || StringUtils.length(codeContentRight) < 1) {
             throw new CmcException("BATTLE006");
         }
     }

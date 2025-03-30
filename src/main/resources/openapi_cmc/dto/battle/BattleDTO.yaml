@@ -13,6 +13,7 @@ components:
         - leftVote
         - rightVote
         - username
+        - userNum
         - viewCount
       properties:
         battleId:
@@ -51,6 +52,10 @@ components:
         username:
           type: string
           description: 회원명
+        userNum:
+          type: integer
+          format: int64
+          description: 회원번호
         viewCount:
           type: integer
           format: int64
