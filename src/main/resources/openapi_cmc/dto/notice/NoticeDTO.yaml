@@ -32,36 +32,49 @@ components:
 
     SelectNoticeResDTO:
       type: object
+      required:
+        - notiId
+        - userNum
+        - notiTemplateId
+        - sendAt
+        - sendState
+        - createdAt
+        - createUser
+        - notiTemplateNm
+        - notiTitle
+        - notiContent
+        - notiType
+        - reasonNoti
       properties:
-        noti_id:
+        notiId:
           type: integer
           format: int64
-        user_num:
+        userNum:
           type: integer
           format: int64
-        noti_template_id:
+        notiTemplateId:
           type: integer
           format: int64
-        send_at:
+        sendAt:
           type: string
-        send_state:
+        sendState:
           type: string
-        link_url:
+        linkUrl:
           type: string
-        created_at:
+        createdAt:
           type: string
-        create_user:
+        createUser:
           type: integer
           format: int32
-        noti_template_nm:
+        notiTemplateNm:
           type: string
-        noti_title:
+        notiTitle:
           type: string
-        noti_content:
+        notiContent:
           type: string
-        noti_type:
+        notiType:
           type: string
-        reason_noti:
+        reasonNoti:
           type: string
 
     SelectNoticeListDTO:
@@ -83,7 +96,7 @@ components:
     DeleteNoticeReqDTO:
       type: object
       properties:
-        noti_id:
+        notiId:
           type: integer
           format: int64
           description: 알림 ID
@@ -91,7 +104,7 @@ components:
     DeleteNoticeResDTO:
       type: object
       properties:
-        noti_id:
+        notiId:
           type: integer
           format: int64
           description: 알림 ID
@@ -99,7 +112,7 @@ components:
     DeleteNoticeAllResDTO:
       type: object
       properties:
-        delete_count:
+        deleteCount:
           type: integer
           format: int64
           description: 삭제 건수

@@ -45,9 +45,9 @@ public class BattleDomain {
     public void validateCreateBattle() throws CmcException {
         validateTitle();
         validateContent();
-        validateEndTime();
         validateCodeContentLeft();
         validateCodeContentRight();
+        validateCodeType();
     }
 
     /**
@@ -60,9 +60,9 @@ public class BattleDomain {
     public void validateUpdateBattle() throws CmcException {
         validateTitle();
         validateContent();
-        validateEndTime();
         validateCodeContentLeft();
         validateCodeContentRight();
+        validateCodeType();
     }
 
     /**
@@ -128,6 +128,19 @@ public class BattleDomain {
     public void validateCodeContentRight() throws CmcException {
         if (StringUtils.length(codeContentRight) > 20000 || StringUtils.length(codeContentRight) < 1) {
             throw new CmcException("BATTLE006");
+        }
+    }
+
+    /**
+     * methodName : validateCodeType
+     * author : IM HYUN WOO
+     * description : code type validation
+     *
+     * @throws CmcException the cmc exception
+     */
+    public void validateCodeType() throws CmcException {
+        if (!CodeType.isValidType(codeTypeLeft) || !CodeType.isValidType(codeTypeRight)) {
+            throw new CmcException("BATTLE012");
         }
     }
 }

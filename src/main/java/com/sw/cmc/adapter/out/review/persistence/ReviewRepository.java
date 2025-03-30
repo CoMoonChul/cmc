@@ -30,7 +30,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @return battle detail vo
      */
     @Query("SELECT new com.sw.cmc.domain.review.ReviewDetailVo( " +
-            "r, u.username, " +
+            "r, u.username, u.userNum, " +
             "(SELECT COUNT(*) FROM ReviewLike rl WHERE r.reviewId = rl.id.reviewId), " +
             "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) ) " +
             "FROM Review r " +

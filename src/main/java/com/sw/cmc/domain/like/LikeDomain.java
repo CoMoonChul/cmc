@@ -19,5 +19,8 @@ import lombok.NoArgsConstructor;
 public class LikeDomain {
     private Long userNum;
     private Long reviewId;
-    private String liked_at;
+    private String likedAt;
+    private boolean likeState;
+    private Long count;
+    private String type;
 }

@@ -107,5 +107,15 @@ public interface LiveCodingUseCase {
      */
     void saveLiveCoding(LiveCodingDomain liveCodingDomain);
 
+
+    /**
+     * methodName : verifyLiveCoding
+     * author : KO YOUNG SUNG
+     * description : 라이브코딩방 토큰 검증
+     *
+     * @param token - jwt 토큰
+     */
+    UUID verifyLiveCoding(String token) throws Exception;
+
 }
 

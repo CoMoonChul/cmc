@@ -31,6 +31,8 @@ components:
 
     SelectCommentListResDTO:
       type: object
+      required:
+        - commentList
       properties:
         pageNumber:
           type: integer
@@ -47,82 +49,88 @@ components:
 
     SelectCommentItemResDTO:
       type: object
+      required:
+        - commentId
+        - content
+        - userNum
+        - createdAt
+        - updatedAt
+        - username
       properties:
-        comment_id:
+        commentId:
           type: integer
           format: int64
           description: 댓글 ID
         content:
           type: string
           description: 내용
-        user_num:
+        userNum:
           type: integer
           format: int64
           description: 회원 번호
-        target_id:
-          type: integer
-          format: int64
-          description: 타겟 ID
-        comment_target:
-          type: integer
-          format: int32
-          description: 타겟 구분
-        created_at:
+        createdAt:
           type: string
           description: 생성 일시
-        updated_at:
+        updatedAt:
           type: string
           description: 최종 수정 일시
         username:
           type: string
-        email:
-          type: string
+          description: 댓글 작성자 명
 
     CreateCommentReqDTO:
       type: object
       required:
         - content
-        - target_id
-        - comment_target
+        - targetId
+        - commentTarget
       properties:
         content:
           type: string
           description: 내용
-        target_id:
+        targetId:
           type: integer
           format: int64
           description: 타켓 ID
-        comment_target:
+        commentTarget:
           type: integer
           format: int32
           description: 타겟 구분
 
     CreateCommentResDTO:
       type: object
+      required:
+        - commentId
+        - content
+        - userNum
+        - targetId
+        - commentTarget
+        - createdAt
+        - updatedAt
       properties:
-        comment_id:
+        commentId:
           type: integer
           format: int64
           description: 댓글 ID
         content:
           type: string
           description: 내용
-        user_num:
+        userNum:
           type: integer
           format: int64
           description: 회원 번호
-        target_id:
+        targetId:
           type: integer
           format: int64
           description: 타겟 ID
-        comment_target:
+        commentTarget:
           type: integer
           format: int32
           description: 타겟 구분
-        created_at:
+        createdAt:
           type: string
           description: 생성 일시
-        updated_at:
+        updatedAt:
           type: string
           description: 최종 수정 일시
 

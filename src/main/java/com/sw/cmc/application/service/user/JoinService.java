@@ -1,5 +1,7 @@
 package com.sw.cmc.application.service.user;
 
+import com.sw.cmc.common.util.NotiUtil;
+import com.sw.cmc.common.util.SmtpUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
@@ -12,6 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 import static com.sw.cmc.domain.user.UserDomain.*;
 
@@ -32,6 +36,8 @@ public class JoinService implements JoinUseCase {
     private final PasswordEncoder passwordEncoder;
 
     private final UserUtil userUtil;
+    private final NotiUtil notiUtil;
+    private final SmtpUtil smtpUtil;
 
     @Override
     @Transactional
@@ -62,6 +68,12 @@ public class JoinService implements JoinUseCase {
 
         // 회원 생성
         joinRepository.save(modelMapper.map(encryptedUserDomain, User.class));
+
+        // 가입 이메일 전송
+        smtpUtil.sendEmailJoin(userDomain.getEmail(), userDomain.getUsername(), userDomain.getUserId(), userDomain.getPassword());
+        // 가입 인앱 알림 전송
+        Map<String, String> templateParams = Map.of("userNm", userDomain.getUsername());
+        notiUtil.sendNotice(1L, "", templateParams);
 
         return encryptedUserDomain.toBuilder()
                 .resultMessage(messageUtil.getFormattedMessage("USER011"))

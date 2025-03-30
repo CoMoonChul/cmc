@@ -42,7 +42,8 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
     @Query("""
         SELECT b,
                COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-               COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount
+               COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
+               (SELECT u.username FROM User u WHERE u.userNum = b.user.userNum) AS username
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
         GROUP BY b
@@ -59,7 +60,8 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
     @Query("""
         SELECT b,
             COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount
+            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
+            (SELECT u.username FROM User u WHERE u.userNum = b.user.userNum) AS username
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
         GROUP BY b.battleId
@@ -79,7 +81,8 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
     @Query("""
         SELECT b,
             COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount
+            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
+            (SELECT u.username FROM User u WHERE u.userNum = b.user.userNum) AS username
         FROM Battle b
         JOIN Vote v ON b.battleId = v.battleId
         WHERE v.user.userNum = :userNum
@@ -99,7 +102,8 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
     @Query("""
         SELECT b,
             COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount
+            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
+            (SELECT u.username FROM User u WHERE u.userNum = b.user.userNum) AS username
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
         WHERE b.user.userNum = :userNum

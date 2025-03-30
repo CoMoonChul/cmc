@@ -6,13 +6,13 @@ import com.sw.cmc.adapter.out.user.persistence.UserRepository;
 import com.sw.cmc.application.port.in.group.GroupUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.MessageUtil;
+import com.sw.cmc.common.util.NotiUtil;
+import com.sw.cmc.common.util.SmtpUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.group.GroupDomain;
 import com.sw.cmc.entity.Group;
 import com.sw.cmc.entity.GroupMember;
 import com.sw.cmc.entity.User;
-import com.sw.cmc.event.notice.SendEmailGroupInviteEvent;
-import com.sw.cmc.event.notice.SendNotiInAppEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,8 @@ public class GroupService implements GroupUseCase {
     private final GroupRepository groupRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final GroupMemberRepository groupMemberRepository;
+    private final NotiUtil notiUtil;
+    private final SmtpUtil smtpUtil;
 
     @Override
     @Transactional
@@ -127,9 +129,10 @@ public class GroupService implements GroupUseCase {
                 .orElseThrow(() -> new CmcException("USER001"));
 
         // 이메일 전송
-        sendEmail(invitee.getEmail(), inviter.getUsername(), group.getGroupName(), invitee.getUsername());
+        smtpUtil.sendEmailGroupInvite(invitee.getEmail(), inviter.getUsername(), group.getGroupName(), invitee.getUsername());
         // 인앱 알림
-        sendNotice("groupNm", group.getGroupName());
+        Map<String, String> templateParams = Map.of("groupNm", group.getGroupName());
+        notiUtil.sendNotice(3L, "", templateParams);
 
         return messageUtil.getFormattedMessage("USER025");
     }
@@ -153,35 +156,5 @@ public class GroupService implements GroupUseCase {
         return messageUtil.getFormattedMessage("USER027");
     }
 
-    public void sendEmail(String email, String username, String groupName, String targetName) throws Exception {
-        SendEmailGroupInviteEvent sendEmailGroupInviteEvent = SendEmailGroupInviteEvent.builder()
-                .to(email)
-                .targetName(targetName)
-                .userName(username)
-                .groupName(groupName)
-                .build();
 
-        eventPublisher.publishEvent(sendEmailGroupInviteEvent);
-
-
-    }
-
-    public void sendNotice(String paramKey, String paramVal) {
-        // 인앱 알림 (notice 테이블에 저장)
-        Long userNum = userUtil.getAuthenticatedUserNum();
-        Map<String, String> templateParams = Map.of(
-                paramKey, paramVal
-        ); // 템플릿 내용
-
-        SendNotiInAppEvent sendNotiInAppEvent = SendNotiInAppEvent.builder()
-                .notiTemplateId(3L)
-                .sendAt(LocalDateTime.now().toString())
-                .linkUrl("")
-                .createUser(userNum)
-                .sendState("Y")
-                .templateParams(templateParams)
-                .build();
-
-        eventPublisher.publishEvent(sendNotiInAppEvent);
-    }
 }

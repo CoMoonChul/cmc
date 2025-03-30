@@ -1,5 +1,6 @@
 package com.sw.cmc.common.jwt;
 
+import com.sw.cmc.common.advice.CmcException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * packageName    : com.sw.cmc.common.jwt
@@ -49,6 +51,54 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + (tokenType == JwtTokenType.ACCESS ? accessTokenExpirationTimeInSeconds : refreshTokenExpirationTimeInSeconds)))
                 .compact();
+    }
+
+
+    // 라이브 코딩용
+    public JwtToken createLcdToken(Claims claims) {
+        long inviteExpirationTimeInSeconds = 60 * 60; // `1시간 유효`
+        final Date now = new Date();
+
+        String accessToken = Jwts.builder()
+                .addClaims(claims)
+                .claim("type", JwtTokenType.ACCESS.name()) // ✅ 토큰 타입 추가
+                .signWith(key, SignatureAlgorithm.forName("HS256"))
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + inviteExpirationTimeInSeconds * 1000))
+                .compact();
+
+        return JwtToken.builder()
+                .accessToken(accessToken)
+                .accessTokenExpirationTime(inviteExpirationTimeInSeconds)
+                .build();
+    }
+
+    public UUID validateLcdToken(final String token) throws CmcException {
+        try {
+            // JWT 검증 및 Claims 추출
+            Claims claims = jwtParser.parseClaimsJws(token).getBody();
+
+            // ✅ 토큰 타입이 "ACCESS"인지 확인
+            String type = claims.get("type", String.class);
+            if (!"ACCESS".equals(type)) {
+                throw new CmcException("LCD009");
+            }
+
+
+            String roomIdStr = claims.get("roomId", String.class);
+            if (roomIdStr == null) {
+                throw new CmcException("LCD0063");
+            }
+
+            return UUID.fromString(roomIdStr);
+        } catch (ExpiredJwtException e) {
+            throw new CmcException("LCD010");
+        } catch (JwtException e) {
+            throw new CmcException("LCD009");
+        } catch (IllegalArgumentException e) {
+            throw new CmcException("LCD011");
+        }
+
     }
 
     public String createAccessToken(final Claims claims) throws Exception {

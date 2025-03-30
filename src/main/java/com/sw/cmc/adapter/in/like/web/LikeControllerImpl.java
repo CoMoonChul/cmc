@@ -1,9 +1,6 @@
 package com.sw.cmc.adapter.in.like.web;
 
-import com.sw.cmc.adapter.in.like.dto.DeleteReviewLikeReqDTO;
-import com.sw.cmc.adapter.in.like.dto.DeleteReviewLikeResDTO;
-import com.sw.cmc.adapter.in.like.dto.UpdateReviewLikeReqDTO;
-import com.sw.cmc.adapter.in.like.dto.UpdateReviewLikeResDTO;
+import com.sw.cmc.adapter.in.like.dto.*;
 import com.sw.cmc.application.port.in.like.LikeUseCase;
 import com.sw.cmc.domain.like.LikeDomain;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +21,11 @@ public class LikeControllerImpl implements LikeControllerApi {
 
     private final LikeUseCase likeUseCase;
     private final ModelMapper modelMapper;
+
+    @Override
+    public ResponseEntity<SelectReviewLikeStateResDTO> selectReviewLikeState(Long id) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(likeUseCase.selectReviewLikeState(id), SelectReviewLikeStateResDTO.class));
+    }
 
     @Override
     public ResponseEntity<DeleteReviewLikeResDTO> deleteReviewLike(DeleteReviewLikeReqDTO deleteReviewLikeReqDTO) throws Exception {
