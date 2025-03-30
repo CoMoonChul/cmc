@@ -22,7 +22,7 @@ import java.util.Optional;
 public interface BattleRepository extends JpaRepository<Battle, Long>  {
 
     @Query("SELECT new com.sw.cmc.domain.battle.BattleDetailVo( " +
-            "b, u.username, " +
+            "b, u.username, u.userNum," +
             "(SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 0), " +
             "(SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 1), " +
             "(SELECT bv.viewCount FROM BattleView bv WHERE bv.battleId = b.battleId) ) " +
