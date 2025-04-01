@@ -35,6 +35,9 @@ public class Review {
     @Column(name = "code_content", length = 20000, nullable = false)
     private String codeContent;
 
+    @Column(name = "code_type", length = 20, nullable = false)
+    private String codeType;
+
     @CreationTimestamp
     @Column(name = "created_at", insertable = false, updatable = false)
     private String createdAt;

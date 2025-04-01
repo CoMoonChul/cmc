@@ -58,6 +58,7 @@ public class ReviewService implements ReviewUseCase {
                 .title(found.getReview().getTitle())
                 .content(found.getReview().getContent())
                 .codeContent(found.getReview().getCodeContent())
+                .codeType(found.getReview().getCodeType())
                 .viewCount(found.getViewCount())
                 .likeCount(found.getLikeCount())
                 .createdAt(found.getReview().getCreatedAt())
@@ -128,6 +129,7 @@ public class ReviewService implements ReviewUseCase {
         saving.setTitle(reviewDomain.getTitle());
         saving.setContent(reviewDomain.getContent());
         saving.setCodeContent(reviewDomain.getCodeContent());
+        saving.setCodeType(reviewDomain.getCodeType());
 
         Review saved = reviewRepository.save(saving);
         entityManager.refresh(saved);
@@ -137,6 +139,7 @@ public class ReviewService implements ReviewUseCase {
                 .title(saved.getTitle())
                 .content(saved.getContent())
                 .codeContent(saved.getCodeContent())
+                .codeType(saved.getCodeType())
                 .createdAt(saved.getCreatedAt())
                 .updatedAt(saved.getUpdatedAt())
                 .build();
@@ -175,6 +178,7 @@ public class ReviewService implements ReviewUseCase {
         found.setTitle(reviewDomain.getTitle());
         found.setContent(reviewDomain.getContent());
         found.setCodeContent(reviewDomain.getCodeContent());
+        found.setCodeType(reviewDomain.getCodeType());
 
         Review saved = reviewRepository.save(found);
 //        entityManager.refresh(saved);
@@ -186,6 +190,7 @@ public class ReviewService implements ReviewUseCase {
                 .title(saved.getTitle())
                 .content(saved.getContent())
                 .codeContent(saved.getCodeContent())
+                .codeType(saved.getCodeType())
                 .createdAt(saved.getCreatedAt())
                 .updatedAt(saved.getUpdatedAt())
                 .build();
@@ -206,6 +211,7 @@ public class ReviewService implements ReviewUseCase {
                 .title(review.getTitle())
                 .content(review.getContent())
                 .codeContent(review.getCodeContent())
+                .codeType(review.getCodeType())
                 .createdAt(review.getCreatedAt())
                 .updatedAt(review.getUpdatedAt())
                 .viewCount(reviewView.getViewCount())

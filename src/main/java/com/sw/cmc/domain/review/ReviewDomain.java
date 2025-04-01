@@ -1,6 +1,7 @@
 package com.sw.cmc.domain.review;
 
 import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.domain.battle.CodeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class ReviewDomain {
     private String createdAt;
     private String updatedAt;
     private String codeContent;
+    private String codeType;
 
     private Long viewCount; // 조회수
     private Long likeCount; // 좋아요 수
@@ -41,6 +43,7 @@ public class ReviewDomain {
         validateTitle();
         validateContent();
         validateCodeContentLength();
+        validateCodeType();
     }
     /**
      * methodName : validateCreateReview
@@ -82,6 +85,18 @@ public class ReviewDomain {
     public void validateCodeContentLength() throws CmcException {
         if (StringUtils.length(codeContent) > 20000) {
             throw new CmcException("REVIEW008");
+        }
+    }
+    /**
+     * methodName : validateCodeType
+     * author : PARK JONG IL
+     * description : code type validation
+     *
+     * @throws CmcException the cmc exception
+     */
+    public void validateCodeType() throws CmcException {
+        if (!CodeType.isValidType(codeType)) {
+            throw new CmcException("REVIEW011");
         }
     }
 }

@@ -29,6 +29,9 @@ components:
         codeContent:
           type: string
           description: 코드 내용
+        codeType:
+          type: string
+          description: 코드 타입
         reviewView:
           type: integer
           format: int64
@@ -48,6 +51,7 @@ components:
         - title
         - content
         - codeContent
+        - codeType
         - viewCount
         - likeCount
       properties:
@@ -73,6 +77,9 @@ components:
         codeContent:
           type: string
           description: 코드 내용
+        codeType:
+          type: string
+          description: 코드 타입
         viewCount:
           type: integer
           format: int64
@@ -151,6 +158,7 @@ components:
         - title
         - content
         - codeContent
+        - codeType
       properties:
         title:
           type: string
@@ -163,6 +171,9 @@ components:
         codeContent:
           type: string
           description: 코드 내용
+        codeType:
+          type: string
+          description: 코드 타입
 
     # 리뷰 생성 응답 DTO
     CreateReviewResDTO:
@@ -197,6 +208,7 @@ components:
         - title
         - content
         - codeContent
+        - codeType
       properties:
         reviewId:
           type: integer
@@ -213,6 +225,9 @@ components:
         codeContent:
           type: string
           description: 코드 내용
+        codeType:
+          type: string
+          description: 코드 타입
     # 리뷰 수정 응답 DTO
     UpdateReviewResDTO:
       allOf:

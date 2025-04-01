@@ -40,6 +40,7 @@ public class ReviewControllerImpl implements ReviewControllerApi {
                 .title(createReviewReqDTO.getTitle())
                 .content(createReviewReqDTO.getContent())
                 .codeContent(createReviewReqDTO.getCodeContent())
+                .codeType(createReviewReqDTO.getCodeType())
                 .build();
 
         ReviewDomain createdReview = reviewUseCase.createReview(reviewDomain);
@@ -61,6 +62,7 @@ public class ReviewControllerImpl implements ReviewControllerApi {
                 .title(updateReviewReqDTO.getTitle())
                 .content(updateReviewReqDTO.getContent())
                 .codeContent(updateReviewReqDTO.getCodeContent())
+                .codeType(updateReviewReqDTO.getCodeType())
                 .build();
         return ResponseEntity.ok(modelMapper.map(reviewUseCase.updateReview(reviewDomain), UpdateReviewResDTO.class));
     }
