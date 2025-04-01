@@ -2,7 +2,6 @@ package com.sw.cmc.adapter.in.lcd.web;
 
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.lcd.LiveCodingAction;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import org.springframework.lang.NonNull;
@@ -12,6 +11,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,11 +29,8 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
     private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
     private final LiveCodingUseCase liveCodingUseCase;
 
-    private final UserUtil userUtil;
-
-    public WebSocketControllerImpl(LiveCodingUseCase liveCodingUseCase, UserUtil userUtil) {
+    public WebSocketControllerImpl(LiveCodingUseCase liveCodingUseCase ) {
         this.liveCodingUseCase = liveCodingUseCase;
-        this.userUtil = userUtil;
     }
 
 
@@ -86,12 +83,6 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             throw new CmcException("LCD001");
         }
 
-        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
-
-        boolean isHost = userNum.equals(roomInfo.getHostId());
-        if (!isHost) {
-            liveCodingUseCase.updateLiveCoding(roomInfo.getRoomId(), userNum, LiveCodingAction.JOIN.getAction());
-        }
         rooms.putIfAbsent(roomId, ConcurrentHashMap.newKeySet());
         rooms.get(roomId).add(session);
 
@@ -101,27 +92,47 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
     // close call back
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
-        System.out.println("#22222222222222222222222222");
-        String roomId = getRoomId(session);
-        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
-
-        if (roomId.isEmpty()) {
-            return;
+        Long userNum = (Long) session.getAttributes().get("userNum");
+        if (userNum == null) {
+            session.close(CloseStatus.NOT_ACCEPTABLE);
+            throw new CmcException("LCD013");
         }
 
+        String roomId = getRoomId(session);
+        if (roomId.isEmpty()) {
+            throw new CmcException("LCD001");
+        }
+
+        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
         Set<WebSocketSession> sessions = rooms.getOrDefault(roomId, Collections.emptySet());
         sessions.remove(session);
 
-        // 방에 더 이상 세션이 없다면 제거
-        if (sessions.isEmpty()) {
+        boolean isHost = userNum.equals(roomInfo.getHostId());
+
+        if (isHost) {
+            // 호스트가 나가면 모든 참가자 세션 종료
+            for (WebSocketSession s : new HashSet<>(sessions)) {
+                try {
+                    s.close(CloseStatus.GOING_AWAY);
+                } catch (IOException e) {
+                    throw new CmcException("LCD014");
+                }
+            }
+
+            // 방 제거
             rooms.remove(roomId);
             boolean deleted = liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
             if (!deleted) {
                 throw new CmcException("LCD004");
             }
 
+            System.out.println("🚫 방 종료: " + roomId);
+        } else {
+            // 참가자 나가기 처리
+            liveCodingUseCase.updateLiveCoding(roomInfo.getRoomId(), userNum, LiveCodingAction.LEAVE.getAction());
         }
 
         System.out.println("❌ WebSocket 연결 종료: " + roomId + " (남은 세션 수: " + rooms.getOrDefault(roomId, Collections.emptySet()).size() + ")");
     }
+
 }

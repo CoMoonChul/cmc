@@ -97,8 +97,9 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     @Override
-    public UUID verifyLiveCoding(String token)  {
-        return jwtTokenProvider.validateLcdToken(token);
+    public LiveCodingDomain verifyLiveCoding(String token)  {
+        UUID verifiedRoomID = jwtTokenProvider.validateLcdToken(token);
+        return this.updateLiveCoding(verifiedRoomID, userUtil.getAuthenticatedUserNum(), LiveCodingAction.JOIN.getAction());
     }
 
 
@@ -117,8 +118,12 @@ public class LiveCodingService implements LiveCodingUseCase {
         if (liveCodingDomain == null) {
             throw new CmcException("LCD001");
         }
-
         if (action == LiveCodingAction.JOIN.getAction()) {
+
+            if (liveCodingDomain.getParticipants().contains(userNum)) {
+                throw new CmcException("LCD005");
+            }
+
             liveCodingDomain.joinParticipant(userNum);
         } else if (action == LiveCodingAction.LEAVE.getAction()) {
             liveCodingDomain.leaveParticipant(userNum);

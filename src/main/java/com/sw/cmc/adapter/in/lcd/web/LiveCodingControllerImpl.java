@@ -24,6 +24,7 @@ import java.util.UUID;
 public class LiveCodingControllerImpl implements LiveCodingControllerApi {
     private final LiveCodingUseCase liveCodingUseCase;
 
+
     @Override
     public ResponseEntity<CreateLiveCodingResDTO> createLiveCoding(CreateLiveCodingReqDTO createLiveCodingReqDTO) throws Exception {
         LiveCodingDomain liveCodingDomain = liveCodingUseCase.createLiveCoding(createLiveCodingReqDTO.getHostId());
@@ -114,11 +115,12 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
 
     @Override
     public ResponseEntity<VerifyLiveCodingResDTO> verifyLiveCoding(VerifyLiveCodingReqDTO verifyLiveCodingReqDTO) throws Exception {
-         UUID verifiedRoom = liveCodingUseCase.verifyLiveCoding(
+        LiveCodingDomain verifiedRoom = liveCodingUseCase.verifyLiveCoding(
                  verifyLiveCodingReqDTO.getToken()
         );
+
         VerifyLiveCodingResDTO response = new VerifyLiveCodingResDTO();
-        response.setRoomId(verifiedRoom);
+        response.setRoomId(verifiedRoom.getRoomId());
 
         return ResponseEntity.ok(response);  // 200 OK 응답 반환
 
