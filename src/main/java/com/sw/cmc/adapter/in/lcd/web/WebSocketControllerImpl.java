@@ -83,12 +83,6 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             throw new CmcException("LCD001");
         }
 
-        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
-
-        boolean isHost = userNum.equals(roomInfo.getHostId());
-        if (!isHost) {
-            liveCodingUseCase.updateLiveCoding(roomInfo.getRoomId(), userNum, LiveCodingAction.JOIN.getAction());
-        }
         rooms.putIfAbsent(roomId, ConcurrentHashMap.newKeySet());
         rooms.get(roomId).add(session);
 
@@ -121,7 +115,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                 try {
                     s.close(CloseStatus.GOING_AWAY);
                 } catch (IOException e) {
-                    throw new CmcException("LCD015");
+                    throw new CmcException("LCD014");
                 }
             }
 

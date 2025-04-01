@@ -115,7 +115,7 @@ public interface LiveCodingUseCase {
      *
      * @param token - jwt 토큰
      */
-    UUID verifyLiveCoding(String token) throws Exception;
+    LiveCodingDomain verifyLiveCoding(String token) throws Exception;
 
 }
 
