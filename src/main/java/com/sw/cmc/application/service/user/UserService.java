@@ -69,7 +69,6 @@ public class UserService implements UserUseCase {
     @Transactional
     public String update(UserDomain userDomain) throws Exception {
         // 유효성 검사
-        validatePassword(userDomain.getPassword());
         validateUsername(userDomain.getUsername());
         validateEmail(userDomain.getEmail());
 
@@ -88,7 +87,6 @@ public class UserService implements UserUseCase {
         final User user = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
                 .orElseThrow(() -> new CmcException("USER001"));
 
-        user.setPassword(passwordEncoder.encode(userDomain.getPassword()));
         user.setUsername(userDomain.getUsername());
         user.setEmail(userDomain.getEmail());
 
@@ -96,5 +94,29 @@ public class UserService implements UserUseCase {
         userRepository.save(user);
 
         return messageUtil.getFormattedMessage("USER018");
+    }
+
+    @Override
+    @Transactional
+    public String updatePassword(UserDomain userDomain) throws Exception {
+        // 유효성 검사
+        validatePassword(userDomain.getNewPassword());
+        validatePasswordChanged(userDomain.getNewPassword(), userDomain.getPastPassword());
+
+        // 회원 조회
+        final User user = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
+                .orElseThrow(() -> new CmcException("USER001"));
+
+        // 기존 비밀번호가 잘못된 경우
+        if (!passwordEncoder.matches(userDomain.getPastPassword(), user.getPassword())) {
+            throw new CmcException("USER030");
+        }
+
+        user.setPassword(passwordEncoder.encode(userDomain.getNewPassword()));
+
+        // 회원 정보 저장
+        userRepository.save(user);
+
+        return messageUtil.getFormattedMessage("USER032");
     }
 }

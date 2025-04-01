@@ -39,13 +39,19 @@ public class UserControllerImpl implements UserControllerApi {
 
     @Override
     public ResponseEntity<UpdateResDTO> update(UpdateReqDTO updateReqDTO) throws Exception {
-
         UserDomain userDomain = UserDomain.builder()
-                .password(updateReqDTO.getPassword())
                 .username(updateReqDTO.getUsername())
                 .email(updateReqDTO.getEmail())
                 .build();
-
         return ResponseEntity.ok(new UpdateResDTO().resultMessage(userUseCase.update(userDomain)));
+    }
+
+    @Override
+    public ResponseEntity<UpdatePasswordResDTO> updatePassword(UpdatePasswordReqDTO updatePasswordReqDTO) throws Exception {
+        UserDomain userDomain = UserDomain.builder()
+                .newPassword(updatePasswordReqDTO.getNewPassword())
+                .pastPassword(updatePasswordReqDTO.getPastPassword())
+                .build();
+        return ResponseEntity.ok(new UpdatePasswordResDTO().resultMessage(userUseCase.updatePassword(userDomain)));
     }
 }
