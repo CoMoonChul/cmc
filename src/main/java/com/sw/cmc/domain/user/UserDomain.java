@@ -1,9 +1,11 @@
 package com.sw.cmc.domain.user;
 
-import com.sw.cmc.adapter.in.user.dto.WithdrawReqDTO;
-import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 import com.sw.cmc.common.advice.CmcException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ public class UserDomain {
     private String username;
     private String email;
     private String userRole;
-
+    private String newPassword;
+    private String pastPassword;
     private String resultMessage;
 
 
@@ -80,6 +83,11 @@ public class UserDomain {
         final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d).{6,}$";
         if (!Pattern.matches(PASSWORD_REGEX, password)) {
             throw new CmcException("USER004");
+        }
+    }
+    public static void validatePasswordChanged(String newPassword, String pastPassword) {
+        if (StringUtils.equals(newPassword, pastPassword)) {
+            throw new CmcException("USER031");
         }
     }
     public static void validateEmail(String email) {

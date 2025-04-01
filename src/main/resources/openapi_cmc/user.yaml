@@ -254,3 +254,24 @@ paths:
             application/json:
               schema:
                 $ref: "./dto/user/UserDTO.yaml#/components/schemas/UpdateResDTO"
+
+  /user/updatePassword:
+    post:
+      tags:
+        - user-controller
+      summary: "API_USER_0011 비밀 번호 변경"
+      description: 비밀 번호 변경 API
+      operationId: "updatePassword"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/user/UserDTO.yaml#/components/schemas/UpdatePasswordReqDTO"
+      responses:
+        "200":
+          description: "비밀 번호 변경 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/user/UserDTO.yaml#/components/schemas/UpdatePasswordResDTO"

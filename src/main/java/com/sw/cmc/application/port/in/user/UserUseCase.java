@@ -15,4 +15,6 @@ public interface UserUseCase {
     String withdraw(UserDomain userDomain) throws Exception;
 
     String update(UserDomain userDomain) throws Exception;
+
+    String updatePassword(UserDomain userDomain) throws Exception;
 }
