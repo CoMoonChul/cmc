@@ -3,6 +3,9 @@ components:
     # API_USER_0008 내 정보 조회
     GetMyInfoResDTO:
       type: object
+      required:
+        - username
+        - email
       properties:
         username:
           type: string
