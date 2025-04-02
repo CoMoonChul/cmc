@@ -1,5 +1,6 @@
 package com.sw.cmc.application.service.user;
 
+import com.sw.cmc.adapter.out.user.persistence.UserRepository;
 import com.sw.cmc.common.util.NotiUtil;
 import com.sw.cmc.common.util.SmtpUtil;
 import com.sw.cmc.common.util.UserUtil;
@@ -34,6 +35,7 @@ public class JoinService implements JoinUseCase {
     private final ModelMapper modelMapper;
     private final JoinRepository joinRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     private final UserUtil userUtil;
     private final NotiUtil notiUtil;
@@ -72,8 +74,13 @@ public class JoinService implements JoinUseCase {
         // 가입 이메일 전송
         smtpUtil.sendEmailJoin(userDomain.getEmail(), userDomain.getUsername(), userDomain.getUserId(), userDomain.getPassword());
         // 가입 인앱 알림 전송
+        // 유저 정보 조회 해서 user id 구하기 ?
+
+        final User joinUser = userRepository.findByUsername(encryptedUserDomain.getUsername())
+                .orElseThrow(() -> new CmcException("USER001"));
+
         Map<String, String> templateParams = Map.of("userNm", userDomain.getUsername());
-        notiUtil.sendNotice(1L, "", templateParams);
+        notiUtil.sendNotice( joinUser.getUserNum(), 1L, "", templateParams);
 
         return encryptedUserDomain.toBuilder()
                 .resultMessage(messageUtil.getFormattedMessage("USER011"))

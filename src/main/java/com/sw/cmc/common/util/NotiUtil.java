@@ -23,11 +23,12 @@ public class NotiUtil {
     private final UserUtil userUtil;
     private final ApplicationEventPublisher eventPublisher;
 
-    public void sendNotice(Long notiTemplateId, String linkUrl , Map<String, String> templateParams) {
+    public void sendNotice(Long userNum, Long notiTemplateId, String linkUrl , Map<String, String> templateParams) {
         // 인앱 알림 (notice 테이블에 저장)
-        Long userNum = userUtil.getAuthenticatedUserNum();
+//        Long userNum = userUtil.getAuthenticatedUserNum();
 
         SendNotiInAppEvent sendNotiInAppEvent = SendNotiInAppEvent.builder()
+                .userNum(userNum)
                 .notiTemplateId(notiTemplateId)
                 .sendAt(LocalDateTime.now().toString())
                 .linkUrl(linkUrl)
