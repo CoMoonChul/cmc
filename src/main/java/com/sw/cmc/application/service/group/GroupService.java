@@ -132,7 +132,7 @@ public class GroupService implements GroupUseCase {
         smtpUtil.sendEmailGroupInvite(invitee.getEmail(), inviter.getUsername(), group.getGroupName(), invitee.getUsername());
         // 인앱 알림
         Map<String, String> templateParams = Map.of("groupNm", group.getGroupName());
-        notiUtil.sendNotice(3L, "", templateParams);
+        notiUtil.sendNotice(inviter.getUserNum(),3L, "", templateParams);
 
         return messageUtil.getFormattedMessage("USER025");
     }
