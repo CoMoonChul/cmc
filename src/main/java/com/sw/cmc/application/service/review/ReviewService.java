@@ -154,7 +154,7 @@ public class ReviewService implements ReviewUseCase {
             throw new CmcException("REVIEW002");
         }
 
-        reviewRepository.deleteById(reviewDomain.getReviewId());
+        reviewRepository.deleteById(found.getReviewId());
         return reviewDomain;
     }
 
