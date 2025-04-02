@@ -2,9 +2,13 @@ package com.sw.cmc.adapter.in.user.web;
 
 import com.sw.cmc.adapter.in.user.dto.*;
 import com.sw.cmc.application.port.in.user.UserUseCase;
+import com.sw.cmc.common.util.RequestUtil;
 import com.sw.cmc.domain.user.UserDomain;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +38,17 @@ public class UserControllerImpl implements UserControllerApi {
                 .password(withdrawReqDTO.getPassword())
                 .build();
 
-        return ResponseEntity.ok(new WithdrawResDTO().resultMessage(userUseCase.withdraw(userDomain)));
+        ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(0) // 즉시 만료
+                .build();
+        HttpServletResponse response = RequestUtil.getResponse();
+        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+        return ResponseEntity.ok(null);
+//        return ResponseEntity.ok(new WithdrawResDTO().resultMessage(userUseCase.withdraw(userDomain)));
     }
 
     @Override
