@@ -55,7 +55,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         for (WebSocketSession s : roomSessions) {
             if (s.isOpen()) {
                 LiveCodingChatDomain liveCodingChatDomain = new LiveCodingChatDomain();
-                liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.CHAT);
+                liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.CHAT.getType());
                 liveCodingChatDomain.setUsernum(userNum);
                 liveCodingChatDomain.setMsg(payload);
                 String msgObj = objectMapper.writeValueAsString(liveCodingChatDomain);
@@ -171,7 +171,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                 try {
                     LiveCodingChatDomain liveCodingChatDomain = new LiveCodingChatDomain();
                     liveCodingChatDomain.setAction(action);
-                    liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.IN_OUT);
+                    liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.IN_OUT.getType());
                     liveCodingChatDomain.setUsernum(userNum);
 
                     String msgObj = objectMapper.writeValueAsString(liveCodingChatDomain);
