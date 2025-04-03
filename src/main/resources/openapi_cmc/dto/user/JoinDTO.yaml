@@ -20,6 +20,9 @@ components:
         email:
           type: string
           description: 회원 이메일
+        profileImg:
+          type: string
+          description: 프로필 이미지
       description: 회원가입 요청
 
     JoinResDTO:

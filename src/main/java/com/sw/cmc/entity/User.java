@@ -47,6 +47,9 @@ public class User {
     @Column(columnDefinition = "VARCHAR(50) COMMENT '회원 권한'")
     private String userRole;
 
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '프로필 이미지'")
+    private String profileImg;
+
     @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP COMMENT '회원 생성 일시'")
     private LocalDateTime createdAt;
 

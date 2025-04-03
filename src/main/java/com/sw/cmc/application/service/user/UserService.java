@@ -7,6 +7,7 @@ import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.sw.cmc.common.constant.Constants.PROFILE_IMG_BASE_URL;
 import static com.sw.cmc.domain.user.UserDomain.*;
 
 /**
@@ -43,6 +45,7 @@ public class UserService implements UserUseCase {
         return UserDomain.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .profileImg(user.getProfileImg())
                 .build();
     }
 
@@ -71,6 +74,7 @@ public class UserService implements UserUseCase {
         // 유효성 검사
         validateUsername(userDomain.getUsername());
         validateEmail(userDomain.getEmail());
+        validateProfileImg(userDomain.getProfileImg());
 
         // 닉네임 중복 검사
         Optional<User> usernameOptional = userRepository.findByUsername(userDomain.getUsername());
@@ -89,6 +93,14 @@ public class UserService implements UserUseCase {
 
         user.setUsername(userDomain.getUsername());
         user.setEmail(userDomain.getEmail());
+
+        // 이미지 경로 미지정시 디폴트 이미지 세팅 처리
+        if (StringUtils.isBlank(userDomain.getProfileImg())) {
+            user.setProfileImg(PROFILE_IMG_BASE_URL + "default_profile.png");
+
+        } else {
+            user.setProfileImg(userDomain.getProfileImg());
+        }
 
         // 회원 정보 저장
         userRepository.save(user);

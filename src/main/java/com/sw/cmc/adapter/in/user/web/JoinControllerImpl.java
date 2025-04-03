@@ -32,6 +32,7 @@ public class JoinControllerImpl implements JoinControllerApi {
                 .password(joinReqDTO.getPassword())
                 .username(joinReqDTO.getUsername())
                 .email(joinReqDTO.getEmail())
+                .profileImg(joinReqDTO.getProfileImg())
                 .build();
 
         return ResponseEntity.ok(modelMapper.map(joinUseCase.join(userDomain), JoinResDTO.class));

@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import static com.sw.cmc.common.constant.Constants.PROFILE_IMG_BASE_URL;
+
 /**
  * packageName    : com.sw.cmc.domain.user
  * fileName       : UserDomain
@@ -39,6 +41,7 @@ public class UserDomain {
     private String newPassword;
     private String pastPassword;
     private String resultMessage;
+    private String profileImg;
 
 
     private static final List<Character> LETTERS = new ArrayList<>();
@@ -101,4 +104,24 @@ public class UserDomain {
             throw new CmcException("USER006");
         }
     }
+    public static void validateProfileImg(String imgUrl) {
+        if (StringUtils.isBlank(imgUrl)) {
+            return;
+        }
+
+        boolean isValid = false;
+        int IMAGE_COUNT = 13;
+        for (int i = 1; i <= IMAGE_COUNT; i++) {
+            String validUrl = PROFILE_IMG_BASE_URL + "animal_profile_" + i + ".png";
+            if (validUrl.equals(imgUrl)) {
+                isValid = true;
+                break;
+            }
+        }
+
+        if (!isValid) {
+            throw new CmcException("USER033");
+        }
+    }
 }
+
