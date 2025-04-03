@@ -50,9 +50,4 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_num", referencedColumnName = "userNum", nullable = false)
     private User user;
-
-    // ReviewView 엔티티와의 관계 설정
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id", referencedColumnName = "reviewId", nullable = false)
-    private ReviewView reviewView;
 }

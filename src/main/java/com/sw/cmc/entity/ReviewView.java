@@ -23,8 +23,4 @@ public class ReviewView {
 
     private Long viewCount;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId  // ReviewId를 PK로 사용
-    @JoinColumn(name = "review_id")
-    private Review review;
 }
