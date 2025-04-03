@@ -96,7 +96,14 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         rooms.putIfAbsent(roomId, ConcurrentHashMap.newKeySet());
         rooms.get(roomId).add(session);
 
-        // ✅ 1. WebSocket을 통해 FE에 즉시 전송
+        // ✅ 방장이 새로고침한 경우에도 다시 복구
+        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
+        boolean isHost = userNum.equals(roomInfo.getHostId());
+
+        if (isHost) {
+            System.out.println("✅ 방장이 재접속함: " + userNum);
+        }
+
         broadcastMessage(userNum, roomId, LiveCodingAction.JOIN.getAction());
         System.out.println("✅ 사용자 입장: " + userNum);
     }
@@ -120,22 +127,36 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         boolean isHost = userNum.equals(roomInfo.getHostId());
 
         if (isHost) {
-            // ✅ 방장이 나가면 전체 세션 종료
-            for (WebSocketSession s : new HashSet<>(sessions)) {
-                try {
-                    s.close(CloseStatus.GOING_AWAY);
-                } catch (IOException e) {
-                    throw new CmcException("LCD014");
-                }
-            }
-            rooms.remove(roomId);
-            liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
+            System.out.println("⌛ 방장이 나감, 3초 대기 중...");
 
-            System.out.println("🚫 방 종료: " + roomId);
+            // ✅ 방장의 세션만 제거, 방은 유지
+            rooms.put(roomId, new HashSet<>(sessions));
+            rooms.get(roomId).remove(session);
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    boolean hostExists = rooms.getOrDefault(roomId, Collections.emptySet()).stream()
+                            .anyMatch(s -> {
+                                Long uid = (Long) s.getAttributes().get("userNum");
+                                return uid != null && uid.equals(userNum);
+                            });
+
+                    if (!hostExists) {
+                        rooms.remove(roomId);
+                        try {
+                            liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        System.out.println("🚫 방 삭제됨: " + roomId);
+                    } else {
+                        System.out.println("✅ 방 유지됨 (방장 재접속 감지)");
+                    }
+                }
+            }, 3000); // 3초 대기
         } else {
             sessions.remove(session);
-
-            // ✅ 1. WebSocket을 통해 FE에 즉시 전송
             broadcastMessage(userNum, roomId, LiveCodingAction.LEAVE.getAction());
             liveCodingUseCase.updateLiveCoding(UUID.fromString(roomId), userNum, LiveCodingAction.LEAVE.getAction());
             System.out.println("❌ 사용자 퇴장: " + userNum);
