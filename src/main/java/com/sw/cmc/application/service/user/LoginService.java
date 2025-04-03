@@ -81,7 +81,7 @@ public class LoginService implements LoginUseCase {
     public UserDomain login(final UserDomain userDomain) throws Exception {
         // 회원 조회
         final User user = loginRepository.findByUserId(userDomain.getUserId())
-                .orElseThrow(() -> new CmcException("USER001"));
+                .orElseThrow(() -> new CmcException("USER034"));
 
         // 비밀번호 검사
         boolean isMatch = passwordEncoder.matches(userDomain.getPassword(), user.getPassword());

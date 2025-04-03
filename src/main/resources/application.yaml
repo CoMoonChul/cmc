@@ -82,7 +82,7 @@ jwt:
     secret-key: ${JWT_SECRET_KEY}
     encryption-key: ${JWT_ENCRYPTION_KEY}
     access-token-expiration-time-in-seconds: 300 # 5분
-    refresh-token-expiration-time-in-seconds: 77760000 # 90일
+    refresh-token-expiration-time-in-seconds: 7776000 # 90일
 
 security:
   authorizationWhitelist:
