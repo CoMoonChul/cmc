@@ -2,6 +2,7 @@ package com.sw.cmc.adapter.in.user.web;
 
 import com.sw.cmc.adapter.in.user.dto.*;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
+import com.sw.cmc.common.jwt.JwtProperties;
 import com.sw.cmc.common.util.RequestUtil;
 import com.sw.cmc.domain.user.UserDomain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ public class LoginControllerImpl implements LoginControllerApi {
 
     private final LoginUseCase loginUseCase;
     private final ModelMapper modelMapper;
+    private final JwtProperties properties;
 
     @Override
     public ResponseEntity<TempLoginResDTO> tempLogin(TempLoginReqDTO tempLoginReqDTO) throws Exception {
@@ -47,19 +49,19 @@ public class LoginControllerImpl implements LoginControllerApi {
 
         LoginResDTO loginResDTO = modelMapper.map(loginUseCase.login(userDomain), LoginResDTO.class);
 
-        // RefreshToken을 HttpOnly 쿠키로 설정
+        // refresh token set cookie
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResDTO.getRefreshToken())
-                .httpOnly(true)  // JavaScript에서 접근 불가 (XSS 방어)
-                .secure(false)  // HTTPS에서만 전송 (중간자 공격 방어), 개발 환경에서는 false (HTTP일때도 동작하도록)
-                .sameSite("Strict")  // 개발 "None", 상용 "Strict"
-                .path("/") // FE의 모든 경로에서 유지되도록 설정
-                .maxAge(30 * 24 * 60 * 60)
+                .httpOnly(true)
+                .secure(false)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(properties.getToken().getRefreshTokenExpirationTimeInSeconds()) // 90 days
                 .build();
 
         HttpServletResponse response = RequestUtil.getResponse();
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResDTO.getAccessToken()) // AccessToken은 헤더로 전달
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResDTO.getAccessToken()) // access token
                 .body(loginResDTO);
 
     }
