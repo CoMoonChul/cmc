@@ -115,3 +115,24 @@ components:
           type: string
           description: 그룹 멤버 내보내기 결과 메시지
       description: 그룹 멤버 내보내기 응답
+
+    # API_GROUP_0006 나의 그룹 리스트 조회
+    GetMyGroupListResDTO:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              groupId:
+                type: integer
+                format: int64
+                description: 그룹 ID
+              groupName:
+                type: string
+                description: 그룹명
+              groupRole:
+                type: string
+                description: 그룹 멤버 권한
+      description: 나의 그룹 리스트 조회 응답
