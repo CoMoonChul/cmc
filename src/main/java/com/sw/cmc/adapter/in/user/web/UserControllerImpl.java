@@ -56,6 +56,7 @@ public class UserControllerImpl implements UserControllerApi {
         UserDomain userDomain = UserDomain.builder()
                 .username(updateReqDTO.getUsername())
                 .email(updateReqDTO.getEmail())
+                .profileImg(updateReqDTO.getProfileImg())
                 .build();
         return ResponseEntity.ok(new UpdateResDTO().resultMessage(userUseCase.update(userDomain)));
     }

@@ -49,6 +49,7 @@ public class JoinService implements JoinUseCase {
         validatePassword(userDomain.getPassword());
         validateUsername(userDomain.getUsername());
         validateEmail(userDomain.getEmail());
+        validateProfileImg(userDomain.getProfileImg());
 
         // 아이디 중복 검사
         if (joinRepository.existsByUserId(userDomain.getUserId())) {

@@ -6,6 +6,7 @@ components:
       required:
         - username
         - email
+        - profileImg
       properties:
         username:
           type: string
@@ -13,6 +14,9 @@ components:
         email:
           type: string
           description: 회원 이메일
+        profileImg:
+          type: string
+          description: 프로필 이미지
       description: 내 정보 조회 응답
 
     # API_USER_0009 회원 탈퇴
@@ -40,6 +44,7 @@ components:
       required:
         - username
         - email
+        - profileImg
       properties:
         username:
           type: string
@@ -47,6 +52,9 @@ components:
         email:
           type: string
           description: 회원 이메일
+        profileImg:
+          type: string
+          description: 프로필 이미지
       description: 회원 정보 변경 요청
 
     UpdateResDTO:
