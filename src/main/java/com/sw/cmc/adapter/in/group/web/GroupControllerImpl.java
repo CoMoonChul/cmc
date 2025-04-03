@@ -1,10 +1,12 @@
 package com.sw.cmc.adapter.in.group.web;
 
 import com.sw.cmc.adapter.in.group.dto.*;
+import com.sw.cmc.adapter.in.user.dto.GetMyInfoResDTO;
 import com.sw.cmc.application.port.in.group.GroupUseCase;
 import com.sw.cmc.domain.group.GroupDomain;
 import com.sw.cmc.entity.GroupMember;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +24,7 @@ import java.util.List;
 public class GroupControllerImpl implements GroupControllerApi {
 
     private final GroupUseCase groupUseCase;
+    private final ModelMapper modelMapper;
 
     @Override
     public ResponseEntity<CreateResDTO> create(CreateReqDTO createReqDTO) throws Exception {
@@ -90,6 +93,26 @@ public class GroupControllerImpl implements GroupControllerApi {
                 .build();
 
         return ResponseEntity.ok(new ExpelResDTO().resultMessage(groupUseCase.expel(groupDomain)));
+    }
+
+    @Override
+    public ResponseEntity<GetMyGroupListResDTO> getMyGroupList() throws Exception {
+        List<GroupMember> groupList = groupUseCase.getMyGroupList().getMembers();
+
+        List<GetMyGroupListResDTOGroupsInner> groups = groupList.stream()
+                .map(group -> {
+                    GetMyGroupListResDTOGroupsInner dto = new GetMyGroupListResDTOGroupsInner();
+                    dto.setGroupId(group.getGroup().getGroupId());
+                    dto.setGroupName(group.getGroup().getGroupName());
+                    dto.setGroupRole(group.getGroupRole());
+                    return dto;
+                })
+                .toList();
+
+        GetMyGroupListResDTO response = new GetMyGroupListResDTO();
+        response.setGroups(groups);
+
+        return ResponseEntity.ok(response);
     }
 
 }

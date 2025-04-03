@@ -1,5 +1,6 @@
 package com.sw.cmc.adapter.out.group.persistence;
 
+import com.sw.cmc.domain.group.GroupDomain;
 import com.sw.cmc.entity.GroupMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,9 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     @Query("SELECT gm FROM GroupMember gm JOIN FETCH gm.user WHERE gm.group.groupId = :groupId")
     List<GroupMember> findByGroupIdWithUser(Long groupId);
+
+    @Query("SELECT gm FROM GroupMember gm " +
+            "JOIN FETCH gm.group g " +
+            "WHERE gm.user.userNum = :userNum")
+    List<GroupMember> findByUserNum_Group(Long userNum);
 }

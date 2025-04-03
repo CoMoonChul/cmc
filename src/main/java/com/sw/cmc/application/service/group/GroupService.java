@@ -156,5 +156,13 @@ public class GroupService implements GroupUseCase {
         return messageUtil.getFormattedMessage("USER027");
     }
 
+    @Override
+    public GroupDomain getMyGroupList() {
+        final List<GroupMember> groups = groupMemberRepository.findByUserNum_Group(userUtil.getAuthenticatedUserNum());
+
+        return GroupDomain.builder()
+                .members(groups)
+                .build();
+    }
 
 }
