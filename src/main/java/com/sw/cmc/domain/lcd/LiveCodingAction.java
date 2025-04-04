@@ -12,7 +12,8 @@ import lombok.Getter;
 @Getter
 public enum LiveCodingAction {
     JOIN(0),
-    LEAVE(1);
+    LEAVE(1),
+    DELETE(2);
 
     private final int action;
 

@@ -55,7 +55,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         for (WebSocketSession s : roomSessions) {
             if (s.isOpen()) {
                 LiveCodingChatDomain liveCodingChatDomain = new LiveCodingChatDomain();
-                liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.CHAT);
+                liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.CHAT.getType());
                 liveCodingChatDomain.setUsernum(userNum);
                 liveCodingChatDomain.setMsg(payload);
                 String msgObj = objectMapper.writeValueAsString(liveCodingChatDomain);
@@ -104,7 +104,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             System.out.println("✅ 방장이 재접속함: " + userNum);
         }
 
-        broadcastMessage(userNum, roomId, LiveCodingAction.JOIN.getAction());
+        broadcastMessage(userNum, roomId, LiveCodingAction.JOIN.getAction(), null);
         System.out.println("✅ 사용자 입장: " + userNum);
     }
 
@@ -143,6 +143,8 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                             });
 
                     if (!hostExists) {
+                        // 방 삭제처리
+                        Set<WebSocketSession> roomSessions = new HashSet<>(rooms.getOrDefault(roomId, Set.of())); // ✅ 백업
                         rooms.remove(roomId);
                         try {
                             liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
@@ -150,6 +152,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                             throw new RuntimeException(e);
                         }
                         System.out.println("🚫 방 삭제됨: " + roomId);
+                        broadcastMessage(userNum, roomId, LiveCodingAction.DELETE.getAction(), roomSessions);
                     } else {
                         System.out.println("✅ 방 유지됨 (방장 재접속 감지)");
                     }
@@ -157,21 +160,22 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             }, 3000); // 3초 대기
         } else {
             sessions.remove(session);
-            broadcastMessage(userNum, roomId, LiveCodingAction.LEAVE.getAction());
+            broadcastMessage(userNum, roomId, LiveCodingAction.LEAVE.getAction(), null);
             liveCodingUseCase.updateLiveCoding(UUID.fromString(roomId), userNum, LiveCodingAction.LEAVE.getAction());
             System.out.println("❌ 사용자 퇴장: " + userNum);
         }
     }
 
     // 입퇴장 용
-    private void broadcastMessage(Long userNum, String roomId, int action) {
-        Set<WebSocketSession> roomSessions = rooms.getOrDefault(roomId, Set.of());
-        for (WebSocketSession s : roomSessions) {
+    private void broadcastMessage(Long userNum, String roomId, int action, Set<WebSocketSession> roomSessions) {
+        // ✅ 파라미터가 존재하면 해당 세션 사용, 없으면 기존 방식 사용
+        Set<WebSocketSession> targetRoomSessions = (roomSessions != null) ? roomSessions : rooms.getOrDefault(roomId, Set.of());
+        for (WebSocketSession s : targetRoomSessions) {
             if (s.isOpen()) {
                 try {
                     LiveCodingChatDomain liveCodingChatDomain = new LiveCodingChatDomain();
                     liveCodingChatDomain.setAction(action);
-                    liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.IN_OUT);
+                    liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.IN_OUT.getType());
                     liveCodingChatDomain.setUsernum(userNum);
 
                     String msgObj = objectMapper.writeValueAsString(liveCodingChatDomain);
