@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -194,8 +195,20 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     private void saveLiveCodeSnippet(LiveCodingDomain liveCodingDomain) {
-        redisRepository.save(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), liveCodingDomain.getRoomId().toString());
-        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingDomain.getHostId(), 1, TimeUnit.HOURS);
+        String redisKey = REDIS_LIVE_CODING_PREFIX + "code:" + liveCodingDomain.getHostId();
+
+        String defaultCode = "console.log('CMC');";
+        Map<String, String> liveCodeSnippetMap = new HashMap<>();
+        liveCodeSnippetMap.put("hostId", liveCodingDomain.getHostId().toString());
+        liveCodeSnippetMap.put("roomId", liveCodingDomain.getRoomId().toString());
+        liveCodeSnippetMap.put("code", defaultCode);  //
+        liveCodeSnippetMap.put("diff", "");
+        liveCodeSnippetMap.put("language", "javascript");
+        liveCodeSnippetMap.put("lastModified", Instant.now().toString());  // 현재 시간 기록
+        liveCodeSnippetMap.put("cursorPos", "{}");  // 빈 JSON 형태로 저장
+
+        redisRepository.saveHash(redisKey, liveCodeSnippetMap);
+        redisTemplate.expire(redisKey, 1, TimeUnit.HOURS);
     }
 
 }

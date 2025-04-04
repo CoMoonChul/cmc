@@ -186,8 +186,4 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             }
         }
     }
-
-
-
-
 }
