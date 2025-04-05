@@ -172,10 +172,10 @@ components:
     UpdateLiveCodingSnippetReqDTO:
       type: object
       properties:
+        roomId:
+          type: string
+          format: uuid
         hostId:
-          type: integer
-          format: int64
-        modifier:
           type: integer
           format: int64
         diff:
@@ -193,8 +193,6 @@ components:
             - text
         language:
           type: string
-        lastModified:
-          type: string
         cursorPos:
           type: object
           properties:
@@ -206,11 +204,10 @@ components:
             - line
             - ch
       required:
+        - roomId
         - hostId
-        - modifier
         - diff
         - language
-        - lastModified
         - cursorPos
 
     UpdateLiveCodingSnippetResDTO:

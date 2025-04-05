@@ -1,5 +1,6 @@
 package com.sw.cmc.application.service.lcd;
 
+import com.sw.cmc.adapter.in.lcd.web.WebSocketBroadcaster;
 import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetReqDTO;
 import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetResDTO;
 import com.sw.cmc.adapter.out.lcd.persistence.RedisRepository;
@@ -17,10 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +40,7 @@ public class LiveCodingService implements LiveCodingUseCase {
     private final RedisRepository redisRepository;
     private final StringRedisTemplate redisTemplate;
     private final UserUtil userUtil;
+    private final WebSocketBroadcaster webSocketBroadcaster;
 
     private static final String REDIS_LIVE_CODING_PREFIX = "live_coding:";  // Redis에 저장할 키 접두사
 
@@ -229,23 +228,35 @@ public class LiveCodingService implements LiveCodingUseCase {
         Long modifier = userUtil.getAuthenticatedUserNum();
         Long hostId = reqDTO.getHostId();
 
+        // 1. 유효성 체크
         LiveCodeSnippetDomain snippetDomain = this.selectLiveCodingSnippet(hostId);
         if (snippetDomain == null) {
-            throw new CmcException("LCD001");
+            throw new CmcException("LCD017"); // 존재하지 않는 방
         }
 
+        // 2. Redis에 Diff 정보 저장
         String redisKey = "live_coding:code:" + hostId;
+
         redisRepository.updateHashValue(redisKey, "diff.start", String.valueOf(reqDTO.getDiff().getStart()));
         redisRepository.updateHashValue(redisKey, "diff.length", String.valueOf(reqDTO.getDiff().getLength()));
         redisRepository.updateHashValue(redisKey, "diff.text", reqDTO.getDiff().getText());
         redisRepository.updateHashValue(redisKey, "cursorPos.line", String.valueOf(reqDTO.getCursorPos().getLine()));
         redisRepository.updateHashValue(redisKey, "cursorPos.ch", String.valueOf(reqDTO.getCursorPos().getCh()));
-        redisRepository.updateHashValue(redisKey, "lastModified", reqDTO.getLastModified());
 
+        // ✅ 서버 현재 시간 기준으로 lastModified 처리
+        OffsetDateTime lastModified = OffsetDateTime.now(ZoneOffset.UTC);
+        redisRepository.updateHashValue(redisKey, "lastModified", lastModified.toString());
+
+        // 3. 다른 사용자에게 브로드캐스트
+        String roomId = reqDTO.getRoomId().toString();
+        String diffText = reqDTO.getDiff().getText();
+        webSocketBroadcaster.broadcastCodeUpdate(roomId, modifier, diffText);
+
+        // 4. 응답 반환
         return new UpdateLiveCodingSnippetResDTO(
                 modifier,
                 reqDTO.getDiff(),
-                OffsetDateTime.parse(reqDTO.getLastModified()),
+                lastModified,
                 reqDTO.getCursorPos()
         );
     }

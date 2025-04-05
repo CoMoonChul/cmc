@@ -20,4 +20,5 @@ public class LiveCodingChatDomain {
     private int action; // 참가 / 나가기
     private String msg;
     private Long usernum;
+    private String diff;
 }

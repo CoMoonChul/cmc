@@ -12,7 +12,8 @@ import lombok.Getter;
 @Getter
 public enum LiveCodingChatType {
     IN_OUT(0),
-    CHAT(1);
+    CHAT(1),
+    UPDATE(2);
 
     private final int type;
 
