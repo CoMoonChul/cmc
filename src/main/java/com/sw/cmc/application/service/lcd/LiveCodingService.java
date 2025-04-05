@@ -11,6 +11,7 @@ import com.sw.cmc.common.jwt.JwtTokenProvider;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.lcd.LiveCodeSnippetDomain;
 import com.sw.cmc.domain.lcd.LiveCodingAction;
+import com.sw.cmc.domain.lcd.LiveCodingConstants;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -42,7 +43,9 @@ public class LiveCodingService implements LiveCodingUseCase {
     private final UserUtil userUtil;
     private final WebSocketBroadcaster webSocketBroadcaster;
 
-    private static final String REDIS_LIVE_CODING_PREFIX = "live_coding:";  // Redis에 저장할 키 접두사
+
+    private static final String LCD_PREFIX = LiveCodingConstants.LCD_PREFIX;
+    private static final String LCD_CODE_PREFIX = LiveCodingConstants.LCD_CODE_PREFIX;
 
     @Override
     public LiveCodingDomain createLiveCoding(Long hostId) throws CmcException {
@@ -82,14 +85,15 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     @Override
     public boolean deleteLiveCoding(UUID roomId) {
-        String key = REDIS_LIVE_CODING_PREFIX + roomId;  // 방 정보 저장 키
+        String key = LCD_PREFIX + roomId;  // 방 정보 저장 키
+
         Map<String, String> liveCodingMap = redisRepository.selectHash(key);  // 방 정보 조회
         if (liveCodingMap == null || liveCodingMap.isEmpty()) {
             throw new CmcException("LCD001");
         }
 
-        String hostIdKey = REDIS_LIVE_CODING_PREFIX + "host:" + liveCodingMap.get("hostId");
-        redisRepository.delete(hostIdKey);  // 호스트 ID 기반 매핑 삭제
+        String codeSnippetKey = LCD_CODE_PREFIX + liveCodingMap.get("hostId");
+        redisRepository.delete(codeSnippetKey);  // 호스트 ID 기반 매핑 삭제
         return redisRepository.delete(key);  // Redis에서 해당 key 삭제
     }
 
@@ -143,7 +147,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     @Override
     public UUID findRoomIdByHostId(Long hostId) {
-        String roomIdStr = redisRepository.select(REDIS_LIVE_CODING_PREFIX + "host:" + hostId);
+        String roomIdStr = redisRepository.select(LCD_CODE_PREFIX + hostId);
         return roomIdStr != null ? UUID.fromString(roomIdStr) : null;
     }
 
@@ -154,7 +158,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     @Override
     public LiveCodingDomain findByRoomId(UUID roomId) {
-        String key = REDIS_LIVE_CODING_PREFIX + roomId;
+        String key = LCD_PREFIX + roomId;
         Map<String, String> liveCodingMap = redisRepository.selectHash(key);  // 수정된 부분: Map<String, String>으로 처리
 
         if (liveCodingMap == null || liveCodingMap.isEmpty()) {
@@ -179,6 +183,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     @Override
     public void saveLiveCoding(LiveCodingDomain liveCodingDomain) {
+        String redisKey = LCD_PREFIX + liveCodingDomain.getRoomId().toString();
         Map<String, String> liveCodingMap = new HashMap<>();
         liveCodingMap.put("roomId", liveCodingDomain.getRoomId().toString());
         liveCodingMap.put("hostId", liveCodingDomain.getHostId().toString());
@@ -187,13 +192,13 @@ public class LiveCodingService implements LiveCodingUseCase {
         liveCodingMap.put("participants", String.join(",", liveCodingDomain.getParticipants().stream().map(String::valueOf).toArray(String[]::new)));
         liveCodingMap.put("link", liveCodingDomain.getLink());
 
-        redisRepository.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
-        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 1, TimeUnit.HOURS);
+        redisRepository.saveHash(redisKey, liveCodingMap);
+        redisTemplate.expire(redisKey, 1, TimeUnit.HOURS);
     }
 
     @Override
     public LiveCodeSnippetDomain selectLiveCodingSnippet(Long hostId) {
-        String redisKey = REDIS_LIVE_CODING_PREFIX + "code:" + hostId;
+        String redisKey = LCD_CODE_PREFIX + hostId;
         Map<String, String> liveCodeMap = redisRepository.selectHash(redisKey);
 
         if (liveCodeMap == null || liveCodeMap.isEmpty()) {
@@ -267,7 +272,7 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     private void saveLiveCodeSnippet(LiveCodingDomain liveCodingDomain) {
-        String redisKey = REDIS_LIVE_CODING_PREFIX + "code:" + liveCodingDomain.getHostId();
+        String redisKey = LCD_CODE_PREFIX + liveCodingDomain.getHostId();
 
         String defaultCode = "console.log('CMC');";
         Map<String, String> liveCodeSnippetMap = new HashMap<>();
