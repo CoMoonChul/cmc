@@ -51,4 +51,11 @@ public class RedisRepository implements RedisUseCase {
         HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
         return hashOps.entries(key);
     }
+
+    @Override
+    public void updateHashValue(String key, String field, String value) {
+        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+        hashOps.put(key, field, value);
+    }
+
 }

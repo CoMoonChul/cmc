@@ -175,8 +175,9 @@ components:
         hostId:
           type: integer
           format: int64
-        code:
-          type: string
+        modifier:
+          type: integer
+          format: int64
         diff:
           type: object
           properties:
@@ -199,16 +200,14 @@ components:
           properties:
             line:
               type: integer
-              description: line	커서가 위치한 줄 번호 (0부터 시작)
             ch:
               type: integer
-              description: ch (character)	해당 줄에서의 문자 위치 (0부터 시작)
           required:
             - line
             - ch
       required:
         - hostId
-        - code
+        - modifier
         - diff
         - language
         - lastModified
@@ -217,11 +216,9 @@ components:
     UpdateLiveCodingSnippetResDTO:
       type: object
       properties:
-        hostId:
+        modifier:
           type: integer
           format: int64
-        code:
-          type: string
         diff:
           type: object
           properties:
@@ -235,28 +232,22 @@ components:
             - start
             - length
             - text
-        language:
-          type: string
         lastModified:
           type: string
+          format: date-time
         cursorPos:
           type: object
           properties:
             line:
               type: integer
-              description: line	커서가 위치한 줄 번호 (0부터 시작)
             ch:
               type: integer
-              description: ch (character)	해당 줄에서의 문자 위치 (0부터 시작)
           required:
             - line
             - ch
       required:
-        - hostId
-        - roomId
-        - code
+        - modifier
         - diff
-        - language
         - lastModified
         - cursorPos
 

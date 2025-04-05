@@ -117,6 +117,15 @@ security:
     - /selectBattle
     - /selectBattleList
     - /selectBattleVoteState
+
+    # LiveCoding
+    - /createLiveCoding
+    - /selectLiveCoding
+    - /deleteLiveCoding
+    - /verifyLiveCoding
+    - /selectLiveCodingSnippet
+    - /updateLiveCodingSnippet
+
     # Like
     - /selectReviewLikeState
 

@@ -1,5 +1,7 @@
 package com.sw.cmc.application.service.lcd;
 
+import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetReqDTO;
+import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetResDTO;
 import com.sw.cmc.adapter.out.lcd.persistence.RedisRepository;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.advice.CmcException;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -105,7 +108,6 @@ public class LiveCodingService implements LiveCodingUseCase {
         return this.updateLiveCoding(verifiedRoomID, userUtil.getAuthenticatedUserNum(), LiveCodingAction.JOIN.getAction());
     }
 
-
     @Override
     public LiveCodingDomain selectLiveCoding(UUID roomId) throws CmcException {
         LiveCodingDomain liveCodingDomain = this.findByRoomId(roomId);
@@ -177,6 +179,20 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     @Override
+    public void saveLiveCoding(LiveCodingDomain liveCodingDomain) {
+        Map<String, String> liveCodingMap = new HashMap<>();
+        liveCodingMap.put("roomId", liveCodingDomain.getRoomId().toString());
+        liveCodingMap.put("hostId", liveCodingDomain.getHostId().toString());
+        liveCodingMap.put("createdAt", String.valueOf(liveCodingDomain.getCreatedAt()));
+        liveCodingMap.put("participantCount", liveCodingDomain.getParticipantCount().toString());
+        liveCodingMap.put("participants", String.join(",", liveCodingDomain.getParticipants().stream().map(String::valueOf).toArray(String[]::new)));
+        liveCodingMap.put("link", liveCodingDomain.getLink());
+
+        redisRepository.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
+        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 1, TimeUnit.HOURS);
+    }
+
+    @Override
     public LiveCodeSnippetDomain selectLiveCodingSnippet(Long hostId) {
         String redisKey = REDIS_LIVE_CODING_PREFIX + "code:" + hostId;
         Map<String, String> liveCodeMap = redisRepository.selectHash(redisKey);
@@ -208,21 +224,30 @@ public class LiveCodingService implements LiveCodingUseCase {
         );
     }
 
-
-
-
     @Override
-    public void saveLiveCoding(LiveCodingDomain liveCodingDomain) {
-        Map<String, String> liveCodingMap = new HashMap<>();
-        liveCodingMap.put("roomId", liveCodingDomain.getRoomId().toString());
-        liveCodingMap.put("hostId", liveCodingDomain.getHostId().toString());
-        liveCodingMap.put("createdAt", String.valueOf(liveCodingDomain.getCreatedAt()));
-        liveCodingMap.put("participantCount", liveCodingDomain.getParticipantCount().toString());
-        liveCodingMap.put("participants", String.join(",", liveCodingDomain.getParticipants().stream().map(String::valueOf).toArray(String[]::new)));
-        liveCodingMap.put("link", liveCodingDomain.getLink());
+    public UpdateLiveCodingSnippetResDTO updateLiveCodingSnippet(UpdateLiveCodingSnippetReqDTO reqDTO) {
+        Long modifier = userUtil.getAuthenticatedUserNum();
+        Long hostId = reqDTO.getHostId();
 
-        redisRepository.saveHash(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), liveCodingMap);
-        redisTemplate.expire(REDIS_LIVE_CODING_PREFIX + liveCodingDomain.getRoomId().toString(), 1, TimeUnit.HOURS);
+        LiveCodeSnippetDomain snippetDomain = this.selectLiveCodingSnippet(hostId);
+        if (snippetDomain == null) {
+            throw new CmcException("LCD001");
+        }
+
+        String redisKey = "live_coding:code:" + hostId;
+        redisRepository.updateHashValue(redisKey, "diff.start", String.valueOf(reqDTO.getDiff().getStart()));
+        redisRepository.updateHashValue(redisKey, "diff.length", String.valueOf(reqDTO.getDiff().getLength()));
+        redisRepository.updateHashValue(redisKey, "diff.text", reqDTO.getDiff().getText());
+        redisRepository.updateHashValue(redisKey, "cursorPos.line", String.valueOf(reqDTO.getCursorPos().getLine()));
+        redisRepository.updateHashValue(redisKey, "cursorPos.ch", String.valueOf(reqDTO.getCursorPos().getCh()));
+        redisRepository.updateHashValue(redisKey, "lastModified", reqDTO.getLastModified());
+
+        return new UpdateLiveCodingSnippetResDTO(
+                modifier,
+                reqDTO.getDiff(),
+                OffsetDateTime.parse(reqDTO.getLastModified()),
+                reqDTO.getCursorPos()
+        );
     }
 
     private boolean isHost(LiveCodingDomain liveCodingDomain) {

@@ -136,20 +136,11 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
         return ResponseEntity.ok(response);
     }
 
-
-
-//    @Override
-//    public ResponseEntity<VerifyLiveCodingResDTO> selectLiveCodingSnippet(VerifyLiveCodingReqDTO verifyLiveCodingReqDTO) throws Exception {
-//        LiveCodingDomain verifiedRoom = liveCodingUseCase.verifyLiveCoding(
-//                verifyLiveCodingReqDTO.getToken()
-//        );
-//
-//        VerifyLiveCodingResDTO response = new VerifyLiveCodingResDTO();
-//        response.setRoomId(verifiedRoom.getRoomId());
-//
-//        return ResponseEntity.ok(response);  // 200 OK 응답 반환
-//
-//    }
+    @Override
+    public ResponseEntity<UpdateLiveCodingSnippetResDTO> updateLiveCodingSnippet(UpdateLiveCodingSnippetReqDTO reqDTO) throws Exception {
+        UpdateLiveCodingSnippetResDTO resDTO = liveCodingUseCase.updateLiveCodingSnippet(reqDTO);
+        return ResponseEntity.ok(resDTO);
+    }
 
 }
 
