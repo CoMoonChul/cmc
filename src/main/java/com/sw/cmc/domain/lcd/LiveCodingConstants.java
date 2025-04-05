@@ -15,6 +15,11 @@ public class LiveCodingConstants {
         throw new CmcException("LCD018");
     }
 
+    // 라이브코딩방 redis key
     public static final String LCD_PREFIX = "live_coding:";
+    // 라이브코드 redis key
     public static final String LCD_CODE_PREFIX = LCD_PREFIX + "code:";
+    // 라이브코드 초기 값
+    public static final String LCD_CODE_INIT = "console.log('CMC');";
+
 }

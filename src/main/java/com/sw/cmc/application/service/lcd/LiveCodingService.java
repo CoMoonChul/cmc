@@ -46,6 +46,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
     private static final String LCD_PREFIX = LiveCodingConstants.LCD_PREFIX;
     private static final String LCD_CODE_PREFIX = LiveCodingConstants.LCD_CODE_PREFIX;
+    private static final String LCD_CODE_INIT = LiveCodingConstants.LCD_CODE_INIT;
 
     @Override
     public LiveCodingDomain createLiveCoding(Long hostId) throws CmcException {
@@ -240,7 +241,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         }
 
         // 2. Redis에 Diff 정보 저장
-        String redisKey = "live_coding:code:" + hostId;
+        String redisKey = LCD_CODE_PREFIX + hostId;
 
         redisRepository.updateHashValue(redisKey, "diff.start", String.valueOf(reqDTO.getDiff().getStart()));
         redisRepository.updateHashValue(redisKey, "diff.length", String.valueOf(reqDTO.getDiff().getLength()));
@@ -274,11 +275,10 @@ public class LiveCodingService implements LiveCodingUseCase {
     private void saveLiveCodeSnippet(LiveCodingDomain liveCodingDomain) {
         String redisKey = LCD_CODE_PREFIX + liveCodingDomain.getHostId();
 
-        String defaultCode = "console.log('CMC');";
         Map<String, String> liveCodeSnippetMap = new HashMap<>();
         liveCodeSnippetMap.put("hostId", liveCodingDomain.getHostId().toString());
         liveCodeSnippetMap.put("roomId", liveCodingDomain.getRoomId().toString());
-        liveCodeSnippetMap.put("code", defaultCode);
+        liveCodeSnippetMap.put("code", LCD_CODE_INIT);
         liveCodeSnippetMap.put("language", "javascript");
         liveCodeSnippetMap.put("lastModified", Instant.now().toString());
 
