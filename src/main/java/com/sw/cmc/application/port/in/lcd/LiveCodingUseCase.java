@@ -1,5 +1,8 @@
 package com.sw.cmc.application.port.in.lcd;
 
+import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetReqDTO;
+import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetResDTO;
+import com.sw.cmc.domain.lcd.LiveCodeSnippetDomain;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 
 import java.util.UUID;
@@ -117,5 +120,22 @@ public interface LiveCodingUseCase {
      */
     LiveCodingDomain verifyLiveCoding(String token) throws Exception;
 
+
+    /**
+     * methodName : selectLiveCodingSnippet
+     * author : KO YOUNG SUNG
+     * description : 라이브코드 조회
+     * @param hostId - 호스트 id
+
+     */
+    LiveCodeSnippetDomain selectLiveCodingSnippet(Long hostId) throws Exception;
+
+    /**
+     * methodName : updateLiveCodingSnippet
+     * author : KO YOUNG SUNG
+     * description : 라이브코드 업데이트
+     * @param reqDTO - UpdateLiveCodingSnippetReqDTO
+     */
+    UpdateLiveCodingSnippetResDTO updateLiveCodingSnippet(UpdateLiveCodingSnippetReqDTO reqDTO) throws Exception;
 }
 

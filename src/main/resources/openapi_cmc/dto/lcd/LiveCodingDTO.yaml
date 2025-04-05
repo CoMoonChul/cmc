@@ -156,3 +156,96 @@ components:
           description: "인증된 방 ID"
       required:
         - roomId
+
+    SelectLiveCodingSnippetResDTO:
+      type: object
+      properties:
+        livecode:
+          type: string
+          description: "저장된 코드 "
+        language:
+          type: string
+      required:
+        - livecode
+        - language
+
+    UpdateLiveCodingSnippetReqDTO:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+        hostId:
+          type: integer
+          format: int64
+        diff:
+          type: object
+          properties:
+            start:
+              type: integer
+            length:
+              type: integer
+            text:
+              type: string
+          required:
+            - start
+            - length
+            - text
+        language:
+          type: string
+        cursorPos:
+          type: object
+          properties:
+            line:
+              type: integer
+            ch:
+              type: integer
+          required:
+            - line
+            - ch
+      required:
+        - roomId
+        - hostId
+        - diff
+        - language
+        - cursorPos
+
+    UpdateLiveCodingSnippetResDTO:
+      type: object
+      properties:
+        modifier:
+          type: integer
+          format: int64
+        diff:
+          type: object
+          properties:
+            start:
+              type: integer
+            length:
+              type: integer
+            text:
+              type: string
+          required:
+            - start
+            - length
+            - text
+        lastModified:
+          type: string
+          format: date-time
+        cursorPos:
+          type: object
+          properties:
+            line:
+              type: integer
+            ch:
+              type: integer
+          required:
+            - line
+            - ch
+      required:
+        - modifier
+        - diff
+        - lastModified
+        - cursorPos
+
+

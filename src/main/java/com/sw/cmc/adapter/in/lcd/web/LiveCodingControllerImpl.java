@@ -4,6 +4,7 @@ import com.sw.cmc.adapter.in.livecoding.dto.*;
 import com.sw.cmc.adapter.in.livecoding.web.LiveCodingControllerApi;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.domain.lcd.LiveCodeSnippetDomain;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -124,6 +125,21 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
 
         return ResponseEntity.ok(response);  // 200 OK 응답 반환
 
+    }
+
+    @Override
+    public ResponseEntity<SelectLiveCodingSnippetResDTO> selectLiveCodingSnippet(Long hostId) throws Exception {
+        LiveCodeSnippetDomain LiveCodeSnippetDomain = liveCodingUseCase.selectLiveCodingSnippet(hostId);
+        SelectLiveCodingSnippetResDTO response = new SelectLiveCodingSnippetResDTO();
+        response.setLanguage(LiveCodeSnippetDomain.getLanguage());
+        response.setLivecode(LiveCodeSnippetDomain.getCode());
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<UpdateLiveCodingSnippetResDTO> updateLiveCodingSnippet(UpdateLiveCodingSnippetReqDTO reqDTO) throws Exception {
+        UpdateLiveCodingSnippetResDTO resDTO = liveCodingUseCase.updateLiveCodingSnippet(reqDTO);
+        return ResponseEntity.ok(resDTO);
     }
 
 }

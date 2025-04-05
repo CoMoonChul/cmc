@@ -57,11 +57,20 @@ public interface RedisUseCase {
     /**
      * methodName : selectHash
      * author : KO YOUNG SUNG
-     * description : 레디스 해쉬 값 조회
+     * description : 레디스 해쉬 값 전체 조회
      * @param key - 레디스 키
      * @return the hash
      */
     Map<String, String> selectHash(String key) throws Exception;
 
+    /**
+     * methodName : updateHashValue
+     * author : KO YOUNG SUNG
+     * description : 레디스 해쉬 필드 업데이트
+     * @param key - 레디스 해시키
+     * @param field - 레디스 필드
+     * @param value - 레디스 값
+     */
+    void updateHashValue(String key, String field, String value) throws Exception;
 
 }

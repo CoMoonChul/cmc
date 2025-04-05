@@ -117,11 +117,15 @@ security:
     - /selectBattle
     - /selectBattleList
     - /selectBattleVoteState
+
+    # LiveCoding
     - /createLiveCoding
     - /selectLiveCoding
     - /deleteLiveCoding
     - /verifyLiveCoding
-    - /ws/livecoding/**
+    - /selectLiveCodingSnippet
+    - /updateLiveCodingSnippet
+
     # Like
     - /selectReviewLikeState
 

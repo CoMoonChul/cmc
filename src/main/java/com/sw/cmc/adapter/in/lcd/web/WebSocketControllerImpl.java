@@ -3,7 +3,10 @@ package com.sw.cmc.adapter.in.lcd.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sw.cmc.application.port.in.lcd.LiveCodingUseCase;
 import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.domain.lcd.*;
+import com.sw.cmc.domain.lcd.LiveCodingAction;
+import com.sw.cmc.domain.lcd.LiveCodingChatDomain;
+import com.sw.cmc.domain.lcd.LiveCodingChatType;
+import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -11,9 +14,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * packageName    : com.sw.cmc.adapter.in.lcd
@@ -24,34 +25,34 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 public class WebSocketControllerImpl extends TextWebSocketHandler {
-
-    // 방 별로 WebSocket 세션을 관리하는 ConcurrentHashMap
-    private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
     private final LiveCodingUseCase liveCodingUseCase;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final WebSocketBroadcaster webSocketBroadcaster;
+    private final WebSocketRoomManager webSocketRoomManager;
 
-    public WebSocketControllerImpl(LiveCodingUseCase liveCodingUseCase ) {
+    public WebSocketControllerImpl(
+            LiveCodingUseCase liveCodingUseCase,
+            WebSocketBroadcaster webSocketBroadcaster,
+            WebSocketRoomManager webSocketRoomManager
+    ) {
         this.liveCodingUseCase = liveCodingUseCase;
+        this.webSocketBroadcaster = webSocketBroadcaster;
+        this.webSocketRoomManager = webSocketRoomManager;
     }
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
         Long userNum = (Long) session.getAttributes().get("userNum");
-
         String roomId = getRoomId(session);
+
         if (roomId.isEmpty()) {
             session.close(CloseStatus.BAD_DATA);
             return;
         }
 
         String payload = message.getPayload();
-        System.out.println("#33 message : " );
-        System.out.println(message);
-        System.out.println("===============");
+        Set<WebSocketSession> roomSessions = webSocketRoomManager.getSessions(roomId);
 
-        Set<WebSocketSession> roomSessions = rooms.getOrDefault(roomId, Set.of());
-
-        // 같은 방에 있는 모든 유저들에게 메시지 전송
         for (WebSocketSession s : roomSessions) {
             if (s.isOpen()) {
                 LiveCodingChatDomain liveCodingChatDomain = new LiveCodingChatDomain();
@@ -64,12 +65,11 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         }
     }
 
-    // roomId를 올바르게 추출하도록 수정: 인덱스 4 사용
     private String getRoomId(WebSocketSession session) {
         try {
             String[] pathSegments = Objects.requireNonNull(session.getUri()).getPath().split("/");
             if (pathSegments.length >= 4) {
-                return pathSegments[3]; // roomId 추출 (인덱스 3 사용)
+                return pathSegments[3];
             }
         } catch (Exception e) {
             throw new CmcException("LCD001");
@@ -77,7 +77,6 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         return "";
     }
 
-    // open call back
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
         Long userNum = (Long) session.getAttributes().get("userNum");
@@ -88,23 +87,13 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         }
 
         String roomId = getRoomId(session);
-        if (roomId.isEmpty()) {
+        if (roomId == null || roomId.isEmpty()) {
             session.close(CloseStatus.BAD_DATA);
             throw new CmcException("LCD001");
         }
 
-        rooms.putIfAbsent(roomId, ConcurrentHashMap.newKeySet());
-        rooms.get(roomId).add(session);
-
-        // ✅ 방장이 새로고침한 경우에도 다시 복구
-        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
-        boolean isHost = userNum.equals(roomInfo.getHostId());
-
-        if (isHost) {
-            System.out.println("✅ 방장이 재접속함: " + userNum);
-        }
-
-        broadcastMessage(userNum, roomId, LiveCodingAction.JOIN.getAction(), null);
+        webSocketRoomManager.addSession(roomId, session);
+        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.JOIN.getAction(), null);
         System.out.println("✅ 사용자 입장: " + userNum);
     }
 
@@ -121,73 +110,51 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             throw new CmcException("LCD001");
         }
 
-        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
-        Set<WebSocketSession> sessions = rooms.getOrDefault(roomId, Collections.emptySet());
+        // 일단 세션은 제거
+        webSocketRoomManager.removeSession(roomId, session);
 
-        boolean isHost = userNum.equals(roomInfo.getHostId());
+        // 3초 후에 여전히 끊겨 있으면 판단
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Set<WebSocketSession> remainingSessions = webSocketRoomManager.getSessions(roomId);
 
-        if (isHost) {
-            System.out.println("⌛ 방장이 나감, 3초 대기 중...");
+                boolean isStillConnected = remainingSessions.stream()
+                        .anyMatch(s -> {
+                            Long uid = (Long) s.getAttributes().get("userNum");
+                            return uid != null && uid.equals(userNum);
+                        });
 
-            // ✅ 방장의 세션만 제거, 방은 유지
-            rooms.put(roomId, new HashSet<>(sessions));
-            rooms.get(roomId).remove(session);
-
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    boolean hostExists = rooms.getOrDefault(roomId, Collections.emptySet()).stream()
-                            .anyMatch(s -> {
-                                Long uid = (Long) s.getAttributes().get("userNum");
-                                return uid != null && uid.equals(userNum);
-                            });
-
-                    if (!hostExists) {
-                        // 방 삭제처리
-                        Set<WebSocketSession> roomSessions = new HashSet<>(rooms.getOrDefault(roomId, Set.of())); // ✅ 백업
-                        rooms.remove(roomId);
-                        try {
-                            liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                        System.out.println("🚫 방 삭제됨: " + roomId);
-                        broadcastMessage(userNum, roomId, LiveCodingAction.DELETE.getAction(), roomSessions);
-                    } else {
-                        System.out.println("✅ 방 유지됨 (방장 재접속 감지)");
-                    }
+                if (isStillConnected) {
+                    // 재접속한 상태 → 아무 처리 안 함
+                    System.out.println("🔁 유저 재접속 감지됨: " + userNum);
+                    return;
                 }
-            }, 3000); // 3초 대기
-        } else {
-            sessions.remove(session);
-            broadcastMessage(userNum, roomId, LiveCodingAction.LEAVE.getAction(), null);
-            liveCodingUseCase.updateLiveCoding(UUID.fromString(roomId), userNum, LiveCodingAction.LEAVE.getAction());
-            System.out.println("❌ 사용자 퇴장: " + userNum);
-        }
-    }
 
-    // 입퇴장 용
-    private void broadcastMessage(Long userNum, String roomId, int action, Set<WebSocketSession> roomSessions) {
-        // ✅ 파라미터가 존재하면 해당 세션 사용, 없으면 기존 방식 사용
-        Set<WebSocketSession> targetRoomSessions = (roomSessions != null) ? roomSessions : rooms.getOrDefault(roomId, Set.of());
-        for (WebSocketSession s : targetRoomSessions) {
-            if (s.isOpen()) {
                 try {
-                    LiveCodingChatDomain liveCodingChatDomain = new LiveCodingChatDomain();
-                    liveCodingChatDomain.setAction(action);
-                    liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.IN_OUT.getType());
-                    liveCodingChatDomain.setUsernum(userNum);
+                    LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
+                    boolean isHost = userNum.equals(roomInfo.getHostId());
 
-                    String msgObj = objectMapper.writeValueAsString(liveCodingChatDomain);
-                    s.sendMessage(new TextMessage(msgObj));
-                } catch (IOException e) {
-                    throw new CmcException("LCD015");
+                    if (isHost) {
+                        // 호스트가 완전히 끊김 → 방 삭제
+                        Set<WebSocketSession> targetSessions = new HashSet<>(remainingSessions);
+                        webSocketRoomManager.removeRoom(roomId);
+                        liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
+                        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.DELETE.getAction(), targetSessions);
+                        System.out.println("🚫 호스트 완전 퇴장 → 방 삭제됨: " + roomId);
+                    } else {
+                        // 게스트가 완전히 끊김 → 퇴장 처리
+                        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.LEAVE.getAction(), null);
+                        liveCodingUseCase.updateLiveCoding(UUID.fromString(roomId), userNum, LiveCodingAction.LEAVE.getAction());
+                        System.out.println("❌ 게스트 완전 퇴장: " + userNum);
+                    }
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
-        }
+        }, 3000);
     }
-
-
 
 
 }
