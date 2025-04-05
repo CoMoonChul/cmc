@@ -151,7 +151,6 @@ paths:
         "400":
           description: "잘못된 요청"
 
-
   /verifyLiveCoding:
     post:
       tags:
@@ -173,3 +172,50 @@ paths:
                 $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/verifyLiveCodingResDTO"
         "400":
           description: "라이브 코딩 토큰 검증 실패"
+
+  /selectLiveCodingSnippet:
+    get:
+      summary: "라이브 코드 조회"
+      tags:
+        - live-coding-controller
+      operationId: "selectLiveCodingSnippet"
+      description: "라이브 코딩방 코드 조회."
+      parameters:
+        - name: hostId
+          in: query
+          description: "host ID"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "라이브 코딩 방 정보 조회 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/SelectLiveCodingSnippetResDTO"
+        "400":
+          description: "잘못된 요청"
+
+  /updateLiveCodingSnippet:
+    post:
+      tags:
+        - live-coding-controller
+      summary: "라이브 코드 업데이트"
+      operationId: "updateLiveCodingSnippet"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/UpdateLiveCodingSnippetReqDTO"
+      responses:
+        "200":
+          description: "라이브 코드 업데이트 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/lcd/LiveCodingDTO.yaml#/components/schemas/UpdateLiveCodingSnippetResDTO"
+        "400":
+          description: "라이브 코드 업데이트 실패"

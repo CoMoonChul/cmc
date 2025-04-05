@@ -1,5 +1,6 @@
 package com.sw.cmc.application.port.in.lcd;
 
+import com.sw.cmc.domain.lcd.LiveCodeSnippetDomain;
 import com.sw.cmc.domain.lcd.LiveCodingDomain;
 
 import java.util.UUID;
@@ -116,6 +117,18 @@ public interface LiveCodingUseCase {
      * @param token - jwt 토큰
      */
     LiveCodingDomain verifyLiveCoding(String token) throws Exception;
+
+
+    /**
+     * methodName : selectLiveCodingSnippet
+     * author : KO YOUNG SUNG
+     * description : 라이브코드 조회
+     * @param hostId - 호스트 id
+
+     */
+    LiveCodeSnippetDomain selectLiveCodingSnippet(Long hostId) throws Exception;
+
+
 
 }
 

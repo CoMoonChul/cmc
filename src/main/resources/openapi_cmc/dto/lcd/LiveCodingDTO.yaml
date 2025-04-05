@@ -156,3 +156,108 @@ components:
           description: "인증된 방 ID"
       required:
         - roomId
+
+    SelectLiveCodingSnippetResDTO:
+      type: object
+      properties:
+        livecode:
+          type: string
+          description: "저장된 코드 "
+        language:
+          type: string
+      required:
+        - livecode
+        - language
+
+    UpdateLiveCodingSnippetReqDTO:
+      type: object
+      properties:
+        hostId:
+          type: integer
+          format: int64
+        code:
+          type: string
+        diff:
+          type: object
+          properties:
+            start:
+              type: integer
+            length:
+              type: integer
+            text:
+              type: string
+          required:
+            - start
+            - length
+            - text
+        language:
+          type: string
+        lastModified:
+          type: string
+        cursorPos:
+          type: object
+          properties:
+            line:
+              type: integer
+              description: line	커서가 위치한 줄 번호 (0부터 시작)
+            ch:
+              type: integer
+              description: ch (character)	해당 줄에서의 문자 위치 (0부터 시작)
+          required:
+            - line
+            - ch
+      required:
+        - hostId
+        - code
+        - diff
+        - language
+        - lastModified
+        - cursorPos
+
+    UpdateLiveCodingSnippetResDTO:
+      type: object
+      properties:
+        hostId:
+          type: integer
+          format: int64
+        code:
+          type: string
+        diff:
+          type: object
+          properties:
+            start:
+              type: integer
+            length:
+              type: integer
+            text:
+              type: string
+          required:
+            - start
+            - length
+            - text
+        language:
+          type: string
+        lastModified:
+          type: string
+        cursorPos:
+          type: object
+          properties:
+            line:
+              type: integer
+              description: line	커서가 위치한 줄 번호 (0부터 시작)
+            ch:
+              type: integer
+              description: ch (character)	해당 줄에서의 문자 위치 (0부터 시작)
+          required:
+            - line
+            - ch
+      required:
+        - hostId
+        - roomId
+        - code
+        - diff
+        - language
+        - lastModified
+        - cursorPos
+
+
