@@ -110,43 +110,51 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             throw new CmcException("LCD001");
         }
 
-        LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
-        boolean isHost = userNum.equals(roomInfo.getHostId());
+        // 일단 세션은 제거
+        webSocketRoomManager.removeSession(roomId, session);
 
-        if (isHost) {
-            System.out.println("⌛ 방장이 나감, 3초 대기 중...");
-            webSocketRoomManager.removeSession(roomId, session); // 일단 제거
+        // 3초 후에 여전히 끊겨 있으면 판단
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Set<WebSocketSession> remainingSessions = webSocketRoomManager.getSessions(roomId);
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    boolean hostExists = webSocketRoomManager.getSessions(roomId).stream()
-                            .anyMatch(s -> {
-                                Long uid = (Long) s.getAttributes().get("userNum");
-                                return uid != null && uid.equals(userNum);
-                            });
+                boolean isStillConnected = remainingSessions.stream()
+                        .anyMatch(s -> {
+                            Long uid = (Long) s.getAttributes().get("userNum");
+                            return uid != null && uid.equals(userNum);
+                        });
 
-                    if (!hostExists) {
-                        Set<WebSocketSession> roomSessions = new HashSet<>(webSocketRoomManager.getSessions(roomId));
-                        webSocketRoomManager.removeRoom(roomId);
-                        try {
-                            liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                        System.out.println("🚫 방 삭제됨: " + roomId);
-                        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.DELETE.getAction(), roomSessions);
-                    } else {
-                        System.out.println("✅ 방 유지됨 (방장 재접속 감지)");
-                    }
+                if (isStillConnected) {
+                    // 재접속한 상태 → 아무 처리 안 함
+                    System.out.println("🔁 유저 재접속 감지됨: " + userNum);
+                    return;
                 }
-            }, 3000);
-        } else {
-            webSocketRoomManager.removeSession(roomId, session);
-            webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.LEAVE.getAction(), null);
-            liveCodingUseCase.updateLiveCoding(UUID.fromString(roomId), userNum, LiveCodingAction.LEAVE.getAction());
-            System.out.println("❌ 사용자 퇴장: " + userNum);
-        }
+
+                try {
+                    LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
+                    boolean isHost = userNum.equals(roomInfo.getHostId());
+
+                    if (isHost) {
+                        // 호스트가 완전히 끊김 → 방 삭제
+                        Set<WebSocketSession> targetSessions = new HashSet<>(remainingSessions);
+                        webSocketRoomManager.removeRoom(roomId);
+                        liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
+                        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.DELETE.getAction(), targetSessions);
+                        System.out.println("🚫 호스트 완전 퇴장 → 방 삭제됨: " + roomId);
+                    } else {
+                        // 게스트가 완전히 끊김 → 퇴장 처리
+                        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.LEAVE.getAction(), null);
+                        liveCodingUseCase.updateLiveCoding(UUID.fromString(roomId), userNum, LiveCodingAction.LEAVE.getAction());
+                        System.out.println("❌ 게스트 완전 퇴장: " + userNum);
+                    }
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, 3000);
     }
+
 
 }
