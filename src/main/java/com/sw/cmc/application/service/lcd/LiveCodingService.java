@@ -43,10 +43,8 @@ public class LiveCodingService implements LiveCodingUseCase {
     private final UserUtil userUtil;
     private final WebSocketBroadcaster webSocketBroadcaster;
 
-
     private static final String LCD_PREFIX = LiveCodingConstants.LCD_PREFIX;
     private static final String LCD_CODE_PREFIX = LiveCodingConstants.LCD_CODE_PREFIX;
-    private static final String LCD_CODE_INIT = LiveCodingConstants.LCD_CODE_INIT;
 
     @Override
     public LiveCodingDomain createLiveCoding(Long hostId) throws CmcException {
@@ -278,7 +276,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         Map<String, String> liveCodeSnippetMap = new HashMap<>();
         liveCodeSnippetMap.put("hostId", liveCodingDomain.getHostId().toString());
         liveCodeSnippetMap.put("roomId", liveCodingDomain.getRoomId().toString());
-        liveCodeSnippetMap.put("code", LCD_CODE_INIT);
+        liveCodeSnippetMap.put("code", "");
         liveCodeSnippetMap.put("language", "javascript");
         liveCodeSnippetMap.put("lastModified", Instant.now().toString());
 
