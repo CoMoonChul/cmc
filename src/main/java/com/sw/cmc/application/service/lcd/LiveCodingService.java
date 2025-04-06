@@ -271,7 +271,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         liveCodeSnippetMap.put("hostId", liveCodingDomain.getHostId().toString());
         liveCodeSnippetMap.put("roomId", liveCodingDomain.getRoomId().toString());
         liveCodeSnippetMap.put("code", "");
-        liveCodeSnippetMap.put("language", "javascript");
+        liveCodeSnippetMap.put("language", "");
         liveCodeSnippetMap.put("lastModified", Instant.now().toString());
 
         // diff 초기값 (0으로 초기화하면 가져와서 파싱할 때 안정적)
