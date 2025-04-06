@@ -131,6 +131,11 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
     public ResponseEntity<SelectLiveCodingSnippetResDTO> selectLiveCodingSnippet(Long hostId) throws Exception {
         LiveCodeSnippetDomain LiveCodeSnippetDomain = liveCodingUseCase.selectLiveCodingSnippet(hostId);
         SelectLiveCodingSnippetResDTO response = new SelectLiveCodingSnippetResDTO();
+        if (LiveCodeSnippetDomain == null) {
+            response.setLanguage("");
+            response.setLivecode("");
+            return ResponseEntity.ok(response);
+        }
         response.setLanguage(LiveCodeSnippetDomain.getLanguage());
         response.setLivecode(LiveCodeSnippetDomain.getCode());
         return ResponseEntity.ok(response);
