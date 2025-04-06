@@ -145,14 +145,8 @@ public class LiveCodingService implements LiveCodingUseCase {
     }
 
     @Override
-    public UUID findRoomIdByHostId(Long hostId) {
-        String roomIdStr = redisRepository.select(LCD_CODE_PREFIX + hostId);
-        return roomIdStr != null ? UUID.fromString(roomIdStr) : null;
-    }
-
-    @Override
     public boolean existsByHostId(Long hostId) {
-        return findRoomIdByHostId(hostId) != null;
+        return redisRepository.selectHash(LCD_CODE_PREFIX + hostId) != null;
     }
 
     @Override
