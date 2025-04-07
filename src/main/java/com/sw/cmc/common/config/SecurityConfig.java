@@ -105,6 +105,7 @@ public class SecurityConfig {
                             } else if (authException instanceof InsufficientAuthenticationException) {
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                                 response.getWriter().write("{\"errorCode\": \"TOKEN_EXPIRED\", \"message\": \"Access Token expired\"}");
+                                return;
                             }
 
                             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

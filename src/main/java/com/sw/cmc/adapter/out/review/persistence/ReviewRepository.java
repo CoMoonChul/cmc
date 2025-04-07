@@ -30,7 +30,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @return battle detail vo
      */
     @Query("SELECT new com.sw.cmc.domain.review.ReviewDetailVo( " +
-            "r, u.username, u.userNum, " +
+            "r, u.username, u.userNum, u.profileImg," +
             "(SELECT COUNT(*) FROM ReviewLike rl WHERE r.reviewId = rl.id.reviewId), " +
             "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) ) " +
             "FROM Review r " +
@@ -48,7 +48,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @return page
      */
     @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
-            "r, u.username, " +
+            "r, u.username, u.profileImg," +
             "(SELECT COUNT(*) FROM ReviewLike rl WHERE rl.id.reviewId = r.reviewId), " +
             "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) )" +
             "FROM Review r " +
@@ -65,13 +65,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @return page
      */
     @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
-            "r, " +
-            "(SELECT u.username FROM User u WHERE u.userNum = r.user.userNum), " +
+            "r, u.username, u.profileImg, " +
             "COUNT(rl.id.reviewId), " +
             "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) )" +
             "FROM Review r " +
+            "JOIN r.user u " +
             "LEFT JOIN ReviewLike rl ON rl.id.reviewId = r.reviewId " +
-            "GROUP BY r.reviewId " +
+            "GROUP BY r.reviewId, u.username, u.profileImg " +
             "ORDER BY COUNT(rl.id.reviewId) DESC")
     Page<ReviewListVo> findAllOrderByLikeCountDesc(Pageable pageable);
 
@@ -85,12 +85,14 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @return page
      */
     @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
-            "r," +
-            "(SELECT u.username FROM User u WHERE r.user.userNum = u.userNum), " +
-            "(SELECT COUNT(*) FROM ReviewLike rl WHERE rl.id.reviewId = r.reviewId), " +
-            "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) )" +
+            "r, u.username, u.profileImg, " +
+            "COUNT(rl), rv.viewCount) " +   // COUNT 대신 rl 개수로
             "FROM Review r " +
-            "WHERE r.user.userNum = :userNum")
+            "JOIN r.user u " +
+            "LEFT JOIN ReviewLike rl ON rl.id.reviewId = r.reviewId " +
+            "LEFT JOIN ReviewView rv ON rv.reviewId = r.reviewId " +
+            "WHERE r.user.userNum = :userNum " +
+            "GROUP BY r, u.username, u.profileImg, rv.viewCount")
     Page<ReviewListVo> findMyReviews(Long userNum, Pageable pageable);
 
     /**
@@ -103,7 +105,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @return page
      */
     @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
-            "r, u.username, " +
+            "r, u.username, u.profileImg," +
             "(SELECT COUNT(*) FROM ReviewLike rl WHERE rl.id.reviewId = r.reviewId), " +
             "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) )" +
             "FROM Review r " +
@@ -122,8 +124,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @return page
      */
     @Query("SELECT new com.sw.cmc.domain.review.ReviewListVo( " +
-            "r, " +
-            "u.username, " +
+            "r, u.username, u.profileImg," +
             "(SELECT COUNT(*) FROM ReviewLike rl WHERE rl.id.reviewId = r.reviewId), " +
             "(SELECT rv.viewCount FROM ReviewView rv WHERE rv.reviewId = r.reviewId) ) " +
             "FROM Review r " +
