@@ -74,9 +74,6 @@ public class JoinService implements JoinUseCase {
 
         // 가입 이메일 전송
         smtpUtil.sendEmailJoin(userDomain.getEmail(), userDomain.getUsername(), userDomain.getUserId(), userDomain.getPassword());
-        // 가입 인앱 알림 전송
-        // 유저 정보 조회 해서 user id 구하기 ?
-
         final User joinUser = userRepository.findByUsername(encryptedUserDomain.getUsername())
                 .orElseThrow(() -> new CmcException("USER001"));
 

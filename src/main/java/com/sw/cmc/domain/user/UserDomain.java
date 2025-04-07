@@ -83,7 +83,7 @@ public class UserDomain {
         }
     }
     public static void validatePassword(String password) {
-        final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d).{6,}$";
+        final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[\\W_]).{8,}$";
         if (!Pattern.matches(PASSWORD_REGEX, password)) {
             throw new CmcException("USER004");
         }
