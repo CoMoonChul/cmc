@@ -14,6 +14,7 @@ components:
         - rightVote
         - username
         - userNum
+        - userImg
         - viewCount
       properties:
         battleId:
@@ -56,6 +57,9 @@ components:
           type: integer
           format: int64
           description: 회원번호
+        userImg:
+          type: string
+          description: 프로필 이미지 경로
         viewCount:
           type: integer
           format: int64
@@ -92,6 +96,7 @@ components:
         - leftVote
         - rightVote
         - username
+        - userImg
       properties:
         battleId:
           type: integer
@@ -117,6 +122,9 @@ components:
         username:
           type: string
           description: 작성자명
+        userImg:
+          type: string
+          description: 작성자프로필 이미지
         createdAt:
           type: string
           description: 생성 일시

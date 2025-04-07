@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -101,10 +102,13 @@ public class SecurityConfig {
                                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                                 response.getWriter().write("{\"errorCode\": \"INVALID_PASSWORD\", \"message\": \"비밀번호가 틀렸습니다.\"}");
                                 return;
+                            } else if (authException instanceof InsufficientAuthenticationException) {
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.getWriter().write("{\"errorCode\": \"TOKEN_EXPIRED\", \"message\": \"Access Token expired\"}");
                             }
 
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.getWriter().write("{\"errorCode\": \"SC_UNAUTHORIZED\", \"message\": \"Unauthorized\"}");
+                            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                            response.getWriter().write("{\"errorCode\": \"SC_INTERNAL_SERVER_ERROR\", \"message\": \"Unknown error\"}");
                         })
                 )
                 // 필터

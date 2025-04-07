@@ -24,11 +24,11 @@ public class SmtpUtil {
 
     /**
      * 회원 가입 이메일 발송
-     * @param email
-     * @param username
-     * @param userId
-     * @param password
-     * @throws Exception
+     * @param email String
+     * @param username String
+     * @param userId String
+     * @param password String
+     * @throws Exception Exception
      */
     public void sendEmailJoin(String email, String username, String userId, String password) throws Exception {
         SendEmailJoinEvent sendEmailJoinEvent = SendEmailJoinEvent.builder()
@@ -43,11 +43,11 @@ public class SmtpUtil {
 
     /**
      * 그룹 초대 이메일 발송
-     * @param email
-     * @param username
-     * @param groupName
-     * @param targetName
-     * @throws Exception
+     * @param email String
+     * @param username String
+     * @param groupName String
+     * @param targetName String
+     * @throws Exception Exception
      */
     public void sendEmailGroupInvite(String email, String username, String groupName, String targetName) throws Exception {
         SendEmailGroupInviteEvent sendEmailGroupInviteEvent = SendEmailGroupInviteEvent.builder()
@@ -63,9 +63,9 @@ public class SmtpUtil {
 
     /**
      * 회원 탈퇴 이메일 전송
-     * @param email
-     * @param username
-     * @throws Exception
+     * @param email String
+     * @param username String
+     * @throws Exception Exception
      */
     public void sendEmailExit(String email, String username) throws Exception {
         SendEmailExitEvent sendEmailExitEvent = SendEmailExitEvent.builder()
