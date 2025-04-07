@@ -15,10 +15,10 @@ import com.sw.cmc.entity.GroupMember;
 import com.sw.cmc.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -123,7 +123,12 @@ public class GroupService implements GroupUseCase {
         group.addGroupMember(groupMember);
 
         // 그룹 멤버 생성
-        groupRepository.save(group);
+        try {
+            groupRepository.save(group);
+        } catch (DataIntegrityViolationException e) {
+            throw new CmcException("USER035");
+        }
+
 
         final User inviter = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
                 .orElseThrow(() -> new CmcException("USER001"));
@@ -133,7 +138,6 @@ public class GroupService implements GroupUseCase {
         // 인앱 알림
         Map<String, String> templateParams = Map.of("groupNm", group.getGroupName());
         notiUtil.sendNotice(inviter.getUserNum(),3L, "", templateParams);
-
         return messageUtil.getFormattedMessage("USER025");
     }
 
