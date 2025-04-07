@@ -119,6 +119,10 @@ public class UserDomain {
             }
         }
 
+        if (imgUrl.equals(PROFILE_IMG_BASE_URL + "default_profile.png")) {
+            isValid = true;
+        }
+
         if (!isValid) {
             throw new CmcException("USER033");
         }

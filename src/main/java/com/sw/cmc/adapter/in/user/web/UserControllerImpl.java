@@ -47,8 +47,7 @@ public class UserControllerImpl implements UserControllerApi {
                 .build();
         HttpServletResponse response = RequestUtil.getResponse();
         response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
-        return ResponseEntity.ok(null);
-//        return ResponseEntity.ok(new WithdrawResDTO().resultMessage(userUseCase.withdraw(userDomain)));
+        return ResponseEntity.ok(new WithdrawResDTO().resultMessage(userUseCase.withdraw(userDomain)));
     }
 
     @Override

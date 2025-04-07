@@ -57,6 +57,7 @@ public class BattleService implements BattleUseCase {
                 .codeTypeRight(found.getBattle().getCodeTypeRight())
                 .userNum(found.getUserNum())
                 .username(found.getUsername())
+                .userImg(found.getUserImg())
                 .createdAt(found.getBattle().getCreatedAt())
                 .updatedAt(found.getBattle().getUpdatedAt())
                 .leftVote(found.getLeftVote())
@@ -117,6 +118,7 @@ public class BattleService implements BattleUseCase {
         Long leftVoteCount = (Long)objects[1];
         Long rightVoteCount = (Long)objects[2];
         String username = (String)objects[3];
+        String userImg = (String)objects[4];
         return BattleDomain.builder()
                 .battleId(battle.getBattleId())
                 .title(battle.getTitle())
@@ -127,6 +129,7 @@ public class BattleService implements BattleUseCase {
                 .leftVote(leftVoteCount)
                 .rightVote(rightVoteCount)
                 .username(username)
+                .userImg(userImg)
                 .createdAt(battle.getCreatedAt())
                 .updatedAt(battle.getUpdatedAt())
                 .build();

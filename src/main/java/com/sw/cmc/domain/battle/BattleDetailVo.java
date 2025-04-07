@@ -19,6 +19,7 @@ public class BattleDetailVo {
     private Battle battle;
     private String username;
     private Long userNum;
+    private String userImg;
     private Long leftVote;
     private Long rightVote;
     private Long viewCount;

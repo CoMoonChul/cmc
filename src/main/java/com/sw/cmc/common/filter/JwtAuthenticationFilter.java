@@ -56,11 +56,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
 
-            // 인증 필수 경로인데 토큰 없음
-            if (Objects.isNull(token) && isProtectedPath(requestURI)) {
-                request.setAttribute("exception", new IllegalArgumentException("Missing access token"));
-            }
-
         } catch (ExpiredJwtException e) {
             request.setAttribute("exception", e);
             throw e; // 토큰 만료

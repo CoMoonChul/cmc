@@ -32,6 +32,7 @@ public class BattleDomain {
     private Long rightVote;
     private Long userNum;
     private String username;
+    private String userImg;
     private Long viewCount;
     private Integer voteValue;
     private String createdAt;

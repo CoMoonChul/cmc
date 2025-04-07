@@ -22,7 +22,7 @@ import java.util.Optional;
 public interface BattleRepository extends JpaRepository<Battle, Long>  {
 
     @Query("SELECT new com.sw.cmc.domain.battle.BattleDetailVo( " +
-            "b, u.username, u.userNum," +
+            "b, u.username, u.userNum, u.profileImg," +
             "(SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 0), " +
             "(SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 1), " +
             "(SELECT bv.viewCount FROM BattleView bv WHERE bv.battleId = b.battleId) ) " +
@@ -43,9 +43,11 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
         SELECT b,
                COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
                COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
-               (SELECT u.username FROM User u WHERE u.userNum = b.user.userNum) AS username
+               u.username,
+               u.profileImg
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
+        LEFT JOIN b.user u
         GROUP BY b
     """)
     Page<Object[]> findAllWithVoteCounts(Pageable pageable);
@@ -61,9 +63,11 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
         SELECT b,
             COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
             COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
-            (SELECT u.username FROM User u WHERE u.userNum = b.user.userNum) AS username
+            u.username,
+            u.profileImg
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
+        LEFT JOIN b.user u
         GROUP BY b.battleId
         ORDER BY COUNT(v.voteId) DESC
     """)
@@ -82,9 +86,11 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
         SELECT b,
             COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
             COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
-            (SELECT u.username FROM User u WHERE u.userNum = b.user.userNum) AS username
+            u.username,
+            u.profileImg
         FROM Battle b
         JOIN Vote v ON b.battleId = v.battleId
+        LEFT JOIN b.user u
         WHERE v.user.userNum = :userNum
         GROUP BY b.battleId
     """)
@@ -103,9 +109,11 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
         SELECT b,
             COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
             COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
-            (SELECT u.username FROM User u WHERE u.userNum = b.user.userNum) AS username
+            u.username,
+            u.profileImg
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
+        LEFT JOIN b.user u
         WHERE b.user.userNum = :userNum
         GROUP BY b.battleId
     """)
