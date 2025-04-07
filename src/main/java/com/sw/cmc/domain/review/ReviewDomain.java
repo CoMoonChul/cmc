@@ -23,6 +23,7 @@ public class ReviewDomain {
     private Long reviewId;
     private Long userNum;
     private String username;
+    private String userImg;
     private String title;
     private String content;
     private String createdAt;

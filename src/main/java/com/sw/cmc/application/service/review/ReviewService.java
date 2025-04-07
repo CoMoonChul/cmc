@@ -55,6 +55,7 @@ public class ReviewService implements ReviewUseCase {
                 .reviewId(found.getReview().getReviewId())
                 .username(found.getUsername())
                 .userNum(found.getUserNum())
+                .userImg(found.getUserImg())
                 .title(found.getReview().getTitle())
                 .content(found.getReview().getContent())
                 .codeContent(found.getReview().getCodeContent())
@@ -105,6 +106,7 @@ public class ReviewService implements ReviewUseCase {
                         .content(s.getReview().getContent())
                         .createdAt(s.getReview().getCreatedAt())
                         .username(s.getUsername())
+                        .userImg(s.getUserImg())
                         .likeCount(s.getLikeCount())
                         .viewCount(s.getViewCount())
                         .build()).toList();

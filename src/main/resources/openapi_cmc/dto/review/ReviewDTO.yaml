@@ -49,6 +49,7 @@ components:
         - reviewId
         - username
         - userNum
+        - userImg
         - title
         - content
         - codeContent
@@ -67,6 +68,9 @@ components:
           type: integer
           format: int64
           description: 글쓴이 ID
+        userImg:
+          type: string
+          description: 회원 이미지
         title:
           type: string
           description: 리뷰 제목
@@ -124,6 +128,7 @@ components:
         - title
         - content
         - username
+        - userImg
         - viewCount
         - likeCount
       properties:
@@ -148,6 +153,9 @@ components:
         username:
           type: string
           description: 회원명
+        userImg:
+          type: string
+          description: 회원 이미지
         createdAt:
           type: string
           description: 생성 일시

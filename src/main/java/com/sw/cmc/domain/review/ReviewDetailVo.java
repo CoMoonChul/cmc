@@ -19,6 +19,7 @@ public class ReviewDetailVo {
     private Review review;
     private String username;
     private Long userNum;
+    private String userImg;
     private Long likeCount;
     private Long viewCount;
 }
