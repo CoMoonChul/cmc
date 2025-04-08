@@ -288,7 +288,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         liveCodeSnippetMap.put("hostId", liveCodingDomain.getHostId().toString());
         liveCodeSnippetMap.put("roomId", liveCodingDomain.getRoomId().toString());
         liveCodeSnippetMap.put("code", ""); // 초기 코드는 빈 문자열
-        liveCodeSnippetMap.put("language", ""); // 언어는 클라이언트가 나중에 설정
+        liveCodeSnippetMap.put("language", "javascript"); // 언어는 클라이언트가 나중에 설정
 
         // 초기 diff: 빈 리스트 → 직렬화
         String emptyDiffJson;
