@@ -1,5 +1,8 @@
 package com.sw.cmc.application.service.lcd;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sw.cmc.adapter.in.lcd.web.WebSocketBroadcaster;
 import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetReqDTO;
 import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetResDTO;
@@ -42,7 +45,7 @@ public class LiveCodingService implements LiveCodingUseCase {
     private final StringRedisTemplate redisTemplate;
     private final UserUtil userUtil;
     private final WebSocketBroadcaster webSocketBroadcaster;
-
+    private final ObjectMapper objectMapper;
     private static final String LCD_PREFIX = LiveCodingConstants.LCD_PREFIX;
     private static final String LCD_CODE_PREFIX = LiveCodingConstants.LCD_CODE_PREFIX;
 
@@ -206,14 +209,20 @@ public class LiveCodingService implements LiveCodingUseCase {
                 ZoneId.systemDefault()
         );
 
+        List<LiveCodeSnippetDomain.Diff> diffList;
+        try {
+            diffList = objectMapper.readValue(
+                    liveCodeMap.getOrDefault("diff", "[]"),
+                    new TypeReference<List<LiveCodeSnippetDomain.Diff>>() {}
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse diff list from Redis", e);
+        }
+
         return new LiveCodeSnippetDomain(
                 UUID.fromString(liveCodeMap.get("roomId")),
                 liveCodeMap.get("code"),
-                new LiveCodeSnippetDomain.Diff(
-                        parseSafeInt(liveCodeMap.get("diff.start"), 0),
-                        parseSafeInt(liveCodeMap.get("diff.length"), 0),
-                        liveCodeMap.getOrDefault("diff.text", "")
-                ),
+                diffList,
                 liveCodeMap.get("language"),
                 lastModified,
                 new LiveCodeSnippetDomain.CursorPosition(line, ch),
@@ -221,7 +230,6 @@ public class LiveCodingService implements LiveCodingUseCase {
         );
     }
 
-    @Override
     public UpdateLiveCodingSnippetResDTO updateLiveCodingSnippet(UpdateLiveCodingSnippetReqDTO reqDTO) {
         Long modifier = userUtil.getAuthenticatedUserNum();
         Long hostId = reqDTO.getHostId();
@@ -235,11 +243,21 @@ public class LiveCodingService implements LiveCodingUseCase {
         // 2. Redis에 Diff 정보 저장
         String redisKey = LCD_CODE_PREFIX + hostId;
 
-        redisRepository.updateHashValue(redisKey, "diff.start", String.valueOf(reqDTO.getDiff().getStart()));
-        redisRepository.updateHashValue(redisKey, "diff.length", String.valueOf(reqDTO.getDiff().getLength()));
-        redisRepository.updateHashValue(redisKey, "diff.text", reqDTO.getDiff().getText());
+        String diffJson;
+        try {
+            diffJson = objectMapper.writeValueAsString(reqDTO.getDiff());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to serialize diff", e);
+        }
+        redisRepository.updateHashValue(redisKey, "diff", diffJson);
+
+        redisRepository.updateHashValue(redisKey, "code", String.valueOf(reqDTO.getCode()));
+        // 커서 정보 저장
         redisRepository.updateHashValue(redisKey, "cursorPos.line", String.valueOf(reqDTO.getCursorPos().getLine()));
         redisRepository.updateHashValue(redisKey, "cursorPos.ch", String.valueOf(reqDTO.getCursorPos().getCh()));
+
+        // 언어 정보도 갱신해주자 (안 해주면 뭐 쓰는지 몰라짐)
+        redisRepository.updateHashValue(redisKey, "language", reqDTO.getLanguage());
 
         // ✅ 서버 현재 시간 기준으로 lastModified 처리
         OffsetDateTime lastModified = OffsetDateTime.now(ZoneOffset.UTC);
@@ -247,8 +265,7 @@ public class LiveCodingService implements LiveCodingUseCase {
 
         // 3. 다른 사용자에게 브로드캐스트
         String roomId = reqDTO.getRoomId().toString();
-        String diffText = reqDTO.getDiff().getText();
-        webSocketBroadcaster.broadcastCodeUpdate(roomId, modifier, diffText);
+        webSocketBroadcaster.broadcastCodeUpdate(roomId, modifier, diffJson, reqDTO.getCursorPos());
 
         // 4. 응답 반환
         return new UpdateLiveCodingSnippetResDTO(
@@ -258,6 +275,7 @@ public class LiveCodingService implements LiveCodingUseCase {
                 reqDTO.getCursorPos()
         );
     }
+
 
     private boolean isHost(LiveCodingDomain liveCodingDomain) {
         Long authenticatedUserNum = userUtil.getAuthenticatedUserNum();
@@ -270,22 +288,30 @@ public class LiveCodingService implements LiveCodingUseCase {
         Map<String, String> liveCodeSnippetMap = new HashMap<>();
         liveCodeSnippetMap.put("hostId", liveCodingDomain.getHostId().toString());
         liveCodeSnippetMap.put("roomId", liveCodingDomain.getRoomId().toString());
-        liveCodeSnippetMap.put("code", "");
-        liveCodeSnippetMap.put("language", "");
-        liveCodeSnippetMap.put("lastModified", Instant.now().toString());
+        liveCodeSnippetMap.put("code", ""); // 초기 코드는 빈 문자열
+        liveCodeSnippetMap.put("language", "javascript"); // 언어는 클라이언트가 나중에 설정
 
-        // diff 초기값 (0으로 초기화하면 가져와서 파싱할 때 안정적)
-        liveCodeSnippetMap.put("diff.start", "0");
-        liveCodeSnippetMap.put("diff.length", "0");
-        liveCodeSnippetMap.put("diff.text", "");
+        // 초기 diff: 빈 리스트 → 직렬화
+        String emptyDiffJson;
+        try {
+            emptyDiffJson = objectMapper.writeValueAsString(Collections.emptyList());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to serialize empty diff list", e);
+        }
+        liveCodeSnippetMap.put("diff", emptyDiffJson);
 
-        // cursorPos 초기값 (커서 위치 없음)
+        // 초기 커서 위치: (0, 0)
         liveCodeSnippetMap.put("cursorPos.line", "0");
         liveCodeSnippetMap.put("cursorPos.ch", "0");
 
+        // 마지막 수정 시간
+        liveCodeSnippetMap.put("lastModified", Instant.now().toString());
+
+        // 저장 및 만료 시간 설정
         redisRepository.saveHash(redisKey, liveCodeSnippetMap);
         redisTemplate.expire(redisKey, 1, TimeUnit.HOURS);
     }
+
 
     private int parseSafeInt(String value, int defaultValue) {
         try {

@@ -132,7 +132,7 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
         LiveCodeSnippetDomain LiveCodeSnippetDomain = liveCodingUseCase.selectLiveCodingSnippet(hostId);
         SelectLiveCodingSnippetResDTO response = new SelectLiveCodingSnippetResDTO();
         if (LiveCodeSnippetDomain == null) {
-            response.setLanguage("");
+            response.setLanguage("javscript");
             response.setLivecode("");
             return ResponseEntity.ok(response);
         }

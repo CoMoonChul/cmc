@@ -172,6 +172,8 @@ components:
     UpdateLiveCodingSnippetReqDTO:
       type: object
       properties:
+        code:
+          type: string
         roomId:
           type: string
           format: uuid
@@ -179,18 +181,17 @@ components:
           type: integer
           format: int64
         diff:
-          type: object
-          properties:
-            start:
-              type: integer
-            length:
-              type: integer
-            text:
-              type: string
-          required:
-            - start
-            - length
-            - text
+          type: array
+          items:
+            type: object
+            properties:
+              op:
+                type: integer
+              text:
+                type: string
+            required:
+              - op
+              - text
         language:
           type: string
         cursorPos:
@@ -217,18 +218,17 @@ components:
           type: integer
           format: int64
         diff:
-          type: object
-          properties:
-            start:
-              type: integer
-            length:
-              type: integer
-            text:
-              type: string
-          required:
-            - start
-            - length
-            - text
+          type: array
+          items:
+            type: object
+            properties:
+              op:
+                type: integer
+              text:
+                type: string
+            required:
+              - op
+              - text
         lastModified:
           type: string
           format: date-time

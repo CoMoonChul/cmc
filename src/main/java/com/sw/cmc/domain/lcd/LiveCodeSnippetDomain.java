@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class LiveCodeSnippetDomain implements Serializable {
     private UUID roomId;              // 방 ID
     private String code;              // 전체 코드
-    private Diff diff;                // 변경된 코드 영역 (Diff 정보)
+    private List<Diff> diff;          // 변경된 코드 영역 (Diff 정보)
     private String language;          // 언어 (예: java, javascript 등)
     private LocalDateTime lastModified; // 마지막 수정 시간
     private CursorPosition cursorPos; // 커서 위치 정보
@@ -31,8 +32,7 @@ public class LiveCodeSnippetDomain implements Serializable {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Diff implements Serializable {
-        private int start;   // 시작 위치
-        private int length;  // 변경 전 길이
+        private int op;   // 시작 위치
         private String text; // 변경된 텍스트
     }
 

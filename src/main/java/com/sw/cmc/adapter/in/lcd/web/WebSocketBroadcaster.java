@@ -1,6 +1,7 @@
 package com.sw.cmc.adapter.in.lcd.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetReqDTOCursorPos;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.domain.lcd.LiveCodingChatDomain;
 import com.sw.cmc.domain.lcd.LiveCodingChatType;
@@ -25,7 +26,8 @@ public class WebSocketBroadcaster {
     private final ObjectMapper objectMapper;
     private final WebSocketRoomManager webSocketRoomManager; // rooms 관리 클래스
 
-    public void broadcastCodeUpdate(String roomId, Long senderUserNum, Object diffObject) {
+    public void broadcastCodeUpdate(String roomId, Long senderUserNum, Object diffObject,
+                                    UpdateLiveCodingSnippetReqDTOCursorPos cursorPos) {
         Set<WebSocketSession> roomSessions = webSocketRoomManager.getSessions(roomId);
 
         if (roomSessions.isEmpty()) {
@@ -41,6 +43,7 @@ public class WebSocketBroadcaster {
                         msg.setLiveCodingChatType(LiveCodingChatType.UPDATE.getType());
                         msg.setUsernum(senderUserNum);
                         msg.setDiff(objectMapper.writeValueAsString(diffObject));
+                        msg.setCursorPos(cursorPos); // ✅ 커서 포지션 포함
 
                         s.sendMessage(new TextMessage(objectMapper.writeValueAsString(msg)));
                     } catch (IOException e) {
