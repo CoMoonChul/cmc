@@ -92,10 +92,32 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             throw new CmcException("LCD001");
         }
 
-        webSocketRoomManager.addSession(roomId, session);
-        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.JOIN.getAction(), null);
-        System.out.println("✅ 사용자 입장: " + userNum);
+        try {
+            // ✅ 세션 먼저 등록
+            webSocketRoomManager.addSession(roomId, session);
+
+            // ✅ 참여자 검증
+            LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
+            boolean isInvited = roomInfo.getParticipants().contains(userNum);
+            if (!isInvited) {
+                // 🚫 초대 안 됐으면 처리 후 종료
+                webSocketRoomManager.removeSession(roomId, session); // 👈 정리
+                session.close(CloseStatus.NOT_ACCEPTABLE);
+                return;
+            }
+
+            webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.JOIN.getAction(), null);
+            System.out.println("✅ 사용자 입장: " + userNum);
+
+        } catch (Exception e) {
+            // 👇 혹시 등록 도중 에러 나도 정리
+            webSocketRoomManager.removeSession(roomId, session);
+            session.close(CloseStatus.SERVER_ERROR);
+//            throw new CmcException("LCD001");
+
+        }
     }
+
 
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
@@ -153,7 +175,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                     throw new RuntimeException(e);
                 }
             }
-        }, 3000);
+        }, 1000);
     }
 
 
