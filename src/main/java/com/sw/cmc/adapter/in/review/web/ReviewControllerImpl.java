@@ -41,6 +41,7 @@ public class ReviewControllerImpl implements ReviewControllerApi {
                 .content(createReviewReqDTO.getContent())
                 .codeContent(createReviewReqDTO.getCodeContent())
                 .codeType(createReviewReqDTO.getCodeType())
+                .groups(createReviewReqDTO.getGroups())
                 .build();
 
         ReviewDomain createdReview = reviewUseCase.createReview(reviewDomain);

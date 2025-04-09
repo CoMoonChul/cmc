@@ -3,6 +3,7 @@ package com.sw.cmc.domain.notice;
 import com.sw.cmc.entity.NotificationTemplate;
 import lombok.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,6 +21,7 @@ import java.util.Map;
 public class NoticeDomain {
     private Long notiId;
     private Long userNum;
+    private List<Long> userNumList;
     private NotificationTemplate notiTemplate;
     private String sendAt;
     private String sendState;

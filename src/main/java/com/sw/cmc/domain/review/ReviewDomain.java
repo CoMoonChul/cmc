@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 /**
  * packageName    : com.sw.cmc.domain.review
  * fileName       : ReviewDomain
@@ -30,6 +32,7 @@ public class ReviewDomain {
     private String updatedAt;
     private String codeContent;
     private String codeType;
+    private List<Long> groups;
 
     private Long viewCount; // 조회수
     private Long likeCount; // 좋아요 수

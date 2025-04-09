@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
-import java.util.Optional;
 
 
 /**
@@ -49,6 +48,22 @@ public class UserUtil {
 
         if (principal instanceof CustomUserDetails) {
             return ((CustomUserDetails) principal).getUserNum();
+        }
+
+        throw new CmcException(messageUtil.getFormattedMessage("USER013"));
+    }
+
+    public String getAuthenticatedUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getUsername();
         }
 
         throw new CmcException(messageUtil.getFormattedMessage("USER013"));

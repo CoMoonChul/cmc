@@ -1,11 +1,13 @@
 package com.sw.cmc.application.service.review;
 
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
+import com.sw.cmc.adapter.out.group.persistence.GroupMemberRepository;
 import com.sw.cmc.adapter.out.like.persistence.ReviewLikeRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.adapter.out.view.persistence.ReviewViewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.common.util.NotiUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.review.ReviewDetailVo;
 import com.sw.cmc.domain.review.ReviewDomain;
@@ -17,14 +19,15 @@ import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -43,8 +46,9 @@ public class ReviewService implements ReviewUseCase {
     private final CommentRepository commentRepository;
     private final ReviewViewRepository reviewViewRepository;
     private final UserUtil userUtil;
-    private final ModelMapper modelMapper;
     private final ReviewLikeRepository reviewLikeRepository;
+    private final GroupMemberRepository groupMemberRepository;
+    private final NotiUtil notiUtil;
 
     @Override
     @Transactional
@@ -123,8 +127,11 @@ public class ReviewService implements ReviewUseCase {
     @Transactional
     public ReviewDomain createReview(ReviewDomain reviewDomain) throws Exception {
         reviewDomain.validateCreateAndUpdateReview();
+
+        // 로그인 사용자 userNum
+        Long authenticatedUserNum = userUtil.getAuthenticatedUserNum();
         User savingUser = new User();
-        savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
+        savingUser.setUserNum(authenticatedUserNum);
 
         Review saving = new Review();
         saving.setUser(savingUser);
@@ -135,6 +142,14 @@ public class ReviewService implements ReviewUseCase {
 
         Review saved = reviewRepository.save(saving);
         entityManager.refresh(saved);
+
+        List<Long> userIds = groupMemberRepository.findDistinctUserNumsByGroupIds(reviewDomain.getGroups());
+        userIds.remove(authenticatedUserNum);
+        Map<String, String> templateParams = new HashMap<>();
+        templateParams.put("userNm", userUtil.getAuthenticatedUsername());
+        templateParams.put("title", saved.getTitle());
+        notiUtil.sendNoticeList(authenticatedUserNum, userIds, 7L, "/review/detail/"+saved.getReviewId(), templateParams);
+
         return ReviewDomain.builder()
                 .reviewId(saved.getReviewId())
                 .userNum(saved.getUser().getUserNum())
