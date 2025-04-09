@@ -28,6 +28,7 @@ public class CommentDomain {
     private String updatedAt;
     private String userName;
     private String email;
+    private String userImg;
 
     /**
      * methodName : validateCreateComment

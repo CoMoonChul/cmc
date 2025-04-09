@@ -10,6 +10,7 @@ import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.comment.CommentDomain;
 import com.sw.cmc.domain.comment.CommentListDomain;
 import com.sw.cmc.domain.comment.CommentTarget;
+import com.sw.cmc.domain.comment.CommentVo;
 import com.sw.cmc.entity.Comment;
 import com.sw.cmc.entity.User;
 import jakarta.persistence.EntityManager;
@@ -55,8 +56,20 @@ public class CommentService implements CommentUseCase {
     @Override
     public CommentListDomain selectCommentList(Long targetId, Integer commentTarget, Integer page, Integer size) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Comment> res = commentRepository.findByTargetIdAndCommentTarget(targetId, commentTarget, pageable);
-        List<CommentDomain> list = res.getContent().stream().map(e -> modelMapper.map(e, CommentDomain.class)).toList();
+        Page<CommentVo> res = commentRepository.findByTargetIdAndCommentTarget(targetId, commentTarget, pageable);
+        List<CommentDomain> list = res.getContent().stream().map(e -> {
+            return CommentDomain.builder()
+                    .commentId(e.getComment().getCommentId())
+                    .content(e.getComment().getContent())
+                    .userNum(e.getComment().getUser().getUserNum())
+                    .targetId(e.getComment().getTargetId())
+                    .commentTarget(e.getComment().getCommentTarget())
+                    .createdAt(e.getComment().getCreatedAt())
+                    .updatedAt(e.getComment().getUpdatedAt())
+                    .userName(e.getComment().getUser().getUsername())
+                    .userImg(e.getUserImg())
+                    .build();
+        }).toList();
 
         return CommentListDomain.builder()
                 .pageNumber(res.getPageable().getPageNumber())
