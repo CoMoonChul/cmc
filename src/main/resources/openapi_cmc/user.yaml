@@ -40,6 +40,27 @@ paths:
               schema:
                 $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinResDTO"
 
+  /user/join/google:
+    post:
+      tags:
+        - join-controller
+      summary: "API_USER_0011 구글 회원가입"
+      description: "구글 회원가입 API"
+      operationId: "joinGoogle"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinGoogleReqDTO"
+      responses:
+        "200":
+          description: "회원가입 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinGoogleResDTO"
+
   /user/checkUserId:
     get:
       tags:

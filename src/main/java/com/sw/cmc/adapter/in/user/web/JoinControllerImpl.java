@@ -1,8 +1,6 @@
 package com.sw.cmc.adapter.in.user.web;
 
-import com.sw.cmc.adapter.in.user.dto.CheckJoinResDTO;
-import com.sw.cmc.adapter.in.user.dto.JoinReqDTO;
-import com.sw.cmc.adapter.in.user.dto.JoinResDTO;
+import com.sw.cmc.adapter.in.user.dto.*;
 import com.sw.cmc.application.port.in.user.JoinUseCase;
 import com.sw.cmc.domain.user.UserDomain;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +34,17 @@ public class JoinControllerImpl implements JoinControllerApi {
                 .build();
 
         return ResponseEntity.ok(modelMapper.map(joinUseCase.join(userDomain), JoinResDTO.class));
+    }
+
+    @Override
+    public ResponseEntity<JoinGoogleResDTO> joinGoogle(JoinGoogleReqDTO joinGoogleReqDTO) throws Exception {
+        UserDomain userDomain = UserDomain.builder()
+                .userId(joinGoogleReqDTO.getUserId())
+                .username(joinGoogleReqDTO.getUsername())
+                .email(joinGoogleReqDTO.getEmail())
+                .profileImg(joinGoogleReqDTO.getProfileImg())
+                .build();
+        return ResponseEntity.ok(modelMapper.map(joinUseCase.joinGoogle(userDomain), JoinGoogleResDTO.class));
     }
 
     @Override

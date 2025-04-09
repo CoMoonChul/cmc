@@ -78,7 +78,7 @@ public class UserDomain {
 
     // Validation
     public static void validateUserId(String userId) {
-        if (StringUtils.length(userId) < 4 || StringUtils.length(userId) > 15) {
+        if (StringUtils.length(userId) < 4 || StringUtils.length(userId) > 30) {
             throw new CmcException("USER003");
         }
     }

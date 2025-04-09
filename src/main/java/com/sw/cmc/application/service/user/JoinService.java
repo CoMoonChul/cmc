@@ -1,15 +1,15 @@
 package com.sw.cmc.application.service.user;
 
+import com.sw.cmc.adapter.out.user.persistence.JoinRepository;
 import com.sw.cmc.adapter.out.user.persistence.UserRepository;
+import com.sw.cmc.application.port.in.user.JoinUseCase;
+import com.sw.cmc.common.advice.CmcException;
+import com.sw.cmc.common.util.MessageUtil;
 import com.sw.cmc.common.util.NotiUtil;
 import com.sw.cmc.common.util.SmtpUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.user.UserDomain;
 import com.sw.cmc.entity.User;
-import com.sw.cmc.adapter.out.user.persistence.JoinRepository;
-import com.sw.cmc.application.port.in.user.JoinUseCase;
-import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.common.util.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static com.sw.cmc.domain.user.UserDomain.*;
 
@@ -86,8 +87,40 @@ public class JoinService implements JoinUseCase {
     }
 
     @Override
+    public UserDomain joinGoogle(UserDomain userDomain) throws Exception {
+        // 유효성 검사
+        validateUserId(userDomain.getUserId());
+        validateUsername(userDomain.getUsername());
+        validateEmail(userDomain.getEmail());
+        validateProfileImg(userDomain.getProfileImg());
+
+        // 아이디 중복 검사
+        if (joinRepository.existsByUserId(userDomain.getUserId())) {
+            throw new CmcException("USER007");
+        }
+        // 닉네임 중복 검사
+        if (joinRepository.existsByUsername(userDomain.getUsername())) {
+            throw new CmcException("USER009");
+        }
+        // 이메일 중복 검사
+        if (joinRepository.existsByEmail(userDomain.getEmail())) {
+            throw new CmcException("USER019");
+        }
+
+        // 비밀번호 암호화 저장(랜덤 비밀번호)
+        UserDomain encryptedUserDomain = userDomain.toBuilder()
+                .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .build();
+        // 회원 생성
+        joinRepository.save(modelMapper.map(encryptedUserDomain, User.class));
+
+        return encryptedUserDomain.toBuilder()
+                .resultMessage(messageUtil.getFormattedMessage("USER011"))
+                .build();
+    }
+
+    @Override
     public String checkUserId(String userId) throws Exception {
-        userUtil.getAuthenticatedUserNum();
         validateUserId(userId);
         return messageUtil.getFormattedMessage(joinRepository.existsByUserId(userId) ? "USER007" : "USER008");
     }
