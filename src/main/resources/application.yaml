@@ -95,6 +95,7 @@ security:
     - /livecodint/**
     # Join
     - /user/join
+    - /user/join/google
     - /user/checkUserId
     - /user/checkUsername
     # Login

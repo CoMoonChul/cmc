@@ -33,6 +33,34 @@ components:
           description: 회원가입 결과 메시지
       description: 회원가입 응답
 
+    JoinGoogleReqDTO:
+      type: object
+      required:
+        - userId
+        - username
+      properties:
+        userId:
+          type: string
+          description: 회원 ID
+        username:
+          type: string
+          description: 회원명
+        email:
+          type: string
+          description: 회원 이메일
+        profileImg:
+          type: string
+          description: 프로필 이미지
+      description: 회원가입 요청
+
+    JoinGoogleResDTO:
+      type: object
+      properties:
+        resultMessage:
+          type: string
+          description: 회원가입 결과 메시지
+      description: 회원가입 응답
+
     # API_USER_0002 ID 중복 체크
     # API_USER_0003 닉네임 중복 체크
     CheckJoinResDTO:

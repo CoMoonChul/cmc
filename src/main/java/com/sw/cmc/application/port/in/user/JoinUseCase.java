@@ -1,7 +1,5 @@
 package com.sw.cmc.application.port.in.user;
 
-import com.sw.cmc.adapter.in.user.dto.CheckJoinResDTO;
-import com.sw.cmc.adapter.in.user.dto.JoinResDTO;
 import com.sw.cmc.domain.user.UserDomain;
 
 /**
@@ -13,6 +11,8 @@ import com.sw.cmc.domain.user.UserDomain;
  */
 public interface JoinUseCase {
     UserDomain join(UserDomain userDomain) throws Exception;
+
+    UserDomain joinGoogle(UserDomain userDomain) throws Exception;
 
     String checkUserId(String userId) throws Exception;
 
