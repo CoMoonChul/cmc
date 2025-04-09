@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -81,13 +82,39 @@ public class NoticeService implements NoticeUseCase {
                 .reasonNoti(reasonNoti)
                 .build();
 
-
         Notification notification = modelMapper.map(notiResult, Notification.class);
-
         Notification saved = noticeRepository.save(notification);
         entityManager.refresh(saved);
 
         return notiResult;
+    }
+
+    @Override
+    @Transactional
+    public List<NoticeDomain> saveNotificationList(NoticeDomain noticeDomain) throws Exception {
+        // 1. NotificationTemplate 조회 (DB에서 가져오기)
+        NotificationTemplate template = noticeTemplateRepository.findById(noticeDomain.getNotiTemplateId())
+                .orElseThrow(() -> new CmcException("NOTI001"));
+        String notiTemplate = template.getNotiContent();
+
+        List<NoticeDomain> resultList = new ArrayList<>();
+
+        for (Long userNum : noticeDomain.getUserNumList()) {
+            String reasonNoti = replacePlaceholders(notiTemplate, noticeDomain.getTemplateParams());
+            NoticeDomain notiResult = NoticeDomain.builder()
+                    .userNum(userNum)  // <-- 여기 주의
+                    .sendAt(noticeDomain.getSendAt())
+                    .linkUrl(noticeDomain.getLinkUrl())
+                    .notiTemplate(template)
+                    .createUser(noticeDomain.getCreateUser())
+                    .sendState(noticeDomain.getSendState())
+                    .reasonNoti(reasonNoti)
+                    .build();
+            Notification notification = modelMapper.map(notiResult, Notification.class);
+            Notification saved = noticeRepository.save(notification);
+            resultList.add(notiResult);
+        }
+        return resultList;
     }
 
 

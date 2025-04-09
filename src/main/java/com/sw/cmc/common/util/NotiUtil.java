@@ -1,11 +1,13 @@
 package com.sw.cmc.common.util;
 
 import com.sw.cmc.event.notice.SendNotiInAppEvent;
+import com.sw.cmc.event.notice.SendNotiInAppEventList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,7 +28,6 @@ public class NotiUtil {
     public void sendNotice(Long userNum, Long notiTemplateId, String linkUrl , Map<String, String> templateParams) {
         // 인앱 알림 (notice 테이블에 저장)
 //        Long userNum = userUtil.getAuthenticatedUserNum();
-
         SendNotiInAppEvent sendNotiInAppEvent = SendNotiInAppEvent.builder()
                 .userNum(userNum)
                 .notiTemplateId(notiTemplateId)
@@ -36,7 +37,21 @@ public class NotiUtil {
                 .sendState("Y") // 전송상태 관리 하려 했으나 필요없을듯?
                 .templateParams(templateParams)
                 .build();
+        eventPublisher.publishEvent(sendNotiInAppEvent);
+    }
 
+    public void sendNoticeList(Long userNum, List<Long> userNumList, Long notiTemplateId, String linkUrl , Map<String, String> templateParams) {
+        // 인앱 알림 (notice 테이블에 저장)
+//        Long userNum = userUtil.getAuthenticatedUserNum();
+        SendNotiInAppEventList sendNotiInAppEvent = SendNotiInAppEventList.builder()
+                .userNumList(userNumList)
+                .notiTemplateId(notiTemplateId)
+                .sendAt(LocalDateTime.now().toString())
+                .linkUrl(linkUrl)
+                .createUser(userNum)
+                .sendState("Y") // 전송상태 관리 하려 했으나 필요없을듯?
+                .templateParams(templateParams)
+                .build();
         eventPublisher.publishEvent(sendNotiInAppEvent);
     }
 }

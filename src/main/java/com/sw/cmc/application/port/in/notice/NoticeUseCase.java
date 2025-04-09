@@ -3,7 +3,6 @@ package com.sw.cmc.application.port.in.notice;
 
 import com.sw.cmc.domain.notice.NotiListDomain;
 import com.sw.cmc.domain.notice.NoticeDomain;
-import com.sw.cmc.entity.Notification;
 
 import java.util.List;
 
@@ -21,9 +20,8 @@ public interface NoticeUseCase {
      * author : AN SEUNG GI
      * description : 알림 리스트 조회 (페이징)
      *
-     * @param user num
-     * @param page
-     * @param size
+     * @param page Integer
+     * @param size Integer
      * @return noti list domain
      * @throws Exception the exception
      */
@@ -35,10 +33,21 @@ public interface NoticeUseCase {
      * author : AN SEUNG GI
      * description : 알림 등록
      *
-     * @param notification
+     * @param noticeDomain NoticeDomain
      * @throws Exception the exception
      */
     NoticeDomain saveNotification(NoticeDomain noticeDomain) throws Exception;
+
+    /**
+     * methodName : saveNotificationList
+     * author : IM HYUN WOO
+     * description :
+     *
+     * @param noticeDomain NoticeDomain
+     * @return notice domain list
+     * @throws Exception the exception
+     */
+    List<NoticeDomain> saveNotificationList(NoticeDomain noticeDomain) throws Exception;
 
 
     /**
@@ -46,7 +55,7 @@ public interface NoticeUseCase {
      * author : AN SEUNG GI
      * description : 알림 삭제
      *
-     * @param notice domain
+     * @param noticeDomain NoticeDomain
      * @return notice domain
      * @throws Exception the exception
      */

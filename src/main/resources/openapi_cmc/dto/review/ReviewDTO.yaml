@@ -183,6 +183,12 @@ components:
         codeType:
           type: string
           description: 코드 타입
+        groups:
+          type: array
+          items:
+            type: integer
+            format: int64
+            description: 그룹 ID
 
     # 리뷰 생성 응답 DTO
     CreateReviewResDTO:
