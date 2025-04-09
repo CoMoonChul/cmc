@@ -68,6 +68,9 @@ components:
           type: integer
           format: int64
           description: 회원 번호
+        userImg:
+          type: string
+          description: 회원 이미지
         createdAt:
           type: string
           description: 생성 일시

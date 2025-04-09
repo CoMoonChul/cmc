@@ -1,5 +1,6 @@
 package com.sw.cmc.adapter.out.comment.persistence;
 
+import com.sw.cmc.domain.comment.CommentVo;
 import com.sw.cmc.entity.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +29,14 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @param pageable Pageable
      * @return page
      */
-    @Query("SELECT c FROM Comment c JOIN FETCH c.user " +
+    @Query("SELECT new com.sw.cmc.domain.comment.CommentVo( " +
+            "c, u.profileImg )" +
+            "FROM Comment c " +
+            "JOIN c.user u " +
             "WHERE c.targetId = :targetId AND c.commentTarget = :commentTarget")
-    Page<Comment> findByTargetIdAndCommentTarget(@Param("targetId") Long targetId,
-                                                       @Param("commentTarget") Integer commentTarget,
-                                                       Pageable pageable);
+    Page<CommentVo> findByTargetIdAndCommentTarget(@Param("targetId") Long targetId,
+                                                   @Param("commentTarget") Integer commentTarget,
+                                                   Pageable pageable);
 
     /**
      * methodName : existsByTargetIdAndCommentTarget
