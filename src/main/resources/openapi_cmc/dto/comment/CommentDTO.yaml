@@ -56,6 +56,7 @@ components:
         - createdAt
         - updatedAt
         - username
+        - userImg
       properties:
         commentId:
           type: integer
@@ -139,8 +140,10 @@ components:
 
     DeleteCommentReqDTO:
       type: object
+      required:
+        - commentId
       properties:
-        comment_id:
+        commentId:
           type: integer
           format: int64
           description: 댓글 ID
