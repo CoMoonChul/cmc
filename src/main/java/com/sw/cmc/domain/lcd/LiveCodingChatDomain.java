@@ -21,4 +21,6 @@ public class LiveCodingChatDomain {
     private String msg;
     private Long usernum;
     private String diff;
+    private Object cursorPos;
+
 }

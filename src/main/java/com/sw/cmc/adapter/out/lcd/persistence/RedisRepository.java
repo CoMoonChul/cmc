@@ -49,7 +49,8 @@ public class RedisRepository implements RedisUseCase {
     @Override
     public Map<String, String> selectHash(String key) {
         HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
-        return hashOps.entries(key);
+        Map<String, String> result = hashOps.entries(key);
+        return result.isEmpty() ? null : result;
     }
 
     @Override

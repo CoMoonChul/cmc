@@ -74,15 +74,6 @@ public interface LiveCodingUseCase {
     LiveCodingDomain updateLiveCoding(UUID roomId, Long userNum, int action) throws Exception;
 
     /**
-     * methodName : findRoomIdByHostId
-     * author : KO YOUNG SUNG
-     * description : hostId로 roomId 찾기
-     * @param hostId - 호스트 id
-     * @return roomId
-     */
-    UUID findRoomIdByHostId(Long hostId);
-
-    /**
      * methodName : existsByHostId
      * author : KO YOUNG SUNG
      * description : hostId로 방이 존재하는지 확인
