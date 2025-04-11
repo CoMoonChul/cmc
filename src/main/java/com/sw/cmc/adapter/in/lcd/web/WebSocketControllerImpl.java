@@ -112,8 +112,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         } catch (Exception e) {
             // 👇 혹시 등록 도중 에러 나도 정리
             webSocketRoomManager.removeSession(roomId, session);
-            session.close(CloseStatus.SERVER_ERROR);
-//            throw new CmcException("LCD001");
+            throw new CmcException("LCD019");
 
         }
     }

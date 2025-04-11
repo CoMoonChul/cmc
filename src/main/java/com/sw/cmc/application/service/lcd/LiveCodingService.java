@@ -214,9 +214,10 @@ public class LiveCodingService implements LiveCodingUseCase {
             diffList = objectMapper.readValue(
                     liveCodeMap.getOrDefault("diff", "[]"),
                     new TypeReference<List<LiveCodeSnippetDomain.Diff>>() {}
+
             );
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to parse diff list from Redis", e);
+            throw new CmcException("LCD020");
         }
 
         return new LiveCodeSnippetDomain(
@@ -276,7 +277,6 @@ public class LiveCodingService implements LiveCodingUseCase {
         );
     }
 
-
     private boolean isHost(LiveCodingDomain liveCodingDomain) {
         Long authenticatedUserNum = userUtil.getAuthenticatedUserNum();
         return authenticatedUserNum != null && authenticatedUserNum.equals(liveCodingDomain.getHostId());
@@ -311,7 +311,6 @@ public class LiveCodingService implements LiveCodingUseCase {
         redisRepository.saveHash(redisKey, liveCodeSnippetMap);
         redisTemplate.expire(redisKey, 1, TimeUnit.HOURS);
     }
-
 
     private int parseSafeInt(String value, int defaultValue) {
         try {
