@@ -63,7 +63,29 @@ public class LoginControllerImpl implements LoginControllerApi {
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResDTO.getAccessToken()) // access token
                 .body(loginResDTO);
+    }
 
+    @Override
+    public ResponseEntity<LoginGoogleResDTO> loginGoogle(LoginGoogleReqDTO loginGoogleReqDTO) throws Exception {
+        UserDomain userDomain = UserDomain.builder()
+                .idToken(loginGoogleReqDTO.getIdToken())
+                .build();
+
+        LoginGoogleResDTO loginResDTO = modelMapper.map(loginUseCase.loginGoogle(userDomain), LoginGoogleResDTO.class);
+        // refresh token set cookie
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResDTO.getRefreshToken())
+                .httpOnly(true)
+                .secure(false)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(properties.getToken().getRefreshTokenExpirationTimeInSeconds()) // 90 days
+                .build();
+
+        HttpServletResponse response = RequestUtil.getResponse();
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResDTO.getAccessToken()) // access token
+                .body(loginResDTO);
     }
 
     @PostMapping("/user/refresh")

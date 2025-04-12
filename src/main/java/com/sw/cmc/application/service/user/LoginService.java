@@ -1,5 +1,9 @@
 package com.sw.cmc.application.service.user;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.sw.cmc.adapter.out.user.persistence.LoginRepository;
 import com.sw.cmc.application.port.in.user.LoginUseCase;
 import com.sw.cmc.common.advice.CmcException;
@@ -16,11 +20,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Objects;
 
 import static com.sw.cmc.domain.user.UserDomain.createRandomPassword;
@@ -46,6 +52,9 @@ public class LoginService implements LoginUseCase {
     private final ApplicationEventPublisher eventPublisher;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final SmtpUtil smtpUtil;
+
+    @Value("${google.client-id}")
+    private String googleClientId;
 
     @Override
     @Transactional
@@ -88,6 +97,50 @@ public class LoginService implements LoginUseCase {
         if (!isMatch) {
             throw new CmcException("USER029");
         }
+
+        // 토큰 생성
+        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUserId());
+
+        // RefreshToken 암호화
+        final TokenDomain tokenDomain = modelMapper.map(jwtToken, TokenDomain.class);
+        tokenDomain.setRefreshToken(userUtil.encrypt(jwtToken.getRefreshToken()));
+
+        // RefreshToken 저장
+        user.setRefreshToken(tokenDomain.getRefreshToken());
+
+        // DB 저장
+        loginRepository.save(user);
+
+        return UserDomain.builder()
+                .accessToken(tokenDomain.getAccessToken())
+                .refreshToken(tokenDomain.getRefreshToken())
+                .userNum(user.getUserNum())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public UserDomain loginGoogle(UserDomain userDomain) throws Exception {
+        String idTokenString = userDomain.getIdToken();
+
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                GoogleNetHttpTransport.newTrustedTransport(),
+                JacksonFactory.getDefaultInstance()
+        )
+        .setAudience(Collections.singletonList(googleClientId))
+        .build();
+
+        GoogleIdToken idToken = verifier.verify(idTokenString);
+        if (idToken == null) {
+            throw new CmcException("USER036");
+        }
+
+        GoogleIdToken.Payload payload = idToken.getPayload();
+        String email = payload.getEmail();
+
+
+        final User user = loginRepository.findByEmail(email)
+                .orElseThrow(() -> new CmcException("USER034"));
 
         // 토큰 생성
         final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUserId());

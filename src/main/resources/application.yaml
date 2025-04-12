@@ -101,6 +101,7 @@ security:
     # Login
     - /user/tempLogin
     - /user/login
+    - /user/login/google
     - /user/refresh
     - /user/tempRefresh
     - /user/findAccount
@@ -135,3 +136,6 @@ openai:
   secret-key: ${AI_KEY}
   url:
     temp: https://api.openai.com/v1/chat/completions
+
+google:
+  client-id: ${GOOGLE_CLIENT_ID}

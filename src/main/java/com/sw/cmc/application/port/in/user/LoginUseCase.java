@@ -15,6 +15,8 @@ public interface LoginUseCase {
 
     UserDomain login(UserDomain userDomain) throws Exception;
 
+    UserDomain loginGoogle(UserDomain userDomain) throws Exception;
+
     String refresh(HttpServletRequest request) throws Exception;
 
     String logout(HttpServletRequest request) throws Exception;

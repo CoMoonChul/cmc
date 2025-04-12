@@ -61,6 +61,27 @@ paths:
               schema:
                 $ref: "./dto/user/JoinDTO.yaml#/components/schemas/JoinGoogleResDTO"
 
+  /user/login/google:
+    post:
+      tags:
+        - login-controller
+      summary: "API_USER_0012 구글 로그인"
+      description: "구글 로그인 API"
+      operationId: "loginGoogle"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./dto/user/LoginDTO.yaml#/components/schemas/LoginGoogleReqDTO"
+      responses:
+        "200":
+          description: "구글 로그인 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/user/LoginDTO.yaml#/components/schemas/LoginGoogleResDTO"
+
   /user/checkUserId:
     get:
       tags:

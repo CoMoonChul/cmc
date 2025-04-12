@@ -30,6 +30,7 @@ import static com.sw.cmc.common.constant.Constants.PROFILE_IMG_BASE_URL;
 public class UserDomain {
     private long userNum;
     private String userId;
+    private String idToken;
     private String password;
     private String accessToken;
     private long accessTokenExpirationTime;
