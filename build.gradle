@@ -27,10 +27,6 @@ configurations {
 	}
 }
 
-repositories {
-	mavenCentral()
-}
-
 dependencies {
 	// 기본 의존성 정보
 	implementation 'org.springframework.boot:spring-boot-starter'
@@ -104,6 +100,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'commons-validator:commons-validator:1.7'
+
+	// google login
+	implementation 'com.google.api-client:google-api-client:2.2.0'
+	implementation 'com.google.http-client:google-http-client-jackson2:1.43.3'
 }
 
 tasks.named('test') {

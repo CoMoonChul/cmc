@@ -26,6 +26,7 @@ public class CmcApplication {
 		System.setProperty("AI_MODEL", dotenv.get("AI_MODEL"));
 		System.setProperty("JWT_SECRET_KEY", dotenv.get("JWT_SECRET_KEY"));
 		System.setProperty("JWT_ENCRYPTION_KEY", dotenv.get("JWT_ENCRYPTION_KEY"));
+		System.setProperty("GOOGLE_CLIENT_ID", dotenv.get("GOOGLE_CLIENT_ID"));
 		SpringApplication.run(CmcApplication.class, args);
 	}
 

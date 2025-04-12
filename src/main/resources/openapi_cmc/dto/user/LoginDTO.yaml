@@ -28,6 +28,33 @@ components:
           description: RefreshToken 만료 시간
       description: 임시로그인 응답
 
+    # API_USER_0012 구글 로그인
+    LoginGoogleReqDTO:
+      required:
+        - idToken
+      properties:
+        idToken:
+          type: string
+          description: 구글 id 토큰
+      description: 구글로그인 요청
+
+    LoginGoogleResDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: AccessToken
+        accessTokenExpirationTime:
+          type: number
+          description: AccessToken 만료 시간
+        refreshToken:
+          type: string
+          description: RefreshToken
+        refreshTokenExpirationTime:
+          type: number
+          description: RefreshToken 만료 시간
+      description: 구글로그인 응답
+
     # API_USER_0004 로그인
     LoginReqDTO:
       type: object
