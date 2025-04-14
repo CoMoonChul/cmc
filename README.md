@@ -14,9 +14,10 @@
 
 ## Contributors
 
- :---------:|:----------:|:---------:|:---------:|:---------:|:---------:
- ⚡ 임현우 | ⚡ 심우현 | ⚡ 안승기 | ⚡ 고영성 | ⚡ 박종일 | ⚡ 한성수
-[Myunwoo](https://github.com/Myunwoo) | [woohj0702](https://github.com/woohj0702) | [AnSeungGi](https://github.com/AnSeungKi) | [KoYoungSung](https://github.com/KoYoungSung) | [Allday Park](https://github.com/JongIlParks) | [sungsuhan](https://github.com/sungsuhan)
+| 리더 | 배포/아키 | 알림/SMTP | 실시간 공유 | 리뷰/배틀 | 회원 |
+| :---------: | :----------: | :---------: | :---------: | :---------: | :---------: |
+| ⚡ 임현우 | ⚡ 심우현 | ⚡ 안승기 | ⚡ 고영성 | ⚡ 박종일 | ⚡ 한성수 |
+| [Myunwoo](https://github.com/Myunwoo) | [woohj0702](https://github.com/woohj0702) | [AnSeungGi](https://github.com/AnSeungKi) | [KoYoungSung](https://github.com/KoYoungSung) | [Allday Park](https://github.com/JongIlParks) | [sungsuhan](https://github.com/sungsuhan) |
 
 <br>
 
