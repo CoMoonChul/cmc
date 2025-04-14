@@ -141,9 +141,8 @@ Hexagonal
 
 ## 헥사고날 아키텍처
 
----
+![image](https://github.com/user-attachments/assets/8f4e2ffd-bf41-4bd4-a414-ef124de9a333)
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/152d40ed-3e1f-46e5-9173-8517ca62ebae/de760dec-51f9-4dbb-b440-9c1b2a1598d2/image.png)
 
 헥사고날 아키텍처는 
 
@@ -161,8 +160,6 @@ Port는 Input port와 Out port로 나누어지고,
 
 ## 계층형 vs 헥사고날
 
----
-
 | **영역** | **계층형** | **헥사고날** |
 | --- | --- | --- |
 | 표현영역 | controller | adapter.in |
@@ -175,8 +172,6 @@ Port는 Input port와 Out port로 나누어지고,
 DB 조회 및 등록 같이 도메인 영역에서 이용할 정보는 application.port.out 패키지 영역에 interface로 만들고 adapter.out 패키지 영역에서 구현합니다.
 
 ## 코문철에서의 활용
-
----
 
 | **영역** | **계층형** | **헥사고날** |
 | --- | --- | --- |
