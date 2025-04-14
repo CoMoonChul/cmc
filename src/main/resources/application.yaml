@@ -121,7 +121,6 @@ security:
     - /selectBattleVoteState
 
     # LiveCoding
-    - /createLiveCoding
     - /selectLiveCoding
     - /deleteLiveCoding
     - /verifyLiveCoding
@@ -139,3 +138,5 @@ openai:
 
 google:
   client-id: ${GOOGLE_CLIENT_ID}
+
+domain: http://localhost:3000
