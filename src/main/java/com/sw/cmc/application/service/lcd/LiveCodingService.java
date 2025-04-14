@@ -19,6 +19,7 @@ import com.sw.cmc.domain.lcd.LiveCodingDomain;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,9 @@ public class LiveCodingService implements LiveCodingUseCase {
     private final ObjectMapper objectMapper;
     private static final String LCD_PREFIX = LiveCodingConstants.LCD_PREFIX;
     private static final String LCD_CODE_PREFIX = LiveCodingConstants.LCD_CODE_PREFIX;
+
+    @Value("${domain}")
+    private String inviteDomain;
 
     @Override
     public LiveCodingDomain createLiveCoding(Long hostId) throws CmcException {
@@ -104,7 +108,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         final Claims claims = Jwts.claims();
         claims.put("roomId", roomId.toString());
         JwtToken jwtToken = jwtTokenProvider.createLcdToken(claims);
-        return "http://localhost:3000/livecoding/join?token=" + jwtToken.getAccessToken();
+        return inviteDomain + "/livecoding/join?token=" + jwtToken.getAccessToken();
     }
 
     @Override
