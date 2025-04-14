@@ -132,6 +132,8 @@ Commit Convention
 ![cmc_erd](https://github.com/user-attachments/assets/ef4bb2dc-f9c7-4083-a794-19bc1ad9b41c)
 
 
+## AWS Architecture
+![cmc drawio](https://github.com/user-attachments/assets/b3f5cc1b-0d7b-4fab-adda-75828f9f8ef7)
 
 
 
