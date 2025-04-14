@@ -131,6 +131,116 @@ Commit Convention
 </div>
 </details>
 
+<details>
+<summary>
+Hexagonal
+</summary>
+<div markdown="1">
+
+[Hexagonal Architecture](https://alistair.cockburn.us)
+
+## 헥사고날 아키텍처
+
+---
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/152d40ed-3e1f-46e5-9173-8517ca62ebae/de760dec-51f9-4dbb-b440-9c1b2a1598d2/image.png)
+
+헥사고날 아키텍처는 
+
+- Business core를 담당하는 도메인 영역
+- Port라고 불리우는 응용 영역
+
+으로 구성되며 외부 adapter들은 port를 통해 통신하게 됩니다.
+
+Port는 Input port와 Out port로 나누어지고,
+
+- Input port: 도메인를 호출하는 어댑터가 통신하는 port
+- Output port: 도메인에 의해 호출되는 어댑터가 통신하는 port
+
+헥사고날 아키텍처의 핵심은 **비즈니스 로직이 있는 '도메인 계층' 이 외부 요소에 의존하지 않고 외부 요소가 '도메인 계층'에 의존하도록 하는 것이 핵심**입니다.
+
+## 계층형 vs 헥사고날
+
+---
+
+| **영역** | **계층형** | **헥사고날** |
+| --- | --- | --- |
+| 표현영역 | controller | adapter.in |
+| 응용영역 | service | application |
+| 도메인영역 |  | domain |
+| 인프라스트럭처영역 | dao | adapter.out |
+
+응용 계층은 외부에 제공해야 할 정보를 application.port.in 패키지 영역에 interface로 만들고 application.service 패키지 영역에 구현하여 제공합니다.
+
+DB 조회 및 등록 같이 도메인 영역에서 이용할 정보는 application.port.out 패키지 영역에 interface로 만들고 adapter.out 패키지 영역에서 구현합니다.
+
+## 코문철에서의 활용
+
+---
+
+| **영역** | **계층형** | **헥사고날** |
+| --- | --- | --- |
+| 표현영역 | controller | adapter.in.web |
+|  | eventListener | adapter.in.event |
+| 응용영역 | service | application |
+| 도메인영역 |  | domain |
+| 인프라스트럭처영역 | dao | adapter.out |
+
+코문철에서는 adapter.in의 방식으로 api controller, event listener가 존재합니다.
+
+따라서,
+
+- api controller에 의해 도메인 영역이 호출
+- event listener에 의해 도메인 영역이 호출
+
+위 둘은 도메인 호출 방식이 다를 뿐, 수행해야 할 비즈니스가 같으므로 @Service의 멤버 메서드는 input/output 타입을 해당 도메인의 도메인 객체로 통일합니다.
+
+```jsx
+package com.sw.cmc.application.port.in.comment;
+
+import com.sw.cmc.domain.comment.CommentDomain;
+import com.sw.cmc.domain.comment.CommentListDomain;
+
+/**
+ * packageName    : com.sw.cmc.application.port.in.comment
+ * fileName       : CommentUseCase
+ * author         : ihw
+ * date           : 2025. 2. 13.
+ * description    : comment usecase
+ */
+public interface CommentUseCase {
+		...
+
+    /**
+     * methodName : createComment
+     * author : IM HYUN WOO
+     * description : 댓글 생성
+     *
+     * @param comment domain
+     * @return comment domain
+     * @throws Exception the exception
+     */
+    CommentDomain createComment(CommentDomain commentDomain) throws Exception;
+
+    /**
+     * methodName : deleteComment
+     * author : IM HYUN WOO
+     * description : 댓글 삭제
+     *
+     * @param comment domain
+     * @return comment domain
+     * @throws Exception the exception
+     */
+    CommentDomain deleteComment(CommentDomain commentDomain) throws Exception;
+
+		...
+}
+```
+
+
+</div>
+</details>
+
 <br>
 
 ## ERD
