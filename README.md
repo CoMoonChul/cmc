@@ -1,6 +1,5 @@
 #  코문철 Co Moon Chul
 
----
 > **코드 리뷰를 위한 개발자 커뮤니티 서비스**
 > <br>
 > 코드 리뷰 커뮤니티
@@ -15,13 +14,10 @@
 
 ## Contributors
 
----
-
 <br>
 
 ## 링크
 
----
 
 - 배포 후 입력(서비스)
 - 배포 후 입력(스웨거)
@@ -30,7 +26,6 @@
 
 ## Development Environment and Library
 
----
 <p align="left"> <img src="https://img.shields.io/badge/Java-17-dd6620"> <img src="https://img.shields.io/badge/Spring%20Boot-3.3.4-green"> <img src="https://img.shields.io/badge/Gradle-8.5-blue"> </p>
 
 - Framework
@@ -59,7 +54,6 @@ Google API Client | 구글 OAuth 로그인 지원 | 2.2.0
 
 ## Conventions
 
----
 <details>
 <summary>
 Commit Convention
@@ -99,8 +93,6 @@ Commit Convention
 
 ### HTTP Method
 
----
-
 - **GET** : 조회 단건/복수
 - **POST** : 리소스 생성/갱신/삭제
 - **~~PUT/DELETE~~** : 보안상 사용하지 않음
@@ -116,15 +108,11 @@ Commit Convention
 - 참여 개발자에게 익숙한 환경
 </aside>
 
----
-
 ### GET API의 파라메터 전달시 **@Pathvariable 사용금지**
 
 - URI의 일부로 전달되는 Pathvariable은 보안에 취약함
 - @GetMapping("/v1/boards") 의 형태로 URI에는 파라메터를 포함하지 않고 API에 **@RequestParam 을 사용**해서 파라메터를 전달한다.
 - @RequestParam 은 Default 로 required=true 이므로 필수값이 아닌 경우 required=false 로 설정해준다.
-
----
 
 ### api method 명 규칙
 
@@ -141,8 +129,8 @@ Commit Convention
 <br>
 
 ## ERD
+![cmc_erd](https://github.com/user-attachments/assets/ef4bb2dc-f9c7-4083-a794-19bc1ad9b41c)
 
----
 
 
 
