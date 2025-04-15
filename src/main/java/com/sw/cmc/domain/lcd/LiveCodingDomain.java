@@ -5,7 +5,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * packageName    : com.sw.cmc.domain.live_coding.model
@@ -24,6 +26,7 @@ public class LiveCodingDomain  {
     private Integer participantCount;  // 참가자 수
     private List<Long> participants;  // 참가자 ID 목록 (userNum 리스트)
     private String link;    // 링크
+    private Map<Long, String> lcdUserName;
 
     // 최대 참가 인원
     private static final int MAX_PARTICIPANT_COUNT = 3;
@@ -49,5 +52,13 @@ public class LiveCodingDomain  {
         this.participantCount = participants.size();
     }
 
+    public Map<String, String> getLcdUserNameAsStringMap() {
+        if (lcdUserName == null) return null;
+        return lcdUserName.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> String.valueOf(entry.getKey()),
+                        Map.Entry::getValue
+                ));
+    }
 
 }

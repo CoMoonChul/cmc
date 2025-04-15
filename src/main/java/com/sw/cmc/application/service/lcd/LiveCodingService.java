@@ -72,6 +72,10 @@ public class LiveCodingService implements LiveCodingUseCase {
         Integer participantCount = 1;
         String link = this.generateInviteLink(roomId);
 
+        String username = userUtil.getAuthenticatedUsername();
+        Map<Long, String> lcdUserName = new HashMap<>();
+        lcdUserName.put(hostId, username);
+
         // LiveCodingDomain 객체 생성
         LiveCodingDomain liveCodingDomain = new LiveCodingDomain(
                 roomId,  // 생성된 방 ID
@@ -79,7 +83,8 @@ public class LiveCodingService implements LiveCodingUseCase {
                 createdAt,  // 방 생성 시간
                 participantCount,  // 참가자 수
                 participants,  // 참가자 목록
-                link   // 링크
+                link,   // 링크
+                lcdUserName
         );
 
         // Redis에 방 정보 저장
@@ -132,12 +137,14 @@ public class LiveCodingService implements LiveCodingUseCase {
         if (liveCodingDomain == null) {
             throw new CmcException("LCD001");
         }
+
         if (action == LiveCodingAction.JOIN.getAction()) {
 
             if (liveCodingDomain.getParticipants().contains(userNum)) {
                 throw new CmcException("LCD005");
             }
-
+            String username = userUtil.getAuthenticatedUsername();
+            liveCodingDomain.getLcdUserName().put(userNum, username);
             liveCodingDomain.joinParticipant(userNum);
         } else if (action == LiveCodingAction.LEAVE.getAction()) {
             liveCodingDomain.leaveParticipant(userNum);
@@ -178,7 +185,17 @@ public class LiveCodingService implements LiveCodingUseCase {
                 .collect(Collectors.toList());
         String link = liveCodingMap.get("link");
 
-        return new LiveCodingDomain(retrievedRoomId, hostId, createdAt, participantCount, participants, link);
+        Map<Long, String> lcdUserName = new HashMap<>();
+        String lcdUserNameJson = liveCodingMap.get("lcdUserName");
+        if (lcdUserNameJson != null) {
+            try {
+                lcdUserName = objectMapper.readValue(lcdUserNameJson, new TypeReference<Map<Long, String>>() {});
+            } catch (JsonProcessingException e) {
+                throw new CmcException("LCD022");
+            }
+        }
+
+        return new LiveCodingDomain(retrievedRoomId, hostId, createdAt, participantCount, participants, link, lcdUserName);
     }
 
     @Override
@@ -191,6 +208,13 @@ public class LiveCodingService implements LiveCodingUseCase {
         liveCodingMap.put("participantCount", liveCodingDomain.getParticipantCount().toString());
         liveCodingMap.put("participants", String.join(",", liveCodingDomain.getParticipants().stream().map(String::valueOf).toArray(String[]::new)));
         liveCodingMap.put("link", liveCodingDomain.getLink());
+
+        try {
+            String lcdUserNameJson = objectMapper.writeValueAsString(liveCodingDomain.getLcdUserName());
+            liveCodingMap.put("lcdUserName", lcdUserNameJson);
+        } catch (JsonProcessingException e) {
+            throw new CmcException("LCD021");
+        }
 
         redisRepository.saveHash(redisKey, liveCodingMap);
         redisTemplate.expire(redisKey, 1, TimeUnit.HOURS);

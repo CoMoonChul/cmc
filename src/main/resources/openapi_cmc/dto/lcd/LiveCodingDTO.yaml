@@ -101,6 +101,10 @@ components:
         link:
           type: string
           description: "초대 링크"
+        lcdUserName:
+          type: object
+          additionalProperties:
+            type: string
       required:
         - roomId
         - hostId
@@ -108,6 +112,7 @@ components:
         - participantCount
         - participants
         - link
+        - lcdUserName
 
     InviteLiveCodingReqDTO:
       type: object
