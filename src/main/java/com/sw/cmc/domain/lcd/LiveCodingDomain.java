@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -24,6 +25,7 @@ public class LiveCodingDomain  {
     private Integer participantCount;  // 참가자 수
     private List<Long> participants;  // 참가자 ID 목록 (userNum 리스트)
     private String link;    // 링크
+    private Map<Long, String> lcdUserName;
 
     // 최대 참가 인원
     private static final int MAX_PARTICIPANT_COUNT = 3;
