@@ -80,6 +80,7 @@ public class LiveCodingControllerImpl implements LiveCodingControllerApi {
         response.setParticipantCount(liveCodingDomain.getParticipantCount());
         response.setParticipants(liveCodingDomain.getParticipants());
         response.setLink(liveCodingDomain.getLink());
+        response.setLcdUserName(liveCodingDomain.getLcdUserNameAsStringMap());
 
         // 응답 반환
         return ResponseEntity.ok(response);  // 200 OK 응답 반환

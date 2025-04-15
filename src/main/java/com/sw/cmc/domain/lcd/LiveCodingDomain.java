@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * packageName    : com.sw.cmc.domain.live_coding.model
@@ -51,5 +52,13 @@ public class LiveCodingDomain  {
         this.participantCount = participants.size();
     }
 
+    public Map<String, String> getLcdUserNameAsStringMap() {
+        if (lcdUserName == null) return null;
+        return lcdUserName.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> String.valueOf(entry.getKey()),
+                        Map.Entry::getValue
+                ));
+    }
 
 }
