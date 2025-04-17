@@ -40,7 +40,7 @@ public class WebSocketAuthInterceptor implements HandshakeInterceptor {
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Claims claims = jwtTokenProvider.getClaims(token);
                 Long userNum = claims.get("userNum", Long.class);
-                String userName = claims.get("userName", String.class);
+                String userName = claims.get("username", String.class);
 
                 if (userNum != null) {
                     attributes.put("userNum", userNum); // ✅ 유저 정보 저장
