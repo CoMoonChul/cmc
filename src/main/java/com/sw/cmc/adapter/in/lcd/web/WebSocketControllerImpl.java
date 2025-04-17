@@ -43,6 +43,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
         Long userNum = (Long) session.getAttributes().get("userNum");
+        String userName = (String) session.getAttributes().get("userName");
         String roomId = getRoomId(session);
 
         if (roomId.isEmpty()) {
@@ -58,6 +59,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                 LiveCodingChatDomain liveCodingChatDomain = new LiveCodingChatDomain();
                 liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.CHAT.getType());
                 liveCodingChatDomain.setUsernum(userNum);
+                liveCodingChatDomain.setUsername(userName);
                 liveCodingChatDomain.setMsg(payload);
                 String msgObj = objectMapper.writeValueAsString(liveCodingChatDomain);
                 s.sendMessage(new TextMessage(msgObj));
@@ -80,6 +82,8 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
         Long userNum = (Long) session.getAttributes().get("userNum");
+        String userName = (String) session.getAttributes().get("userName");
+
 
         if (userNum == null) {
             session.close(CloseStatus.NOT_ACCEPTABLE);
@@ -106,8 +110,8 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                 return;
             }
 
-            webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.JOIN.getAction(), null);
-            System.out.println("✅ 사용자 입장: " + userNum);
+            webSocketBroadcaster.broadcastMessage(userNum, userName, roomId, LiveCodingAction.JOIN.getAction(), null);
+            System.out.println("✅ 사용자 입장: " + userName);
 
         } catch (Exception e) {
             // 👇 혹시 등록 도중 에러 나도 정리
@@ -121,6 +125,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
         Long userNum = (Long) session.getAttributes().get("userNum");
+        String userName = (String) session.getAttributes().get("userName");
         if (userNum == null) {
             session.close(CloseStatus.NOT_ACCEPTABLE);
             throw new CmcException("LCD013");
@@ -161,11 +166,11 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                         Set<WebSocketSession> targetSessions = new HashSet<>(remainingSessions);
                         webSocketRoomManager.removeRoom(roomId);
                         liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
-                        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.DELETE.getAction(), targetSessions);
+                        webSocketBroadcaster.broadcastMessage(userNum, userName, roomId, LiveCodingAction.DELETE.getAction(), targetSessions);
                         System.out.println("🚫 호스트 완전 퇴장 → 방 삭제됨: " + roomId);
                     } else {
                         // 게스트가 완전히 끊김 → 퇴장 처리
-                        webSocketBroadcaster.broadcastMessage(userNum, roomId, LiveCodingAction.LEAVE.getAction(), null);
+                        webSocketBroadcaster.broadcastMessage(userNum, userName, roomId, LiveCodingAction.LEAVE.getAction(), null);
                         liveCodingUseCase.updateLiveCoding(UUID.fromString(roomId), userNum, LiveCodingAction.LEAVE.getAction());
                         System.out.println("❌ 게스트 완전 퇴장: " + userNum);
                     }
