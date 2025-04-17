@@ -204,6 +204,8 @@ components:
           required:
             - line
             - ch
+        isBroadcast:
+          type: boolean
       required:
         - roomId
         - hostId

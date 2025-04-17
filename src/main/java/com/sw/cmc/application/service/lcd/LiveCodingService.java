@@ -269,8 +269,10 @@ public class LiveCodingService implements LiveCodingUseCase {
         redisRepository.updateHashValue(redisKey, "lastModified", lastModified.toString());
 
         // 3. 다른 사용자에게 브로드캐스트
-        String roomId = reqDTO.getRoomId().toString();
-        webSocketBroadcaster.broadcastCodeUpdate(roomId, modifier, diffJson, reqDTO.getCursorPos());
+        if (reqDTO.getIsBroadcast()) {
+            String roomId = reqDTO.getRoomId().toString();
+            webSocketBroadcaster.broadcastCodeUpdate(roomId, modifier, diffJson, reqDTO.getCursorPos());
+        }
 
         // 4. 응답 반환
         return new UpdateLiveCodingSnippetResDTO(

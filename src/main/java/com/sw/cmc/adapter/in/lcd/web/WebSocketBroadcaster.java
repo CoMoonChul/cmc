@@ -37,11 +37,13 @@ public class WebSocketBroadcaster {
         for (WebSocketSession s : roomSessions) {
             if (s.isOpen()) {
                 Long targetUserNum = (Long) s.getAttributes().get("userNum");
+                String targetUserName = (String) s.getAttributes().get("userName");
                 if (targetUserNum != null && !targetUserNum.equals(senderUserNum)) {
                     try {
                         LiveCodingChatDomain msg = new LiveCodingChatDomain();
                         msg.setLiveCodingChatType(LiveCodingChatType.UPDATE.getType());
                         msg.setUsernum(senderUserNum);
+                        msg.setUsername(targetUserName);
                         msg.setDiff(objectMapper.writeValueAsString(diffObject));
                         msg.setCursorPos(cursorPos); // ✅ 커서 포지션 포함
 
@@ -54,7 +56,7 @@ public class WebSocketBroadcaster {
         }
     }
 
-    public void broadcastMessage(Long userNum, String roomId, int action, Set<WebSocketSession> roomSessions) {
+    public void broadcastMessage(Long userNum, String userName, String roomId, int action, Set<WebSocketSession> roomSessions) {
         Set<WebSocketSession> targetRoomSessions =
                 (roomSessions != null) ? roomSessions : webSocketRoomManager.getRoomSessions(roomId);
 
@@ -65,6 +67,7 @@ public class WebSocketBroadcaster {
                     liveCodingChatDomain.setAction(action);
                     liveCodingChatDomain.setLiveCodingChatType(LiveCodingChatType.IN_OUT.getType());
                     liveCodingChatDomain.setUsernum(userNum);
+                    liveCodingChatDomain.setUsername(userName);
 
                     String msgObj = objectMapper.writeValueAsString(liveCodingChatDomain);
                     s.sendMessage(new TextMessage(msgObj));
