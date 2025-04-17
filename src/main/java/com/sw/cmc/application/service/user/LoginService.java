@@ -69,7 +69,7 @@ public class LoginService implements LoginUseCase {
         }
 
         // Token 생성
-        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUserId());
+        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUsername(), user.getUserId());
 
         // RefreshToken 저장
         user.setRefreshToken(jwtToken.getRefreshToken());
@@ -99,7 +99,7 @@ public class LoginService implements LoginUseCase {
         }
 
         // 토큰 생성
-        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUserId());
+        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUsername(), user.getUserId());
 
         // RefreshToken 암호화
         final TokenDomain tokenDomain = modelMapper.map(jwtToken, TokenDomain.class);
@@ -143,7 +143,7 @@ public class LoginService implements LoginUseCase {
                 .orElseThrow(() -> new CmcException("USER034"));
 
         // 토큰 생성
-        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUserId());
+        final JwtToken jwtToken = userUtil.createToken(user.getUserNum(), user.getUsername(), user.getUserId());
 
         // RefreshToken 암호화
         final TokenDomain tokenDomain = modelMapper.map(jwtToken, TokenDomain.class);
@@ -179,7 +179,7 @@ public class LoginService implements LoginUseCase {
         final User user = loginRepository.findByUserNum(userNum).orElseThrow(() -> new CmcException("USER001"));
 
         // AccessToken 재발급
-        return userUtil.createAccessToken(user.getUserNum(), user.getUserId());
+        return userUtil.createAccessToken(user.getUserNum(), user.getUsername(), user.getUserId());
     }
 
     public String tempRefresh(String refreshToken) throws Exception {
@@ -198,7 +198,7 @@ public class LoginService implements LoginUseCase {
         final User user = loginRepository.findByUserNum(userNum).orElseThrow(() -> new CmcException("USER001"));
 
         // AccessToken 재발급
-        return userUtil.createAccessToken(user.getUserNum(), user.getUserId());
+        return userUtil.createAccessToken(user.getUserNum(), user.getUsername(), user.getUserId());
     }
 
     @Override

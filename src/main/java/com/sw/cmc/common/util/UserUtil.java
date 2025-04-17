@@ -83,20 +83,22 @@ public class UserUtil {
         return null;
     }
 
-    public JwtToken createToken(final long userNum, final String userId) throws Exception {
+    public JwtToken createToken(final long userNum, final String username, final String userId) throws Exception {
         final Claims claims = Jwts.claims();
 
         claims.setSubject(userId);
         claims.put("userNum", userNum);
+        claims.put("username", username);
 
         return jwtTokenProvider.createToken(claims);
     }
 
-    public String createAccessToken(final long userNum, final String userId) throws Exception {
+    public String createAccessToken(final long userNum, final String username, final String userId) throws Exception {
         final Claims claims = Jwts.claims();
 
         claims.setSubject(userId);
         claims.put("userNum", userNum);
+        claims.put("username", username);
 
         return jwtTokenProvider.createAccessToken(claims);
     }
