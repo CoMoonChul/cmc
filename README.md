@@ -60,9 +60,7 @@ Google API Client | 구글 OAuth 로그인 지원 | 2.2.0
 ## Conventions
 
 <details>
-<summary>
-Commit Convention
-</summary>
+<summary>Commit Convention</summary>
 <div markdown="1">
 
 - [HOTFIX] : 🚑️  issue나, QA에서 급한 버그 수정에 사용
