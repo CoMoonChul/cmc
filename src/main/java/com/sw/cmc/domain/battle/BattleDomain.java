@@ -74,7 +74,7 @@ public class BattleDomain {
      * @throws CmcException the cmc exception
      */
     public void validateTitle() throws CmcException {
-        if (StringUtils.length(title) < 5 || StringUtils.length(content) > 60) {
+        if (StringUtils.length(title) < 5 || StringUtils.length(title) > 60) {
             throw new CmcException("BATTLE002");
         }
     }
