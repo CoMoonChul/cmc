@@ -122,7 +122,6 @@ security:
     - /selectBattleVoteState
 
     # LiveCoding
-    - /createLiveCoding
     - /selectLiveCoding
     - /deleteLiveCoding
     - /verifyLiveCoding
