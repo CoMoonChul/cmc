@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.sw.cmc.domain.user.UserDomain.*;
+import static com.sw.cmc.common.constant.Constants.PROFILE_IMG_BASE_URL;
 
 /**
  * packageName    : com.sw.cmc.application.service.user
@@ -65,9 +66,10 @@ public class JoinService implements JoinUseCase {
             throw new CmcException("USER019");
         }
 
-        // 비밀번호 암호화 저장
+        // 암호화 비밀번호, 프로필 디폴트 이미지 저장
         UserDomain encryptedUserDomain = userDomain.toBuilder()
                 .password(passwordEncoder.encode(userDomain.getPassword()))
+                .profileImg(PROFILE_IMG_BASE_URL + "default_profile.png")
                 .build();
 
         // 회원 생성
