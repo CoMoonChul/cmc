@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sw.cmc.adapter.in.lcd.web.WebSocketBroadcaster;
+import com.sw.cmc.adapter.in.lcd.web.WebSocketRoomManager;
 import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetReqDTO;
 import com.sw.cmc.adapter.in.livecoding.dto.UpdateLiveCodingSnippetResDTO;
 import com.sw.cmc.adapter.out.lcd.persistence.RedisRepository;
@@ -22,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +49,7 @@ public class LiveCodingService implements LiveCodingUseCase {
     private final StringRedisTemplate redisTemplate;
     private final UserUtil userUtil;
     private final WebSocketBroadcaster webSocketBroadcaster;
+    private final WebSocketRoomManager webSocketRoomManager;
     private final ObjectMapper objectMapper;
     private static final String LCD_PREFIX = LiveCodingConstants.LCD_PREFIX;
     private static final String LCD_CODE_PREFIX = LiveCodingConstants.LCD_CODE_PREFIX;
@@ -61,9 +65,33 @@ public class LiveCodingService implements LiveCodingUseCase {
             throw new CmcException("LCD008");
         }
 
+        // 기존 방이 있으면 삭제
         if (this.existsByHostId(hostId)) {
-            throw new CmcException("LCD003");
+            // 기존 roomId를 추출
+            Map<String, String> existingCodeMap = redisRepository.selectHash(LCD_CODE_PREFIX + hostId);
+            if (existingCodeMap != null && existingCodeMap.containsKey("roomId")) {
+                UUID existingRoomId = UUID.fromString(existingCodeMap.get("roomId"));
+
+                // 세션 종료 처리
+                String roomIdStr = existingRoomId.toString();
+                Set<WebSocketSession> existingSessions = webSocketRoomManager.getSessions(roomIdStr);
+                for (WebSocketSession session : existingSessions) {
+                    try {
+                        if (session.isOpen()) {
+                            session.close(CloseStatus.NORMAL);
+                        }
+                    } catch (Exception e) {
+                        throw new CmcException("LCD022");
+                    }
+                }
+
+                webSocketRoomManager.removeRoom(roomIdStr);
+
+                // Redis 상의 방 정보 제거
+                this.deleteLiveCoding(existingRoomId);
+            }
         }
+
 
         UUID roomId = UUID.randomUUID();
         LocalDateTime createdAt = LocalDateTime.now();
@@ -72,7 +100,6 @@ public class LiveCodingService implements LiveCodingUseCase {
         Integer participantCount = 1;
         String link = this.generateInviteLink(roomId);
 
-        // LiveCodingDomain 객체 생성
         LiveCodingDomain liveCodingDomain = new LiveCodingDomain(
                 roomId,  // 생성된 방 ID
                 hostId,  // 방장 ID
@@ -82,11 +109,10 @@ public class LiveCodingService implements LiveCodingUseCase {
                 link   // 링크
         );
 
-        // Redis에 방 정보 저장
-        this.saveLiveCoding(liveCodingDomain);  // Repository 사용
+        this.saveLiveCoding(liveCodingDomain);
         this.saveLiveCodeSnippet(liveCodingDomain);
 
-        return liveCodingDomain;  // 생성된 LiveCodingDomain 반환
+        return liveCodingDomain;
     }
 
     @Override
@@ -252,24 +278,18 @@ public class LiveCodingService implements LiveCodingUseCase {
         try {
             diffJson = objectMapper.writeValueAsString(reqDTO.getDiff());
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to serialize diff", e);
+            throw new CmcException("LCD021"); // serialize 실패
         }
         redisRepository.updateHashValue(redisKey, "diff", diffJson);
-
         redisRepository.updateHashValue(redisKey, "code", String.valueOf(reqDTO.getCode()));
-        // 커서 정보 저장
         redisRepository.updateHashValue(redisKey, "cursorPos.line", String.valueOf(reqDTO.getCursorPos().getLine()));
         redisRepository.updateHashValue(redisKey, "cursorPos.ch", String.valueOf(reqDTO.getCursorPos().getCh()));
-
-        // 언어 정보도 갱신해주자 (안 해주면 뭐 쓰는지 몰라짐)
         redisRepository.updateHashValue(redisKey, "language", reqDTO.getLanguage());
-
-        // ✅ 서버 현재 시간 기준으로 lastModified 처리
         OffsetDateTime lastModified = OffsetDateTime.now(ZoneOffset.UTC);
         redisRepository.updateHashValue(redisKey, "lastModified", lastModified.toString());
 
         // 3. 다른 사용자에게 브로드캐스트
-        if (reqDTO.getIsBroadcast()) {
+        if (Boolean.TRUE.equals(reqDTO.getIsBroadcast())) {
             String roomId = reqDTO.getRoomId().toString();
             webSocketBroadcaster.broadcastCodeUpdate(roomId, modifier, diffJson, reqDTO.getCursorPos());
         }

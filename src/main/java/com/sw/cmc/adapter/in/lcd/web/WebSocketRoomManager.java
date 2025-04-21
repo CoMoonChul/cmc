@@ -18,10 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class WebSocketRoomManager {
     private final ConcurrentHashMap<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<WebSocketSession, String> sessionToRoomMap = new ConcurrentHashMap<>();
 
     /** 방에 세션 추가 */
     public void addSession(String roomId, WebSocketSession session) {
         rooms.computeIfAbsent(roomId, k -> Collections.synchronizedSet(new HashSet<>())).add(session);
+        sessionToRoomMap.put(session, roomId);
     }
 
     /** 방에서 세션 제거 */
@@ -33,25 +35,37 @@ public class WebSocketRoomManager {
                 rooms.remove(roomId);
             }
         }
+        sessionToRoomMap.remove(session);
     }
 
-    /** 방에 있는 세션들 조회 (기존) */
+    /** 세션만으로 제거 (roomId 모를 때 사용) */
+    public void removeSession(WebSocketSession session) {
+        String roomId = sessionToRoomMap.get(session);
+        if (roomId != null) {
+            removeSession(roomId, session);
+        }
+    }
+
+    /** 세션으로부터 roomId 조회 */
+    public String getRoomIdBySession(WebSocketSession session) {
+        return sessionToRoomMap.get(session);
+    }
+
     public Set<WebSocketSession> getSessions(String roomId) {
         return rooms.getOrDefault(roomId, Collections.emptySet());
     }
 
-    /** ✅ broadcast 쪽에서 사용하는 명확한 이름 alias */
     public Set<WebSocketSession> getRoomSessions(String roomId) {
         return getSessions(roomId);
     }
 
-    /** 전체 방 ID 조회 */
-    public Set<String> getAllRoomIds() {
-        return rooms.keySet();
-    }
-
     /** 특정 방 제거 */
     public void removeRoom(String roomId) {
-        rooms.remove(roomId);
+        Set<WebSocketSession> sessions = rooms.remove(roomId);
+        if (sessions != null) {
+            for (WebSocketSession session : sessions) {
+                sessionToRoomMap.remove(session);
+            }
+        }
     }
 }
