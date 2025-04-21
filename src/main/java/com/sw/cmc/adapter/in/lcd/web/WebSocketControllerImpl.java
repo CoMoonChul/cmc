@@ -44,9 +44,9 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
         Long userNum = (Long) session.getAttributes().get("userNum");
         String userName = (String) session.getAttributes().get("userName");
-        String roomId = getRoomId(session);
+        String roomId = webSocketRoomManager.getRoomIdBySession(session); // ✅ 변경됨
 
-        if (roomId.isEmpty()) {
+        if (roomId == null || roomId.isEmpty()) {
             session.close(CloseStatus.BAD_DATA);
             return;
         }
@@ -84,7 +84,6 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         Long userNum = (Long) session.getAttributes().get("userNum");
         String userName = (String) session.getAttributes().get("userName");
 
-
         if (userNum == null) {
             session.close(CloseStatus.NOT_ACCEPTABLE);
             throw new CmcException("LCD013");
@@ -97,15 +96,11 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
         }
 
         try {
-            // ✅ 세션 먼저 등록
             webSocketRoomManager.addSession(roomId, session);
-
-            // ✅ 참여자 검증
             LiveCodingDomain roomInfo = liveCodingUseCase.selectLiveCoding(UUID.fromString(roomId));
             boolean isInvited = roomInfo.getParticipants().contains(userNum);
             if (!isInvited) {
-                // 🚫 초대 안 됐으면 처리 후 종료
-                webSocketRoomManager.removeSession(roomId, session); // 👈 정리
+                webSocketRoomManager.removeSession(session);
                 session.close(CloseStatus.NOT_ACCEPTABLE);
                 return;
             }
@@ -114,13 +109,10 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             System.out.println("✅ 사용자 입장: " + userName);
 
         } catch (Exception e) {
-            // 👇 혹시 등록 도중 에러 나도 정리
-            webSocketRoomManager.removeSession(roomId, session);
+            webSocketRoomManager.removeSession(session);
             throw new CmcException("LCD019");
-
         }
     }
-
 
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
@@ -131,15 +123,14 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
             throw new CmcException("LCD013");
         }
 
-        String roomId = getRoomId(session);
-        if (roomId.isEmpty()) {
-            throw new CmcException("LCD001");
+        String roomId = webSocketRoomManager.getRoomIdBySession(session); // ✅ session -> roomId 사용
+        if (roomId == null || roomId.isEmpty()) {
+            return;
         }
 
-        // 일단 세션은 제거
-        webSocketRoomManager.removeSession(roomId, session);
+        webSocketRoomManager.removeSession(session); // ✅ 간편화된 제거
 
-        // 3초 후에 여전히 끊겨 있으면 판단
+        // 3초 뒤 퇴장 판단
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -152,7 +143,6 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                         });
 
                 if (isStillConnected) {
-                    // 재접속한 상태 → 아무 처리 안 함
                     System.out.println("🔁 유저 재접속 감지됨: " + userNum);
                     return;
                 }
@@ -162,25 +152,21 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                     boolean isHost = userNum.equals(roomInfo.getHostId());
 
                     if (isHost) {
-                        // 호스트가 완전히 끊김 → 방 삭제
                         Set<WebSocketSession> targetSessions = new HashSet<>(remainingSessions);
                         webSocketRoomManager.removeRoom(roomId);
                         liveCodingUseCase.deleteLiveCoding(UUID.fromString(roomId));
                         webSocketBroadcaster.broadcastMessage(userNum, userName, roomId, LiveCodingAction.DELETE.getAction(), targetSessions);
                         System.out.println("🚫 호스트 완전 퇴장 → 방 삭제됨: " + roomId);
                     } else {
-                        // 게스트가 완전히 끊김 → 퇴장 처리
                         webSocketBroadcaster.broadcastMessage(userNum, userName, roomId, LiveCodingAction.LEAVE.getAction(), null);
                         liveCodingUseCase.updateLiveCoding(UUID.fromString(roomId), userNum, LiveCodingAction.LEAVE.getAction());
                         System.out.println("❌ 게스트 완전 퇴장: " + userNum);
                     }
 
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new CmcException("LCD022");
                 }
             }
-        }, 1000);
+        }, 1500);
     }
-
-
 }
