@@ -179,7 +179,7 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                     throw new RuntimeException(e);
                 }
             }
-        }, 1000);
+        }, 1500);
     }
 
 
