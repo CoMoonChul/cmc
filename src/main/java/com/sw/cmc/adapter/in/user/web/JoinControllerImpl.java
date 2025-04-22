@@ -38,12 +38,14 @@ public class JoinControllerImpl implements JoinControllerApi {
 
     @Override
     public ResponseEntity<JoinGoogleResDTO> joinGoogle(JoinGoogleReqDTO joinGoogleReqDTO) throws Exception {
+
         UserDomain userDomain = UserDomain.builder()
                 .userId(joinGoogleReqDTO.getUserId())
                 .username(joinGoogleReqDTO.getUsername())
                 .email(joinGoogleReqDTO.getEmail())
                 .profileImg(joinGoogleReqDTO.getProfileImg())
                 .build();
+
         return ResponseEntity.ok(modelMapper.map(joinUseCase.joinGoogle(userDomain), JoinGoogleResDTO.class));
     }
 

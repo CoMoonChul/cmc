@@ -109,10 +109,12 @@ public class JoinService implements JoinUseCase {
             throw new CmcException("USER019");
         }
 
-        // 비밀번호 암호화 저장(랜덤 비밀번호)
+        // 암호화 비밀번호, 프로필 디폴트 이미지 저장 (랜덤 비밀번호)
         UserDomain encryptedUserDomain = userDomain.toBuilder()
                 .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .profileImg(PROFILE_IMG_BASE_URL + "default_profile.png")
                 .build();
+
         // 회원 생성
         joinRepository.save(modelMapper.map(encryptedUserDomain, User.class));
 
