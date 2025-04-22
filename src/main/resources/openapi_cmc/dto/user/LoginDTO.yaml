@@ -53,6 +53,10 @@ components:
         refreshTokenExpirationTime:
           type: number
           description: RefreshToken 만료 시간
+        userNum:
+          type: integer
+          format: int64
+          description: 회원번호
       description: 구글로그인 응답
 
     # API_USER_0004 로그인
