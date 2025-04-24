@@ -167,6 +167,6 @@ public class WebSocketControllerImpl extends TextWebSocketHandler {
                     throw new CmcException("LCD022");
                 }
             }
-        }, 1500);
+        }, 2000);
     }
 }
