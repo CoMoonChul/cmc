@@ -25,7 +25,7 @@
 
 
 - 배포 후 입력(서비스)
-- 배포 후 입력(스웨거)
+- swagger : http://comoonchul.com:8080/swagger-ui/index.html?continue#/
 
 <br>
 
