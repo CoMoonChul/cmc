@@ -53,6 +53,4 @@ public class NoticeEventListener {
 
         noticeUseCase.saveNotificationList(noticeDomain);
     }
-
-
 }
