@@ -76,9 +76,10 @@ public class JoinService implements JoinUseCase {
         joinRepository.save(modelMapper.map(encryptedUserDomain, User.class));
 
         // 가입 이메일 전송
-        smtpUtil.sendEmailJoin(userDomain.getEmail(), userDomain.getUsername(), userDomain.getUserId(), userDomain.getPassword());
         final User joinUser = userRepository.findByUsername(encryptedUserDomain.getUsername())
                 .orElseThrow(() -> new CmcException("USER001"));
+
+        smtpUtil.sendEmailJoin(userDomain.getEmail(), userDomain.getUsername(), userDomain.getUserId(), userDomain.getPassword());
 
         Map<String, String> templateParams = Map.of("userNm", userDomain.getUsername());
         notiUtil.sendNotice( joinUser.getUserNum(), 1L, "", templateParams);
