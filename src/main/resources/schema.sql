@@ -39,6 +39,17 @@ CREATE TABLE IF NOT EXISTS comment (
     CONSTRAINT fk_comment_user FOREIGN KEY (user_num) REFERENCES user(user_num) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS ai_comment (
+    comment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    content VARCHAR(600) NOT NULL,
+    target_id BIGINT NOT NULL,
+    code_content MEDIUMTEXT NOT NULL,
+    code_type VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_ai_comment_review FOREIGN KEY (target_id) REFERENCES review(review_id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS code_editor (
     code_edit_num BIGINT AUTO_INCREMENT PRIMARY KEY,
     content MEDIUMTEXT,

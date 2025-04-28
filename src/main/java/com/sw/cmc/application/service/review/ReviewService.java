@@ -16,9 +16,11 @@ import com.sw.cmc.domain.review.ReviewListVo;
 import com.sw.cmc.entity.Review;
 import com.sw.cmc.entity.ReviewView;
 import com.sw.cmc.entity.User;
+import com.sw.cmc.event.ai.CreateCommentEvent;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +51,7 @@ public class ReviewService implements ReviewUseCase {
     private final ReviewLikeRepository reviewLikeRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final NotiUtil notiUtil;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -149,6 +152,15 @@ public class ReviewService implements ReviewUseCase {
         templateParams.put("userNm", userUtil.getAuthenticatedUsername());
         templateParams.put("title", saved.getTitle());
         notiUtil.sendNoticeList(authenticatedUserNum, userIds, 7L, "/review/detail/"+saved.getReviewId(), templateParams);
+
+        CreateCommentEvent createCommentEvent = CreateCommentEvent.builder()
+                .reviewId(saved.getReviewId())
+                .title(saved.getTitle())
+                .content(saved.getContent())
+                .codeContent(saved.getCodeContent())
+                .codeType(saved.getCodeType())
+                .build();
+        eventPublisher.publishEvent(createCommentEvent);
 
         return ReviewDomain.builder()
                 .reviewId(saved.getReviewId())
