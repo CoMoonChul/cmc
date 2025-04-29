@@ -3,6 +3,7 @@ package com.sw.cmc.adapter.in.ai.event;
 import com.sw.cmc.application.port.in.ai.AIUseCase;
 import com.sw.cmc.domain.ai.AIDomain;
 import com.sw.cmc.event.ai.CreateCommentEvent;
+import com.sw.cmc.event.ai.DeleteCommentEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,7 @@ public class AIEventListener {
     }
 
     @EventListener
-    public void handleDeleteComment(CreateCommentEvent event) {
+    public void handleDeleteComment(DeleteCommentEvent event) {
         AIDomain aiDomain = AIDomain.builder()
                 .reviewId(event.getReviewId())
                 .build();

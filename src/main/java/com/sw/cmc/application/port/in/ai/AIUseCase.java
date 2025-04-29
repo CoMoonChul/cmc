@@ -1,6 +1,5 @@
 package com.sw.cmc.application.port.in.ai;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sw.cmc.domain.ai.AIDomain;
 
 import java.io.IOException;
@@ -28,8 +27,19 @@ public interface AIUseCase {
      * author : IM HYUN WOO
      * description : ai 댓글 삭제
      *
-     * @param aidomain AIDomain
+     * @param aiDomain AIDomain
      * @return ai domain
      */
     AIDomain deleteComment(AIDomain aiDomain);
+
+
+    /**
+     * methodName : selectAIComment
+     * author : IM HYUN WOO
+     * description : ai 댓글 조회
+     *
+     * @param id Long
+     * @return ai domain
+     */
+    AIDomain selectAIComment(Long id);
 }
