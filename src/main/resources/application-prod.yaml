@@ -39,7 +39,7 @@ spring:
 
   data:
     redis:
-      host: ${REDIS_HOST}
+      # host: env로 관리
       port: 6379
       # password: 1234
       database: 0 # 기본 데이터베이스
