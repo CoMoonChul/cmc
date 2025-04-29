@@ -16,6 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(name = "ai_comment")
 public class AIComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -131,6 +131,9 @@ security:
     # Like
     - /selectReviewLikeState
 
+    # AI
+    - /selectAIComment
+
 
 openai:
   model: ${AI_MODEL}

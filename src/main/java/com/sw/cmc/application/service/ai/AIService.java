@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sw.cmc.adapter.out.ai.persistence.AIRepository;
 import com.sw.cmc.application.port.in.ai.AIUseCase;
+import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.config.GptConfig;
 import com.sw.cmc.common.util.AIUtil;
 import com.sw.cmc.common.util.GzipUtil;
@@ -28,7 +29,7 @@ import java.util.Map;
  * fileName       : AiService
  * author         : ihw
  * date           : 2025. 2. 19.
- * description    : ai service
+ * description    : AIService
  */
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,16 @@ public class AIService implements AIUseCase {
 
     private final GptConfig gptConfig;
     private final AIRepository aiRepository;
+
+    @Override
+    public AIDomain selectAIComment(Long id) {
+        AIComment found = aiRepository.findByTargetId(id).orElseThrow(() -> new CmcException("AI001"));
+        AIDomain.AIDomainBuilder builder = AIDomain.builder()
+                .content(found.getContent())
+                .codeContent(found.getCodeContent())
+                .codeType(found.getCodeType());
+        return builder.build();
+    }
 
     @Override
     @Transactional

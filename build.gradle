@@ -122,6 +122,7 @@ def cmcSwaggerMap = [
 		"redis": "redis.yaml",
 		"editor": "editor.yaml",
 		"group" : "group.yaml",
+		"ai" : "ai.yaml",
 ]
 
 cmcSwaggerMap.each { entry ->

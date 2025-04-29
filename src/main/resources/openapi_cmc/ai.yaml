@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: AI api
+  description: Cmc AI api
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: ai-controller
+    description: AI api controller
+
+paths:
+  /selectAIComment:
+    get:
+      tags:
+        - ai-controller
+      summary: ai 댓글 단건 조회
+      description: ai 댓글 단건 조회
+      operationId: selectAIComment
+      parameters:
+        - name: id
+          in: query
+          description: 댓글 id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "./dto/ai/AiDTO.yaml#/components/schemas/SelectAICommentResDTO"
+        '400':
+          description: Invalid status value

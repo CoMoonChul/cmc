@@ -17,14 +17,18 @@ import com.sw.cmc.entity.Review;
 import com.sw.cmc.entity.ReviewView;
 import com.sw.cmc.entity.User;
 import com.sw.cmc.event.ai.CreateCommentEvent;
+import com.sw.cmc.event.ai.DeleteCommentEvent;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -41,6 +45,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReviewService implements ReviewUseCase {
 
     private final EntityManager entityManager;
@@ -146,21 +151,8 @@ public class ReviewService implements ReviewUseCase {
         Review saved = reviewRepository.save(saving);
         entityManager.refresh(saved);
 
-        List<Long> userIds = groupMemberRepository.findDistinctUserNumsByGroupIds(reviewDomain.getGroups());
-        userIds.remove(authenticatedUserNum);
-        Map<String, String> templateParams = new HashMap<>();
-        templateParams.put("userNm", userUtil.getAuthenticatedUsername());
-        templateParams.put("title", saved.getTitle());
-        notiUtil.sendNoticeList(authenticatedUserNum, userIds, 7L, "/review/detail/"+saved.getReviewId(), templateParams);
-
-        CreateCommentEvent createCommentEvent = CreateCommentEvent.builder()
-                .reviewId(saved.getReviewId())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .codeContent(saved.getCodeContent())
-                .codeType(saved.getCodeType())
-                .build();
-        eventPublisher.publishEvent(createCommentEvent);
+        // 알림 발송 + 이벤트 퍼블리싱 비동기 처리
+        sendNotificationAndPublishEvent(saved, reviewDomain.getGroups(), authenticatedUserNum);
 
         return ReviewDomain.builder()
                 .reviewId(saved.getReviewId())
@@ -173,6 +165,7 @@ public class ReviewService implements ReviewUseCase {
                 .updatedAt(saved.getUpdatedAt())
                 .build();
     }
+
     @Override
     @Transactional
     public ReviewDomain deleteReview(ReviewDomain reviewDomain) throws Exception {
@@ -184,6 +177,7 @@ public class ReviewService implements ReviewUseCase {
         }
 
         reviewRepository.deleteById(found.getReviewId());
+        sendDeleteReviewEvent(reviewDomain);
         return reviewDomain;
     }
 
@@ -210,7 +204,6 @@ public class ReviewService implements ReviewUseCase {
         found.setCodeType(reviewDomain.getCodeType());
 
         Review saved = reviewRepository.save(found);
-//        entityManager.refresh(saved);
 
         // 저장
         return ReviewDomain.builder()
@@ -246,5 +239,39 @@ public class ReviewService implements ReviewUseCase {
                 .viewCount(reviewView.getViewCount())
                 .likeCount(reviewLike)
                 .build();
+    }
+
+    @Async
+    private void sendNotificationAndPublishEvent(Review saved, List<Long> groupIds, Long authenticatedUserNum) {
+        try {
+            if (CollectionUtils.isNotEmpty(groupIds)) {
+                List<Long> userIds = groupMemberRepository.findDistinctUserNumsByGroupIds(groupIds);
+                userIds.remove(authenticatedUserNum);
+
+                Map<String, String> templateParams = new HashMap<>();
+                templateParams.put("userNm", userUtil.getAuthenticatedUsername());
+                templateParams.put("title", saved.getTitle());
+                notiUtil.sendNoticeList(authenticatedUserNum, userIds, 7L, "/review/detail/" + saved.getReviewId(), templateParams);
+            }
+
+            CreateCommentEvent createCommentEvent = CreateCommentEvent.builder()
+                    .reviewId(saved.getReviewId())
+                    .title(saved.getTitle())
+                    .content(saved.getContent())
+                    .codeContent(saved.getCodeContent())
+                    .codeType(saved.getCodeType())
+                    .build();
+            eventPublisher.publishEvent(createCommentEvent);
+        } catch (Exception e) {
+            log.error("알림 발송 및 이벤트 퍼블리싱 실패", e);
+        }
+    }
+
+    @Async
+    private void sendDeleteReviewEvent(ReviewDomain reviewDomain) {
+        DeleteCommentEvent event = DeleteCommentEvent.builder()
+                .reviewId(reviewDomain.getReviewId())
+                .build();
+        eventPublisher.publishEvent(event);
     }
 }
