@@ -53,9 +53,6 @@ spring:
   web:
     resources:
       add-mappings: false
-  jackson:
-    time-zone: Asia/Seoul
-    date-format: yyyy-MM-dd'T'HH:mm:ssXXX
 
 server:
   port: 8080
