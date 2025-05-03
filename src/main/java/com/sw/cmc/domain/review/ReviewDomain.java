@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,8 +28,8 @@ public class ReviewDomain {
     private String userImg;
     private String title;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
     private String codeContent;
     private String codeType;
     private List<Long> groups;
