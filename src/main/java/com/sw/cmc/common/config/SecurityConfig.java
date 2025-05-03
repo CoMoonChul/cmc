@@ -92,7 +92,7 @@ public class SecurityConfig {
 
                             if (cause instanceof ExpiredJwtException) {
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                                response.getWriter().write("{\"errorCode\": \"TOKEN_EXPIRED\", \"message\": \"Access Token expired\"}");
+                                response.getWriter().write("{\"errorCode\": \"[EJE]TOKEN_EXPIRED\", \"message\": \"Access Token expired\"}");
                                 return;
                             } else if (cause instanceof JwtException || cause instanceof IllegalArgumentException) {
                                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -104,7 +104,7 @@ public class SecurityConfig {
                                 return;
                             } else if (authException instanceof InsufficientAuthenticationException) {
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                                response.getWriter().write("{\"errorCode\": \"TOKEN_EXPIRED\", \"message\": \"Access Token expired\"}");
+                                response.getWriter().write("{\"errorCode\": \"[ISA]TOKEN_EXPIRED\", \"message\": \"Access Token expired\"}");
                                 return;
                             }
 
