@@ -7,8 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-
 /**
  * packageName    : com.sw.cmc.entity
  * fileName       : Review
@@ -42,11 +40,11 @@ public class Review {
 
     @CreationTimestamp
     @Column(name = "created_at", insertable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at", insertable = false)
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 
     // User 엔티티와의 관계 설정
     @ManyToOne(fetch = FetchType.LAZY)

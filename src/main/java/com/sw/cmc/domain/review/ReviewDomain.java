@@ -1,6 +1,5 @@
 package com.sw.cmc.domain.review;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.domain.battle.CodeType;
 import lombok.AllArgsConstructor;
@@ -30,9 +29,7 @@ public class ReviewDomain {
     private String userImg;
     private String title;
     private String content;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX", timezone = "Asia/Seoul")
     private LocalDateTime updatedAt;
     private String codeContent;
     private String codeType;
