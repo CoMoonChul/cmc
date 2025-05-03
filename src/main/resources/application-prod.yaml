@@ -36,6 +36,9 @@ spring:
             required: true
           ssl:
             trust: smtp.gmail.com
+  jackson:
+    time-zone: Asia/Seoul
+    date-format: yyyy-MM-dd'T'HH:mm:ssXXX
 
   data:
     redis:
