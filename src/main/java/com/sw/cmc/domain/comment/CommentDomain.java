@@ -62,7 +62,7 @@ public class CommentDomain {
      * @throws CmcException the cmc exception
      */
     public void validateContent() throws CmcException {
-        if (StringUtils.length(content) < 5 || StringUtils.length(content) > 500) {
+        if (StringUtils.length(content) < 2 || StringUtils.length(content) > 500) {
             throw new CmcException("COMMENT002");
         }
     }
