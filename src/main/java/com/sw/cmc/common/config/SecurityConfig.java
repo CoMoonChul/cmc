@@ -122,7 +122,10 @@ public class SecurityConfig {
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000")); // WebSocket 허용할 Origin 설정
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:3000",
+                "https://comoonchul.com" // 추가
+        )); // WebSocket 허용할 Origin 설정
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
 
