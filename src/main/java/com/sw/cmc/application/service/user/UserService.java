@@ -43,6 +43,7 @@ public class UserService implements UserUseCase {
                 .orElseThrow(() -> new CmcException("USER001"));
 
         return UserDomain.builder()
+                .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .profileImg(user.getProfileImg())
@@ -56,9 +57,10 @@ public class UserService implements UserUseCase {
         final User user = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
                 .orElseThrow(() -> new CmcException("USER001"));
 
-        // 비밀번호 검사
+        boolean isGoogleUser = user.getUserId().startsWith("google_");
         boolean isMatch = passwordEncoder.matches(userDomain.getPassword(), user.getPassword());
-        if (!isMatch) {
+        // 비밀번호 검사
+        if (!isGoogleUser && !isMatch) {
             throw new CmcException("USER029");
         }
 

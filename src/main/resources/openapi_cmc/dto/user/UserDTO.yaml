@@ -4,10 +4,14 @@ components:
     GetMyInfoResDTO:
       type: object
       required:
+        - userId
         - username
         - email
         - profileImg
       properties:
+        userId:
+          type: string
+          description: 회원 ID
         username:
           type: string
           description: 회원명
