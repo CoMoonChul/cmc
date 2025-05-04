@@ -23,11 +23,11 @@ components:
     WithdrawReqDTO:
       type: object
       required:
-        - password
+        - userId
       properties:
-        password:
+        userId:
           type: string
-          description: 회원 비밀번호
+          description: 회원 ID
       description: 회원 탈퇴 요청
 
     WithdrawResDTO:

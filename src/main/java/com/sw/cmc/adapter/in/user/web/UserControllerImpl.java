@@ -35,7 +35,7 @@ public class UserControllerImpl implements UserControllerApi {
     public ResponseEntity<WithdrawResDTO> withdraw(WithdrawReqDTO withdrawReqDTO) throws Exception {
 
         UserDomain userDomain = UserDomain.builder()
-                .password(withdrawReqDTO.getPassword())
+                .userId(withdrawReqDTO.getUserId())
                 .build();
 
         ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")

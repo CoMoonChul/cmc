@@ -56,10 +56,9 @@ public class UserService implements UserUseCase {
         final User user = userRepository.findByUserNum(userUtil.getAuthenticatedUserNum())
                 .orElseThrow(() -> new CmcException("USER001"));
 
-        // 비밀번호 검사
-        boolean isMatch = passwordEncoder.matches(userDomain.getPassword(), user.getPassword());
-        if (!isMatch) {
-            throw new CmcException("USER029");
+        // 회원 ID 검사
+        if (!user.getUserId().equals(userDomain.getUserId())) {
+            throw new CmcException("USER037");
         }
 
         // 회원 삭제
