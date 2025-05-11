@@ -291,7 +291,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         // 3. 다른 사용자에게 브로드캐스트
         if (Boolean.TRUE.equals(reqDTO.getIsBroadcast())) {
             String roomId = reqDTO.getRoomId().toString();
-            webSocketBroadcaster.broadcastCodeUpdate(roomId, modifier, diffJson, reqDTO.getCursorPos());
+            webSocketBroadcaster.broadcastCodeUpdate(roomId, modifier, diffJson, reqDTO.getCursorPos(), reqDTO.getLanguage());
         }
 
         // 4. 응답 반환

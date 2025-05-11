@@ -145,4 +145,4 @@ google:
   client-id: ${GOOGLE_CLIENT_ID}
 
 # 도메인 수정 필요
-domain: http://localhost:3000
+domain: https://comoonchul.com
