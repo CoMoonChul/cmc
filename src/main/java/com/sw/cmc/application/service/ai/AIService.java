@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sw.cmc.adapter.out.ai.persistence.AIRepository;
 import com.sw.cmc.application.port.in.ai.AIUseCase;
-import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.config.GptConfig;
 import com.sw.cmc.common.util.AIUtil;
 import com.sw.cmc.common.util.GzipUtil;
@@ -40,8 +39,9 @@ public class AIService implements AIUseCase {
 
     @Override
     public AIDomain selectAIComment(Long id) {
-        AIComment found = aiRepository.findByTargetId(id).orElseThrow(() -> new CmcException("AI001"));
+        AIComment found = aiRepository.findByTargetId(id).orElseGet(AIComment::new);
         AIDomain.AIDomainBuilder builder = AIDomain.builder()
+                .commentId(found.getCommentId())
                 .content(found.getContent())
                 .codeContent(found.getCodeContent())
                 .codeType(found.getCodeType());

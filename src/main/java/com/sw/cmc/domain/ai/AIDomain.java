@@ -16,6 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 public class AIDomain {
     private Long reviewId;
+    private Long commentId;
     private String title;
     private String content;
     private String codeContent;
