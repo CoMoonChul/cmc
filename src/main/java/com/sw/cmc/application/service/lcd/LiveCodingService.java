@@ -42,8 +42,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class LiveCodingService implements LiveCodingUseCase {
-
-
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisRepository redisRepository;
     private final StringRedisTemplate redisTemplate;
@@ -99,6 +97,7 @@ public class LiveCodingService implements LiveCodingUseCase {
         participants.add(hostId);
         Integer participantCount = 1;
         String link = this.generateInviteLink(roomId);
+        System.out.println("createLiveCoding link: " + link);
 
         LiveCodingDomain liveCodingDomain = new LiveCodingDomain(
                 roomId,  // 생성된 방 ID
@@ -185,7 +184,7 @@ public class LiveCodingService implements LiveCodingUseCase {
     @Override
     public LiveCodingDomain findByRoomId(UUID roomId) {
         String key = LCD_PREFIX + roomId;
-        Map<String, String> liveCodingMap = redisRepository.selectHash(key);  // 수정된 부분: Map<String, String>으로 처리
+        Map<String, String> liveCodingMap = redisRepository.selectHash(key);
 
         if (liveCodingMap == null || liveCodingMap.isEmpty()) {
             return null;  // 방이 없으면 null 반환
@@ -203,6 +202,8 @@ public class LiveCodingService implements LiveCodingUseCase {
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
         String link = liveCodingMap.get("link");
+
+        System.out.println("findByRoomId link: " + link);
 
         return new LiveCodingDomain(retrievedRoomId, hostId, createdAt, participantCount, participants, link);
     }
