@@ -27,7 +27,7 @@ public class WebSocketBroadcaster {
     private final WebSocketRoomManager webSocketRoomManager; // rooms 관리 클래스
 
     public void broadcastCodeUpdate(String roomId, Long senderUserNum, Object diffObject,
-                                    UpdateLiveCodingSnippetReqDTOCursorPos cursorPos) {
+                                    UpdateLiveCodingSnippetReqDTOCursorPos cursorPos, String language) {
         Set<WebSocketSession> roomSessions = webSocketRoomManager.getSessions(roomId);
 
         if (roomSessions.isEmpty()) {
@@ -46,6 +46,7 @@ public class WebSocketBroadcaster {
                         msg.setUsername(targetUserName);
                         msg.setDiff(objectMapper.writeValueAsString(diffObject));
                         msg.setCursorPos(cursorPos); // ✅ 커서 포지션 포함
+                        msg.setLanguage(language);
 
                         s.sendMessage(new TextMessage(objectMapper.writeValueAsString(msg)));
                     } catch (IOException e) {
