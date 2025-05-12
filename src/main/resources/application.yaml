@@ -123,7 +123,6 @@ security:
     # LiveCoding
     - /selectLiveCoding
     - /deleteLiveCoding
-    - /verifyLiveCoding
     - /selectLiveCodingSnippet
     - /updateLiveCodingSnippet
 
