@@ -78,12 +78,10 @@ public class JwtTokenProvider {
             // JWT 검증 및 Claims 추출
             Claims claims = jwtParser.parseClaimsJws(token).getBody();
 
-            // ✅ 토큰 타입이 "ACCESS"인지 확인
             String type = claims.get("type", String.class);
             if (!"ACCESS".equals(type)) {
                 throw new CmcException("LCD009");
             }
-
 
             String roomIdStr = claims.get("roomId", String.class);
             if (roomIdStr == null) {

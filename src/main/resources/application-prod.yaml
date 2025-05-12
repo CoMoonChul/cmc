@@ -124,7 +124,6 @@ security:
     # LiveCoding
     - /selectLiveCoding
     - /deleteLiveCoding
-    - /verifyLiveCoding
     - /selectLiveCodingSnippet
     - /updateLiveCodingSnippet
 
@@ -144,5 +143,4 @@ openai:
 google:
   client-id: ${GOOGLE_CLIENT_ID}
 
-# 도메인 수정 필요
 domain: https://comoonchul.com
