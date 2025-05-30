@@ -9,10 +9,7 @@ import com.sw.cmc.application.port.in.review.ReviewUseCase;
 import com.sw.cmc.common.advice.CmcException;
 import com.sw.cmc.common.util.NotiUtil;
 import com.sw.cmc.common.util.UserUtil;
-import com.sw.cmc.domain.review.ReviewDetailVo;
-import com.sw.cmc.domain.review.ReviewDomain;
-import com.sw.cmc.domain.review.ReviewListDomain;
-import com.sw.cmc.domain.review.ReviewListVo;
+import com.sw.cmc.domain.review.*;
 import com.sw.cmc.entity.Review;
 import com.sw.cmc.entity.ReviewView;
 import com.sw.cmc.entity.User;
@@ -82,33 +79,22 @@ public class ReviewService implements ReviewUseCase {
     @Override
     public ReviewListDomain selectReviewList(Integer condition, Integer page, Integer size) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<ReviewListVo> res = switch (condition) {
-            // 최신순
-            case 0 -> reviewRepository.findAllReviews(pageable);
-            // 좋아요 많은순
-            case 1 -> reviewRepository.findAllOrderByLikeCountDesc(pageable);
-            // 본인 작성
-            case 2 -> {
-                if (userUtil.getAuthenticatedUserNum() == null) {
-                    throw new CmcException("REVIEW010");
-                }
+        Long userNum = userUtil.getAuthenticatedUserNum();
+        Page<ReviewListVo> res = switch (ReviewListCondition.of(condition)) {
+            case LATEST -> reviewRepository.findAllReviews(pageable);
+            case MOST_LIKED -> reviewRepository.findAllOrderByLikeCountDesc(pageable);
+            case MY_REVIEW -> {
+                validateUserNum(userNum);
                 yield reviewRepository.findMyReviews(userUtil.getAuthenticatedUserNum(), pageable);
             }
-            // 본인 댓글
-            case 3 -> {
-                if (userUtil.getAuthenticatedUserNum() == null) {
-                    throw new CmcException("REVIEW010");
-                }
+            case MY_COMMENTED -> {
+                validateUserNum(userNum);
                 yield reviewRepository.findMyCommentingReviews(userUtil.getAuthenticatedUserNum(), pageable);
             }
-            // 본인 좋아요
-            case 4 -> {
-                if (userUtil.getAuthenticatedUserNum() == null) {
-                    throw new CmcException("REVIEW010");
-                }
+            case MY_LIKED -> {
+                validateUserNum(userNum);
                 yield reviewRepository.findMyLikeReviews(userUtil.getAuthenticatedUserNum(), pageable);
             }
-            default -> throw new CmcException("REVIEW009");
         };
 
         List<ReviewDomain> list = res.getContent().stream()
@@ -273,5 +259,11 @@ public class ReviewService implements ReviewUseCase {
                 .reviewId(reviewDomain.getReviewId())
                 .build();
         eventPublisher.publishEvent(event);
+    }
+
+    private void validateUserNum(Long userNum) {
+        if (userUtil.getAuthenticatedUserNum() == null) {
+            throw new CmcException("REVIEW010");
+        }
     }
 }
