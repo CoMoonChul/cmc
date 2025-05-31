@@ -29,39 +29,24 @@ public class LikeService implements LikeUseCase {
     @Override
     public LikeDomain selectReviewLikeState(Long id) throws Exception {
         Long count = reviewLikeRepository.countById_ReviewId(id);
+        LikeDomain.LikeDomainBuilder builder = LikeDomain.builder()
+                .reviewId(id)
+                .count(count);
 
-        if (userUtil.getAuthenticatedUserNum() == null) {
-            return LikeDomain.builder()
-                    .reviewId(id)
-                    .count(count)
-                    .build();
+        Long userNum = userUtil.getAuthenticatedUserNum();
+        if (userNum == null) {
+            return builder.build();
         }
 
-        ReviewLikeId reviewLikeId = new ReviewLikeId();
-        reviewLikeId.setUserNum(userUtil.getAuthenticatedUserNum());
-        reviewLikeId.setReviewId(id);
-        ReviewLike found = reviewLikeRepository.findById(reviewLikeId).orElse(null);
-        if (found == null) {
-            return LikeDomain.builder()
-                    .reviewId(id)
-                    .count(count)
-                    .likeState(false)
-                    .build();
-        } else {
-            return LikeDomain.builder()
-                    .reviewId(id)
-                    .count(count)
-                    .likeState(true)
-                    .build();
-        }
+        ReviewLikeId reviewLikeId = new ReviewLikeId(userNum, id);
+        boolean liked = reviewLikeRepository.findById(reviewLikeId).isPresent();
+        return builder.likeState(liked).build();
     }
 
     @Override
     @Transactional
     public LikeDomain updateReviewLike(LikeDomain likeDomain) throws Exception {
-        ReviewLikeId id = new ReviewLikeId();
-        id.setUserNum(userUtil.getAuthenticatedUserNum());
-        id.setReviewId(likeDomain.getReviewId());
+        ReviewLikeId id = new ReviewLikeId(userUtil.getAuthenticatedUserNum(), likeDomain.getReviewId());
 
         if (reviewLikeRepository.existsById(id)) {
             reviewLikeRepository.deleteById(id);
