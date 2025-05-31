@@ -21,14 +21,20 @@ import java.util.Optional;
 @Repository
 public interface BattleRepository extends JpaRepository<Battle, Long>  {
 
-    @Query("SELECT new com.sw.cmc.domain.battle.BattleDetailVo( " +
-            "b, u.username, u.userNum, u.profileImg," +
-            "(SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 0), " +
-            "(SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 1), " +
-            "(SELECT bv.viewCount FROM BattleView bv WHERE bv.battleId = b.battleId) ) " +
-            "FROM Battle b " +
-            "LEFT JOIN b.user u " +
-            "WHERE b.battleId = :battleId")
+    @Query("""
+        SELECT new com.sw.cmc.domain.battle.BattleDetailVo(
+            b,
+            u.username,
+            u.userNum,
+            u.profileImg,
+            (SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 0),
+            (SELECT COUNT(v) FROM Vote v WHERE v.battleId = b.battleId AND v.voteValue = 1),
+            (SELECT bv.viewCount FROM BattleView bv WHERE bv.battleId = b.battleId)
+        )
+        FROM Battle b
+        LEFT JOIN b.user u
+        WHERE b.battleId = :battleId
+    """)
     Optional<BattleDetailVo> findBattleDetail(@Param("battleId") Long battleId);
 
     /**

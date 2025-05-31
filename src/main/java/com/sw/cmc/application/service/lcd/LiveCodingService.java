@@ -203,8 +203,6 @@ public class LiveCodingService implements LiveCodingUseCase {
                 .collect(Collectors.toList());
         String link = liveCodingMap.get("link");
 
-        System.out.println("findByRoomId link: " + link);
-
         return new LiveCodingDomain(retrievedRoomId, hostId, createdAt, participantCount, participants, link);
     }
 
