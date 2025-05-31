@@ -1,6 +1,7 @@
 package com.sw.cmc.adapter.out.battle.persistence;
 
 import com.sw.cmc.domain.battle.BattleDetailVo;
+import com.sw.cmc.domain.battle.BattleListVo;
 import com.sw.cmc.entity.Battle;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
@@ -46,17 +47,19 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
      * @return page
      */
     @Query("""
-        SELECT b,
-               COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-               COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
-               u.username,
-               u.profileImg
+        SELECT new com.sw.cmc.domain.battle.BattleListVo(
+            b,
+            COUNT(CASE WHEN v.voteValue = 0 THEN 1 END),
+            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END),
+            u.username,
+            u.profileImg
+        )
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
         LEFT JOIN b.user u
         GROUP BY b
     """)
-    Page<Object[]> findAllWithVoteCounts(Pageable pageable);
+    Page<BattleListVo> findAllWithVoteCounts(Pageable pageable);
 
     /**
      * methodName : findAllOrderByVoteCountDescAndCreatedAtDesc
@@ -66,18 +69,20 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
      * @return list
      */
     @Query("""
-        SELECT b,
-            COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
+        SELECT new com.sw.cmc.domain.battle.BattleListVo(
+            b,
+            COUNT(CASE WHEN v.voteValue = 0 THEN 1 END),
+            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END),
             u.username,
             u.profileImg
+        )
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
         LEFT JOIN b.user u
         GROUP BY b.battleId
         ORDER BY COUNT(v.voteId) DESC
     """)
-    Page<Object[]> findAllOrderByVoteCountDesc(Pageable pageable);
+    Page<BattleListVo> findAllOrderByVoteCountDesc(Pageable pageable);
 
     /**
      * methodName : findMyVotedBattles
@@ -89,18 +94,20 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
      * @return list
      */
     @Query("""
-        SELECT b,
-            COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
+        SELECT new com.sw.cmc.domain.battle.BattleListVo(
+            b,
+            COUNT(CASE WHEN v.voteValue = 0 THEN 1 END),
+            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END),
             u.username,
             u.profileImg
+        )
         FROM Battle b
         JOIN Vote v ON b.battleId = v.battleId
         LEFT JOIN b.user u
         WHERE v.user.userNum = :userNum
         GROUP BY b.battleId
     """)
-    Page<Object[]> findMyVotedBattles(Long userNum, Pageable pageable);
+    Page<BattleListVo> findMyVotedBattles(Long userNum, Pageable pageable);
 
     /**
      * methodName : findMyBattles
@@ -112,16 +119,18 @@ public interface BattleRepository extends JpaRepository<Battle, Long>  {
      * @return page
      */
     @Query("""
-        SELECT b,
-            COUNT(CASE WHEN v.voteValue = 0 THEN 1 END) AS leftVoteCount,
-            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END) AS rightVoteCount,
+        SELECT new com.sw.cmc.domain.battle.BattleListVo(
+            b,
+            COUNT(CASE WHEN v.voteValue = 0 THEN 1 END),
+            COUNT(CASE WHEN v.voteValue = 1 THEN 1 END),
             u.username,
             u.profileImg
+        )
         FROM Battle b
         LEFT JOIN Vote v ON b.battleId = v.battleId
         LEFT JOIN b.user u
         WHERE b.user.userNum = :userNum
         GROUP BY b.battleId
     """)
-    Page<Object[]> findMyBattles(Long userNum, Pageable pageable);
+    Page<BattleListVo> findMyBattles(Long userNum, Pageable pageable);
 }

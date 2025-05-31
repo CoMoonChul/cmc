@@ -12,6 +12,7 @@ import com.sw.cmc.entity.User;
 import com.sw.cmc.entity.Vote;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,7 @@ public class BattleService implements BattleUseCase {
     private final CommentRepository commentRepository;
     private final VoteRepository voteRepository;
     private final UserUtil userUtil;
+    private final ModelMapper modelMapper;
 
     @Override
     public BattleDomain selectBattle(Long id) {
@@ -69,7 +71,7 @@ public class BattleService implements BattleUseCase {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Long userNum = userUtil.getAuthenticatedUserNum();
 
-        Page<Object[]> res = switch (BattleListCondition.of(condition)) {
+        Page<BattleListVo> res = switch (BattleListCondition.of(condition)) {
             case LATEST -> battleRepository.findAllWithVoteCounts(pageable);
             case MOST_VOTED -> battleRepository.findAllOrderByVoteCountDesc(pageable);
             case MY_BATTLE -> {
@@ -81,17 +83,8 @@ public class BattleService implements BattleUseCase {
                 yield battleRepository.findMyVotedBattles(userNum, pageable);
             }
         };
-        return convertObjToListDomain(res);
-    }
 
-    private void validateUserNumExist(Long userNum) {
-        if (Objects.isNull(userNum)) {
-            throw new CmcException("BATTLE011");
-        }
-    }
-
-    private BattleListDomain convertObjToListDomain(Page<Object[]> page) {
-        List<BattleDomain> battleList = Optional.of(page.getContent())
+        List<BattleDomain> battleList = Optional.of(res.getContent())
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(this::toBattleDomain)
@@ -99,36 +92,11 @@ public class BattleService implements BattleUseCase {
                 .collect(Collectors.toList());
 
         return BattleListDomain.builder()
-                .pageNumber(Optional.of(page.getNumber()).orElse(0))
-                .pageSize(Optional.of(page.getSize()).orElse(0))
-                .totalElements((int) page.getTotalElements())
-                .totalPages(Optional.of(page.getTotalPages()).orElse(0))
+                .pageNumber(Optional.of(res.getNumber()).orElse(0))
+                .pageSize(Optional.of(res.getSize()).orElse(0))
+                .totalElements((int) res.getTotalElements())
+                .totalPages(Optional.of(res.getTotalPages()).orElse(0))
                 .battleList(battleList)
-                .build();
-    }
-
-    private BattleDomain toBattleDomain(Object[] objects) {
-        if (objects == null || objects.length < 1 || !(objects[0] instanceof Battle battle)) {
-            return null;
-        }
-
-        Long leftVoteCount = (Long)objects[1];
-        Long rightVoteCount = (Long)objects[2];
-        String username = (String)objects[3];
-        String userImg = (String)objects[4];
-        return BattleDomain.builder()
-                .battleId(battle.getBattleId())
-                .title(battle.getTitle())
-                .content(battle.getContent())
-                .endTime(battle.getEndTime())
-                .codeContentLeft(battle.getCodeContentLeft())
-                .codeContentRight(battle.getCodeContentRight())
-                .leftVote(leftVoteCount)
-                .rightVote(rightVoteCount)
-                .username(username)
-                .userImg(userImg)
-                .createdAt(battle.getCreatedAt())
-                .updatedAt(battle.getUpdatedAt())
                 .build();
     }
 
@@ -142,22 +110,6 @@ public class BattleService implements BattleUseCase {
         return BattleDomain.builder()
                 .battleId(saved.getBattleId())
                 .build();
-    }
-
-    private Battle convertDomainToEntity(BattleDomain battleDomain) {
-        User savingUser = new User();
-        savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
-
-        Battle saving = new Battle();
-        saving.setUser(savingUser);
-        saving.setCodeContentLeft(battleDomain.getCodeContentLeft());
-        saving.setCodeContentRight(battleDomain.getCodeContentRight());
-        saving.setCodeTypeLeft(battleDomain.getCodeTypeLeft());
-        saving.setCodeTypeRight(battleDomain.getCodeTypeRight());
-        saving.setTitle(battleDomain.getTitle());
-        saving.setContent(battleDomain.getContent());
-        saving.setEndTime(battleDomain.getEndTime());
-        return saving;
     }
 
     @Override
@@ -255,5 +207,49 @@ public class BattleService implements BattleUseCase {
                     .ifPresent(vote -> builder.voteValue(vote.getVoteValue()));
         }
         return builder.build();
+    }
+
+
+    private BattleDomain toBattleDomain(BattleListVo vo) {
+        if (vo == null) {
+            return null;
+        }
+
+        return BattleDomain.builder()
+                .battleId(vo.getBattle().getBattleId())
+                .title(vo.getBattle().getTitle())
+                .content(vo.getBattle().getContent())
+                .endTime(vo.getBattle().getEndTime())
+                .codeContentLeft(vo.getBattle().getCodeContentLeft())
+                .codeContentRight(vo.getBattle().getCodeContentRight())
+                .leftVote(vo.getLeftVote())
+                .rightVote(vo.getRightVote())
+                .username(vo.getUsername())
+                .userImg(vo.getUserImg())
+                .createdAt(vo.getBattle().getCreatedAt())
+                .updatedAt(vo.getBattle().getUpdatedAt())
+                .build();
+    }
+
+    private void validateUserNumExist(Long userNum) {
+        if (Objects.isNull(userNum)) {
+            throw new CmcException("BATTLE011");
+        }
+    }
+
+    private Battle convertDomainToEntity(BattleDomain battleDomain) {
+        User savingUser = new User();
+        savingUser.setUserNum(userUtil.getAuthenticatedUserNum());
+
+        Battle saving = new Battle();
+        saving.setUser(savingUser);
+        saving.setCodeContentLeft(battleDomain.getCodeContentLeft());
+        saving.setCodeContentRight(battleDomain.getCodeContentRight());
+        saving.setCodeTypeLeft(battleDomain.getCodeTypeLeft());
+        saving.setCodeTypeRight(battleDomain.getCodeTypeRight());
+        saving.setTitle(battleDomain.getTitle());
+        saving.setContent(battleDomain.getContent());
+        saving.setEndTime(battleDomain.getEndTime());
+        return saving;
     }
 }
