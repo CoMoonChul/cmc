@@ -1,36 +1,28 @@
 package com.sw.cmc.application.service.review;
 
 import com.sw.cmc.adapter.out.comment.persistence.CommentRepository;
-import com.sw.cmc.adapter.out.group.persistence.GroupMemberRepository;
 import com.sw.cmc.adapter.out.like.persistence.ReviewLikeRepository;
 import com.sw.cmc.adapter.out.review.persistence.ReviewRepository;
 import com.sw.cmc.adapter.out.view.persistence.ReviewViewRepository;
 import com.sw.cmc.application.port.in.review.ReviewUseCase;
+import com.sw.cmc.application.service.async.CmcAsyncService;
 import com.sw.cmc.common.advice.CmcException;
-import com.sw.cmc.common.util.NotiUtil;
 import com.sw.cmc.common.util.UserUtil;
 import com.sw.cmc.domain.review.*;
 import com.sw.cmc.entity.Review;
 import com.sw.cmc.entity.ReviewView;
 import com.sw.cmc.entity.User;
-import com.sw.cmc.event.ai.CreateCommentEvent;
-import com.sw.cmc.event.ai.DeleteCommentEvent;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -44,16 +36,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class ReviewService implements ReviewUseCase {
-
     private final EntityManager entityManager;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
     private final ReviewViewRepository reviewViewRepository;
     private final UserUtil userUtil;
     private final ReviewLikeRepository reviewLikeRepository;
-    private final GroupMemberRepository groupMemberRepository;
-    private final NotiUtil notiUtil;
-    private final ApplicationEventPublisher eventPublisher;
+    private final CmcAsyncService cmcAsyncService;
 
     @Override
     @Transactional
@@ -124,6 +113,7 @@ public class ReviewService implements ReviewUseCase {
 
         // 로그인 사용자 userNum
         Long authenticatedUserNum = userUtil.getAuthenticatedUserNum();
+        String authenticatedUserNm = userUtil.getAuthenticatedUsername();
         User savingUser = new User();
         savingUser.setUserNum(authenticatedUserNum);
 
@@ -138,7 +128,7 @@ public class ReviewService implements ReviewUseCase {
         entityManager.refresh(saved);
 
         // 알림 발송 + 이벤트 퍼블리싱 비동기 처리
-        sendNotificationAndPublishEvent(saved, reviewDomain.getGroups(), authenticatedUserNum);
+        cmcAsyncService.sendNotificationAndPublishEvent(saved, reviewDomain.getGroups(), authenticatedUserNum, authenticatedUserNm);
 
         return ReviewDomain.builder()
                 .reviewId(saved.getReviewId())
@@ -163,7 +153,7 @@ public class ReviewService implements ReviewUseCase {
         }
 
         reviewRepository.deleteById(found.getReviewId());
-        sendDeleteReviewEvent(reviewDomain);
+        cmcAsyncService.sendDeleteReviewEvent(reviewDomain);
         return reviewDomain;
     }
 
@@ -225,40 +215,6 @@ public class ReviewService implements ReviewUseCase {
                 .viewCount(reviewView.getViewCount())
                 .likeCount(reviewLike)
                 .build();
-    }
-
-    @Async
-    private void sendNotificationAndPublishEvent(Review saved, List<Long> groupIds, Long authenticatedUserNum) {
-        try {
-            if (CollectionUtils.isNotEmpty(groupIds)) {
-                List<Long> userIds = groupMemberRepository.findDistinctUserNumsByGroupIds(groupIds);
-                userIds.remove(authenticatedUserNum);
-
-                Map<String, String> templateParams = new HashMap<>();
-                templateParams.put("userNm", userUtil.getAuthenticatedUsername());
-                templateParams.put("title", saved.getTitle());
-                notiUtil.sendNoticeList(authenticatedUserNum, userIds, 7L, "/review/detail/" + saved.getReviewId(), templateParams);
-            }
-
-            CreateCommentEvent createCommentEvent = CreateCommentEvent.builder()
-                    .reviewId(saved.getReviewId())
-                    .title(saved.getTitle())
-                    .content(saved.getContent())
-                    .codeContent(saved.getCodeContent())
-                    .codeType(saved.getCodeType())
-                    .build();
-            eventPublisher.publishEvent(createCommentEvent);
-        } catch (Exception e) {
-            log.error("알림 발송 및 이벤트 퍼블리싱 실패", e);
-        }
-    }
-
-    @Async
-    private void sendDeleteReviewEvent(ReviewDomain reviewDomain) {
-        DeleteCommentEvent event = DeleteCommentEvent.builder()
-                .reviewId(reviewDomain.getReviewId())
-                .build();
-        eventPublisher.publishEvent(event);
     }
 
     private void validateUserNum(Long userNum) {
